@@ -1,0 +1,83 @@
+{
+  "project_info": {
+    "project_number": "605990300251",
+    "firebase_url": "https://badir-app-default-rtdb.firebaseio.com",
+    "project_id": "badir-app",
+    "storage_bucket": "badir-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:605990300251:android:68120670ebff3efa0f2d7e",
+        "android_client_info": {
+          "package_name": "com.example.bader_user_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "605990300251-sk9tnanj2l6qahonoe746qjrrd4pciob.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUgujdtlUNut-JMZretoA9yPzx2Nl_b78"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "605990300251-sk9tnanj2l6qahonoe746qjrrd4pciob.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "605990300251-9ro78frkuobvqu698u1igicneadgbgel.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.badirApp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:605990300251:android:628cc565aaf6b5db0f2d7e",
+        "android_client_info": {
+          "package_name": "com.example.badir_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "605990300251-sk9tnanj2l6qahonoe746qjrrd4pciob.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUgujdtlUNut-JMZretoA9yPzx2Nl_b78"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "605990300251-sk9tnanj2l6qahonoe746qjrrd4pciob.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "605990300251-9ro78frkuobvqu698u1igicneadgbgel.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.badirApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
