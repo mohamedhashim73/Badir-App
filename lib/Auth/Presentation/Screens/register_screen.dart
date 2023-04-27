@@ -5,7 +5,9 @@ import 'package:bader_user_app/Core/Constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../Core/Components/drop_down_items.dart';
 import '../../../Core/Components/snackBar_item.dart';
+import '../../../Core/Components/text_field_component.dart';
 import '../../../Core/Theme/app_colors.dart';
 import '../../../Core/Utils/app_strings.dart';
 
@@ -50,12 +52,11 @@ class RegisterScreen extends StatelessWidget {
                       children:
                       [
                         _textUpperTextField(title: "الاسم"),
-                        _textFieldComponent(controller: _nameController, isSecure: false, cubit: cubit),
+                        textFieldComponent(controller: _nameController),
                         _textUpperTextField(title: "رقم التليفون"),
-                        _textFieldComponent(controller: _phoneController, isSecure: false, cubit: cubit),
+                        textFieldComponent(controller: _phoneController),
                         _textUpperTextField(title: "الكية"),
-                        _dropDownComponent(
-                            cubit: cubit,
+                        dropDownComponent(
                             items: Constants.colleges,
                             onChanged: (college)
                             {
@@ -64,8 +65,7 @@ class RegisterScreen extends StatelessWidget {
                             value: cubit.selectedCollege
                         ),
                         _textUpperTextField(title: "الجنس"),
-                        _dropDownComponent(
-                            cubit: cubit,
+                        dropDownComponent(
                             items: Constants.genderStatus,
                             onChanged: (gender)
                             {
@@ -74,9 +74,9 @@ class RegisterScreen extends StatelessWidget {
                             value: cubit.selectedGender
                         ),
                         _textUpperTextField(title: "البريد الإلكتروني"),
-                        _textFieldComponent(controller: _emailController, isSecure: false, cubit: cubit),
+                        textFieldComponent(controller: _emailController),
                         _textUpperTextField(title: "كلمة المرور"),
-                        _textFieldComponent(controller: _passwordController, isSecure: true, cubit: cubit),
+                        textFieldComponent(controller: _passwordController, isSecure: true),
                         SizedBox(height: 20.h,),
                         DefaultButton(
                           width: double.infinity,
@@ -130,46 +130,3 @@ Widget _textUpperTextField({required String title}){
   );
 }
 
-Widget _containerItem({required Widget child}){
-  return Container(
-      height: 45.h,
-      width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: 12.w,vertical: 5.h),
-      margin: EdgeInsets.only(bottom: 6.h),
-      decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
-      child: child
-  );
-}
-
-Widget _textFieldComponent({required TextEditingController controller,required bool isSecure,required AuthCubit cubit}){
-  return _containerItem(
-    child: TextFormField(
-      controller: controller,
-      obscureText: isSecure == false ? false : cubit.passwordShown ? false : true,
-      decoration: InputDecoration(
-        suffixIcon: isSecure == true ? GestureDetector(
-          onTap: ()
-          {
-            cubit.changePasswordVisiblity();
-          },
-          child: Icon(cubit.passwordShown ? Icons.visibility : Icons.visibility_off),
-        ) : const SizedBox(),
-        contentPadding: EdgeInsets.zero,
-        border: InputBorder.none
-      ),
-    ),
-  );
-}
-
-Widget _dropDownComponent({required AuthCubit cubit,required List<String> items,required void Function(String?)? onChanged,String? value}){
-  return _containerItem(
-    child: DropdownButtonHideUnderline(
-      child: DropdownButton(
-        hint: const Text("اختار"),
-        value: value,
-        onChanged: onChanged,
-        items: items.map((e) => DropdownMenuItem(value: e,child: Text(e,textDirection: TextDirection.rtl,),)).toList(),
-      ),
-    ),
-  );
-}

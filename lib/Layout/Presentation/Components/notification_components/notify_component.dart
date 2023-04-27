@@ -13,7 +13,7 @@ class NotifyComponent extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: 12.h,horizontal: 12.w),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(4),
-        color: AppColors.kNotifyColor
+        color: AppColors.kYellowColor
       ),
       child: Column(
         children:

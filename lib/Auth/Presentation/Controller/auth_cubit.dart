@@ -43,7 +43,7 @@ class AuthCubit extends Cubit<AuthStates>{
             (right) async
             {
               // Todo: Send User Data to Firestore
-              UserModel userModel = UserModel(name, right.user!.uid, email, "User", password, gender, college, phone,false);
+              UserModel userModel = UserModel(name, right.user!.uid,'', email, "User", password, gender, college, phone,false,'','',0);
               await SendUserDataToFirestoreUseCase(authBaseRepository: sl<AuthRemoteImplyRepository>()).execute(user: userModel, userID: right.user!.uid);
               emit(RegisterSuccessState());
             }

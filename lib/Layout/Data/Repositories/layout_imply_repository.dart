@@ -2,7 +2,6 @@ import 'package:bader_user_app/Core/Errors/failure.dart';
 import 'package:bader_user_app/Layout/Data/Data_Source/clubs_remote_data_source.dart';
 import 'package:bader_user_app/Layout/Data/Data_Source/events_remote_data_source.dart';
 import 'package:bader_user_app/Layout/Data/Data_Source/layout_data_source.dart';
-import 'package:bader_user_app/Layout/Data/Models/club_model.dart';
 import 'package:bader_user_app/Layout/Domain/Entities/club_entity.dart';
 import 'package:bader_user_app/Layout/Domain/Entities/event_entity.dart';
 import 'package:bader_user_app/Layout/Domain/Entities/notification_entity.dart';
@@ -17,6 +16,17 @@ class LayoutRemoteImplyRepository implements LayoutBaseRepository {
   final EventsRemoteDataSource eventsRemoteDataSource;
   LayoutRemoteImplyRepository({required this.layoutRemoteDataSource,required this.clubsRemoteDataSource,required this.eventsRemoteDataSource});
 
+  @override
+  Future<bool> requestAMembershipOnSpecificClub({required String clubID,required String userAskForMembershipID,required String infoAboutAsker,required String committeeName,required String requestUserName}) async {
+    try
+    {
+      await clubsRemoteDataSource.requestAMembershipOnSpecificClub(clubID: clubID, userAskForMembershipID: userAskForMembershipID,infoAboutAsker: infoAboutAsker,committeeName : committeeName, requestUserName: requestUserName);
+      return true;
+    }
+    on FirebaseException catch(e){
+      return false;
+    }
+  }
   @override
   Future<bool> acceptOrRefuseMembershipRequest({required String requestSenderID}) {
     // TODO: implement acceptOrRefuseMembershipRequest
@@ -66,9 +76,8 @@ class LayoutRemoteImplyRepository implements LayoutBaseRepository {
   }
 
   @override
-  Future<bool> updateMyData() {
-    // TODO: implement editUserData
-    throw UnimplementedError();
+  Future<bool> updateMyData({required String name,required String college,required String gender,required int phone}) {
+    return layoutRemoteDataSource.updateMyData(name: name, college: college, gender: gender, phone: phone);
   }
 
   @override

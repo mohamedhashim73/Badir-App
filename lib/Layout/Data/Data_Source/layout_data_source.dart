@@ -11,6 +11,22 @@ class LayoutRemoteDataSource {
     return UserModel.fromJson(json: querySnapshot.data());
   }
 
+  Future<bool> updateMyData({required String name,required String college,required String gender,required int phone}) async {
+    try{
+      await FirebaseFirestore.instance.collection(Constants.kUsersCollectionName)
+          .doc(Constants.userID).update({
+        'name' : name,
+        'college' : college,
+        'phone' : phone,
+        'gender' : gender,
+      });
+      return true;
+    }
+    on FirebaseException catch(e){
+      return false;
+    }
+  }
+
   // TODO: Notifications
   Future<List<NotifyModel>> getNotifications() async {
     List<NotifyModel> notifications = [];

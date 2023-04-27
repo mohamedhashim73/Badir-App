@@ -7,7 +7,9 @@ import 'package:bader_user_app/Core/Utils/app_strings.dart';
 import 'package:bader_user_app/Core/Utils/service_locators.dart';
 import 'package:bader_user_app/Layout/Presentation/Controller/Clubs_Cubit/clubs_cubit.dart';
 import 'package:bader_user_app/Layout/Presentation/Controller/Events_Cubit/events_cubit.dart';
+import 'package:bader_user_app/Layout/Presentation/Screens/edit_profile_screen.dart';
 import 'package:bader_user_app/Layout/Presentation/Screens/layout_screen.dart';
+import 'package:bader_user_app/Layout/Presentation/Screens/view_clubs.dart';
 import 'package:bader_user_app/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -42,7 +44,7 @@ class MyApp extends StatelessWidget {
           providers:
           [
             BlocProvider(create: (context) => AuthCubit()),
-            BlocProvider(create: (context) => ClubsCubit()..getClubsData()),
+            BlocProvider(create: (context) => ClubsCubit()),
             BlocProvider(create: (context) => EventsCubit()),
             BlocProvider(create: (context) => LayoutCubit()..getMyData()),
           ],
@@ -50,11 +52,17 @@ class MyApp extends StatelessWidget {
             routes:
             {
               AppStrings.kLoginScreen : (context) => LoginScreen(),
+              AppStrings.kViewClubsScreen : (context) => ViewClubsScreen(),
+              AppStrings.kEditProfileScreen : (context) => EditProfileScreen(),
               AppStrings.kRegisterScreen : (context) => RegisterScreen(),
               AppStrings.kLayoutScreen : (context) => const LayoutScreen(),
             },
             theme: ThemeData(
               fontFamily: 'Cairo',
+              appBarTheme: AppBarTheme(
+                backgroundColor: AppColors.kMainColor,
+                elevation: 0,
+              ),
               buttonTheme: ButtonThemeData(
                 buttonColor: AppColors.kMainColor
               )

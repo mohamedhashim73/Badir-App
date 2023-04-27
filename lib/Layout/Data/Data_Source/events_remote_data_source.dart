@@ -8,7 +8,7 @@ class EventsRemoteDataSource{
   // TODO: Get Clubs from Firestore
   Future<List<EventModel>> getEvents() async {
     List<EventModel> events = [];
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection(Constants.kClubsCollectionName).get();
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection(Constants.kEventsCollectionName).get();
     for( var item in querySnapshot.docs )
     {
       events.add(EventModel.fromJson(json: item.data()));

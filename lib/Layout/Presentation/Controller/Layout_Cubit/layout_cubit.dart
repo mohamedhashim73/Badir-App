@@ -1,7 +1,10 @@
+import 'package:bader_user_app/Core/Constants/constants.dart';
 import 'package:bader_user_app/Core/Utils/service_locators.dart';
 import 'package:bader_user_app/Layout/Data/Repositories/layout_imply_repository.dart';
 import 'package:bader_user_app/Layout/Domain/Entities/user_entity.dart';
+import 'package:bader_user_app/Layout/Domain/UseCases/Clubs_UseCases/request_membership_use_case.dart';
 import 'package:bader_user_app/Layout/Domain/UseCases/Layout_UseCases/get_notifications_use_case.dart';
+import 'package:bader_user_app/Layout/Domain/UseCases/Layout_UseCases/update_my_data_use_case.dart';
 import 'package:bader_user_app/Layout/Presentation/Screens/profile_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
@@ -26,8 +29,19 @@ class LayoutCubit extends Cubit<LayoutStates> {
 
   void changeBottomNavIndex({required int index}) {
     bottomNavIndex = index;
-    // Emit state
     emit(ChangeBottomNavIndexState());
+  }
+
+  String? selectedCollege;
+  void chooseCollege({required String college}){
+    selectedCollege = college;
+    emit(CollegeChosenSuccessState());
+  }
+
+  String? selectedGender;
+  void chooseGender({required String gender}){
+    selectedGender = gender;
+    emit(GenderChosenSuccessState());
   }
 
   // TODO: Get Notifications
@@ -48,9 +62,10 @@ class LayoutCubit extends Cubit<LayoutStates> {
     );
   }
 
+
   // TODO: USER
   UserEntity? userData;
-  void getMyData() async {
+  Future<void> getMyData() async {
     var result = await GetMyDataUseCase(layoutBaseRepository: sl<LayoutRemoteImplyRepository>()).execute();
     result.fold(
             (serverFailure) => emit(FailedToGetUserDataState(message: serverFailure.message)),
@@ -59,6 +74,20 @@ class LayoutCubit extends Cubit<LayoutStates> {
               userData = userEntity;
               emit(GetMyDataSuccessState());
             });
+  }
+
+  void updateMyData({required String name,required String college,required String gender,required int phone}) async {
+    emit(UpdateMyDataLoadingState());
+    bool dataUpdatedSuccess = await UpdateMyDataUseCase(layoutBaseRepository: sl<LayoutRemoteImplyRepository>()).execute(name: name, college: college, gender: gender, phone: phone);
+    if( dataUpdatedSuccess )
+      {
+        await getMyData();
+        emit(UpdateMyDataSuccessState());
+      }
+    else
+      {
+        emit(FailedToUpdateMyDataState());
+      }
   }
 
 }

@@ -2,6 +2,13 @@ abstract class LayoutStates{}
 
 class LayoutInitialState extends LayoutStates{}
 
+class CollegeChosenSuccessState extends LayoutStates{}
+class GenderChosenSuccessState extends LayoutStates{}
+
+class UpdateMyDataSuccessState extends LayoutStates{}
+class UpdateMyDataLoadingState extends LayoutStates{}
+class FailedToUpdateMyDataState extends LayoutStates{}
+
 class GetMyDataSuccessState extends LayoutStates{}
 class FailedToGetUserDataState extends LayoutStates{
   final String message;

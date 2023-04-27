@@ -10,17 +10,16 @@ abstract class LayoutBaseRepository{
 
   // TODO: USER
   Future<Either<Failure, UserEntity>> getMyData();
-  Future<bool> updateMyData();
+  Future<bool> updateMyData({required String name,required String college,required String gender,required int phone});
   Future<bool> logOut();
   Future<Either<Failure,List<ClubEntity>>> getClubs();
+  Future<Either<Failure,List<EventEntity>>> getEvents();
+  Future<bool> requestAMembershipOnSpecificClub({required String clubID,required String requestUserName,required String userAskForMembershipID,required String infoAboutAsker,required String committeeName});
 
 
   // TODO: Notifications
   Future<Either<Failure,List<NotificationEntity>>> getNotifications();
   Future<bool> sendANotification({required String receiverID});
-
-  // TODO: Events -- PUBLIC USER
-  Future<Either<Failure,List<EventEntity>>> getEvents();
 
   // TODO: ( Leader )
   // TODO: Events -- LEADER ROLE

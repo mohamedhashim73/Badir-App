@@ -26,6 +26,7 @@ class NotificationsScreen extends StatelessWidget {
               appBar: AppBar(
                   backgroundColor: AppColors.kMainColor,
                   elevation: 0,
+                  automaticallyImplyLeading: false,
                   title: const Text("التنبيهات")
               ),
               body: cubit.notifications.isNotEmpty ?
