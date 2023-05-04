@@ -1,18 +1,16 @@
 import 'package:equatable/equatable.dart';
 
 abstract class Failure extends Equatable {
-  // Todo: Using Equatable as if there instance from object have the same value, will not create new instance as there one already created before with the same values
-  final String message;
-  const Failure({required this.message});
-
+  final String errorMessage;
+  const Failure({required this.errorMessage});
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [];
 }
 
-class ServerFailure extends Failure{
-  const ServerFailure({required super.message});
+class ServerFailure extends Failure {
+  const ServerFailure({required super.errorMessage});
 }
 
-class CacheFailure extends Failure{
-  const CacheFailure({required super.message});
+class EmptyCacheFailure extends Failure{
+  const EmptyCacheFailure({required super.errorMessage});
 }
