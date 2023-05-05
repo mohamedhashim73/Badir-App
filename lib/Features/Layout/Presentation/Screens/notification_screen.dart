@@ -4,6 +4,7 @@ import 'package:bader_user_app/Features/Layout/Presentation/Controller/Layout_Cu
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../Core/Components/drwaer_item.dart';
 import '../../../../Core/Theme/app_colors.dart';
 
 class NotificationsScreen extends StatelessWidget {
@@ -19,10 +20,10 @@ class NotificationsScreen extends StatelessWidget {
           listener: (context,state){},
           builder: (context,state) {
             return Scaffold(
-              appBar: AppBar(
+                drawer: DrawerItem(),
+                appBar: AppBar(
                   backgroundColor: AppColors.kMainColor,
                   elevation: 0,
-                  automaticallyImplyLeading: false,
                   title: const Text("التنبيهات")
               ),
               body: cubit.notifications.isNotEmpty ?

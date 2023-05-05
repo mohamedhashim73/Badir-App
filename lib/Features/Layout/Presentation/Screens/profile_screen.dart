@@ -1,3 +1,4 @@
+import 'package:bader_user_app/Core/Components/drwaer_item.dart';
 import 'package:bader_user_app/Core/Utils/app_strings.dart';
 import 'package:bader_user_app/Features/Layout/Domain/Entities/user_entity.dart';
 import 'package:bader_user_app/Features/Layout/Presentation/Controller/Layout_Cubit/layout_cubit.dart';
@@ -19,8 +20,8 @@ class ProfileScreen extends StatelessWidget {
       child: Directionality(
         textDirection: TextDirection.rtl,
         child: Scaffold(
+          drawer: DrawerItem(),
           appBar: AppBar(
-              automaticallyImplyLeading: false,
               title: const Text("الملف الشخصي")
           ),
           body: BlocConsumer<LayoutCubit,LayoutStates>(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-Widget textFieldComponent({required TextEditingController controller,bool? isSecure,int? maxLines}){
+Widget textFieldComponent({required TextEditingController controller,bool? isSecure,int? maxLines,bool enabled = true,TextInputType? textInputType}){
   return Container(
     height: maxLines == null ? 45.h : null ,
     width: double.infinity,
@@ -9,6 +9,8 @@ Widget textFieldComponent({required TextEditingController controller,bool? isSec
     margin: EdgeInsets.only(bottom: 6.h),
     decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
     child: TextFormField(
+      enabled: enabled,
+      keyboardType: textInputType ?? TextInputType.name,
       controller: controller,
       maxLines: maxLines ?? 1,
       style: TextStyle(

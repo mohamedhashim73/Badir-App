@@ -1,3 +1,4 @@
+import 'package:bader_user_app/Features/Clubs/Data/Models/club_model.dart';
 import 'package:equatable/equatable.dart';
 
 class ClubEntity extends Equatable{
@@ -11,7 +12,7 @@ class ClubEntity extends Equatable{
   final String college;
   final List committees;
   final int memberNum;
-  final String contactAccounts;
+  final ContactMeansForClubModel contactAccounts;
 
   const ClubEntity(
       this.name,
@@ -30,4 +31,11 @@ class ClubEntity extends Equatable{
   // TODO: implement props
   List<Object?> get props => [name,id,description,image,leaderName,leaderID,leaderEmail,college,committees,memberNum,contactAccounts];
 
+}
+
+class ContactMeansForClub{
+  final String? phone;
+  final String? twitter;
+
+  ContactMeansForClub({required this.phone,required this.twitter});
 }

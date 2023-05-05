@@ -5,6 +5,7 @@ import 'package:bader_user_app/Features/Layout/Presentation/Controller/Layout_Cu
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../Core/Components/drwaer_item.dart';
 import '../../../../Core/Theme/app_colors.dart';
 import '../../../Events/Domain/Entities/event_entity.dart';
 import '../../../Clubs/Presentation/Controller/clubs_cubit.dart';
@@ -26,11 +27,11 @@ class HomeScreen extends StatelessWidget {
       child: Directionality(
         textDirection: TextDirection.rtl,
         child: Scaffold(
-          appBar: AppBar(
+            drawer: DrawerItem(),
+            appBar: AppBar(
               backgroundColor: AppColors.kMainColor,
               elevation: 0,
               title: const Text("الرئيسية"),
-              automaticallyImplyLeading: false,
           ),
           body: Padding(
             padding: EdgeInsets.symmetric(horizontal: 12.w,vertical: 7.5.h),

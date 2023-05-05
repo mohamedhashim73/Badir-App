@@ -14,7 +14,7 @@ class ViewClubDetailsScreen extends StatelessWidget {
         child: Scaffold(
           appBar: AppBar(title: const Text("تفاصيل النادي"),automaticallyImplyLeading: false),
           body: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 12.w,vertical:10.h),
+            padding: EdgeInsets.symmetric(horizontal: 12.w,vertical:12.h),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children:
@@ -29,7 +29,7 @@ class ViewClubDetailsScreen extends StatelessWidget {
                         height: 80.h,
                         width: 120.w,
                         decoration: BoxDecoration(
-                            image: DecorationImage(image: NetworkImage(club.image)),
+                            image: DecorationImage(image: NetworkImage(club.image),fit: BoxFit.cover),
                             border: Border.all(color: Colors.black.withOpacity(0.5)),
                             borderRadius: BorderRadius.circular(8)
                         ),

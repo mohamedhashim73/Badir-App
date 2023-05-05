@@ -11,6 +11,10 @@ class ServerFailure extends Failure {
   const ServerFailure({required super.errorMessage});
 }
 
+class NoNetworkFailure extends Failure {
+  const NoNetworkFailure({required super.errorMessage});
+}
+
 class EmptyCacheFailure extends Failure{
   const EmptyCacheFailure({required super.errorMessage});
 }

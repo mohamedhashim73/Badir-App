@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bader_user_app/Core/Errors/exceptions.dart';
 import 'package:bader_user_app/Core/Errors/failure.dart';
 import 'package:bader_user_app/Features/Clubs/Data/Data_Sources/local_clubs_data_source.dart';
@@ -6,6 +8,8 @@ import 'package:bader_user_app/Features/Clubs/Domain/Contract_Repositories/club_
 import 'package:bader_user_app/Features/Clubs/Domain/Entities/club_entity.dart';
 import 'package:bader_user_app/Features/Layout/Domain/Entities/user_entity.dart';
 import 'package:dartz/dartz.dart';
+
+import '../Models/club_model.dart';
 
 class ClubsImplyRepository implements ClubsContractRepository{
   final RemoteClubsDataSource remoteClubsDataSource;
@@ -51,12 +55,6 @@ class ClubsImplyRepository implements ClubsContractRepository{
   }
 
   @override
-  Future<bool> editClub({required String clubID}) {
-    // TODO: implement editClub
-    throw UnimplementedError();
-  }
-
-  @override
   Future<List<UserEntity>> viewClubMembersInfo({required String clubID}) {
     // TODO: implement viewClubMembersInfo
     throw UnimplementedError();
@@ -65,6 +63,30 @@ class ClubsImplyRepository implements ClubsContractRepository{
   @override
   Future<bool> requestAMembershipOnSpecificClub({required String clubID, required String requestUserName, required String userAskForMembershipID, required String infoAboutAsker, required String committeeName}) async {
     return remoteClubsDataSource.requestAMembershipOnSpecificClub(clubID: clubID, requestUserName: requestUserName, userAskForMembershipID: userAskForMembershipID, infoAboutAsker: infoAboutAsker, committeeName: committeeName);
+  }
+
+  @override
+  Future<Either<Failure, String>> uploadClubImageToStorage({required File imgFile}) async {
+    try
+    {
+      String imageUrl = await remoteClubsDataSource.uploadClubImageToStorage(imgFile: imgFile);
+      return Right(imageUrl);
+    }
+    on NoNetworkException catch(e){
+      return Left(NoNetworkFailure(errorMessage: e.exceptionMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> updateClubData({required String clubID, required String image, required String name, required int memberNum, required String aboutClub, required ContactMeansForClubModel contactInfo}) async {
+    try
+    {
+      await remoteClubsDataSource.updateClubData(clubID: clubID, image: image, name: name, memberNum: memberNum, aboutClub: aboutClub, contactInfo: contactInfo);
+      return const Right(unit);
+    }
+    on ServerException catch(e){
+      return Left(ServerFailure(errorMessage: e.exceptionMessage));
+    }
   }
 
 }
