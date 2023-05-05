@@ -69,18 +69,31 @@ class RemoteClubsDataSource{
     }
   }
 
+  // TODO: This method will get the number of members | use it when add new member to change its value on Members Number Collection
+  Future<int> getMembersNum() async {
+    int membersNum = 0;
+    await FirebaseFirestore.instance.collection(Constants.kMembersNumberCollectionName).doc('Number').get().then((value){
+      membersNum = value.data() != null  ? value.data()!['total'] : 0;
+    });
+    return membersNum;
+  }
+
   Future<void> acceptOrRejectMembershipRequest({required String requestSenderID,required String clubID,required bool respondStatus}) async {
     try
     {
       // ف كلا الحالتين هحذف م الطلبات
       await FirebaseFirestore.instance.collection(Constants.kClubsCollectionName).doc(clubID).collection(Constants.kMembershipRequestsCollectionName).doc(requestSenderID).delete();
-      if( respondStatus )
+      if( respondStatus )     // TODO: Request Accepted
         {
+          int membersNum = await getMembersNum();
+          // TODO: Update Value of Members Number on its Collection as I listen for it on Home Screen
+          await FirebaseFirestore.instance.collection(Constants.kMembersNumberCollectionName).doc('Number').set({
+            'total' : ++membersNum
+          });
           MemberModel member = MemberModel(memberID: requestSenderID, membershipDate: Constants.getTimeNow());
-          // هخزن الداتا بتاعه المستخدم ده ك عضو في الكولكشن بتاع النادي
+          // TODO: هخزن الداتا بتاعه المستخدم ده ك عضو في الكولكشن بتاع النادي
           await FirebaseFirestore.instance.collection(Constants.kClubsCollectionName).doc(clubID).collection(Constants.kMembersDataCollectionName).doc(requestSenderID).set(member.toJson());
         }
-      // TODO: I have to send notification to him .....
     }
     on FirebaseException catch(e){
       throw ServerException(exceptionMessage: e.code);

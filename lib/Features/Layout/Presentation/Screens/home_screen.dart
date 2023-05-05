@@ -1,7 +1,9 @@
+import 'package:bader_user_app/Core/Constants/constants.dart';
 import 'package:bader_user_app/Core/Utils/app_strings.dart';
 import 'package:bader_user_app/Features/Clubs/Domain/Entities/club_entity.dart';
 import 'package:bader_user_app/Features/Events/Presentation/Controller/events_cubit.dart';
 import 'package:bader_user_app/Features/Layout/Presentation/Controller/Layout_Cubit/layout_cubit.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -20,10 +22,11 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final layoutCubit = LayoutCubit.getInstance(context);
     if( layoutCubit.userData == null ) layoutCubit.getMyData();
-    final clubsCubit = ClubsCubit.getInstance(context)..getInfoForClubThatILead(clubID: layoutCubit.userData!.clubIDThatHeLead!);
+    final clubsCubit = ClubsCubit.getInstance(context);
     final eventsCubit = EventsCubit.getInstance(context);
     if(clubsCubit.clubs.isEmpty) clubsCubit.getClubsData();
     if(eventsCubit.events.isEmpty) eventsCubit.getEventsData();
+    if(layoutCubit.userData != null && layoutCubit.userData!.clubIDThatHeLead!.isNotEmpty ) clubsCubit.getInfoForClubThatILead(clubID: layoutCubit.userData!.clubIDThatHeLead!);
     ClubsCubit.getInstance(context);
     return SafeArea(
       child: Directionality(
@@ -52,7 +55,22 @@ class HomeScreen extends StatelessWidget {
                         builder: (context,state) =>  _staticsDataItem(imagePath: "assets/images/clubs_num_icon.png", title: clubsCubit.clubs.length <= 10 ? "${clubsCubit.clubs.length} أندية" : "${clubsCubit.clubs.length} نادي"),
                     ),
                     _staticsDataItem(imagePath: "assets/images/clock_icon.png", title: "0 ساعة"),
-                    _staticsDataItem(imagePath: "assets/images/members_num_icon.png", title: "0 عضو"),
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children:
+                      [
+                        Image.asset("assets/images/members_num_icon.png",height: 70.h,width: 70.w,),
+                        SizedBox(height: 2.5.h,),
+                        StreamBuilder(
+                          stream: FirebaseFirestore.instance.collection(Constants.kMembersNumberCollectionName).doc('Number').snapshots(),
+                          builder: (context,event)
+                          {
+                            int membersNum = event.data != null ? event.data!.data()!['total'] : 0;
+                            return FittedBox(fit:BoxFit.scaleDown,child: Text("$membersNum عضو",style: TextStyle(fontWeight: FontWeight.w500,fontSize: 15.5.sp),));
+                          },
+                        )
+                      ],
+                    )
                   ],
                 ),
                 SizedBox(height: 12.h,),

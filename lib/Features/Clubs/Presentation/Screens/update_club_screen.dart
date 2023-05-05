@@ -28,8 +28,8 @@ class UpdateClubScreen extends StatelessWidget {
     _collegeController.text = cubit.dataAboutClubYouLead!.college;
     _aboutClubController.text = cubit.dataAboutClubYouLead!.description;
     _membersNumController.text = cubit.dataAboutClubYouLead!.memberNum.toString();
-    _phoneController.text = cubit.dataAboutClubYouLead!.contactAccounts.phone.toString();
-    _twitterController.text = cubit.dataAboutClubYouLead!.contactAccounts.twitter.toString();
+    _phoneController.text = cubit.dataAboutClubYouLead!.contactAccounts.phone != null ? cubit.dataAboutClubYouLead!.contactAccounts.phone.toString() : '';
+    _twitterController.text = cubit.dataAboutClubYouLead!.contactAccounts.twitter != null ? cubit.dataAboutClubYouLead!.contactAccounts.twitter.toString() : '';
     return SafeArea(
       child: Directionality(
         textDirection: TextDirection.rtl,

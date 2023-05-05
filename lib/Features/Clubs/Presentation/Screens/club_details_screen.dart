@@ -31,7 +31,7 @@ class ViewClubDetailsScreen extends StatelessWidget {
                         decoration: BoxDecoration(
                             image: DecorationImage(image: NetworkImage(club.image),fit: BoxFit.cover),
                             border: Border.all(color: Colors.black.withOpacity(0.5)),
-                            borderRadius: BorderRadius.circular(8)
+                            borderRadius: BorderRadius.circular(2.5)
                         ),
                       ),
                   ],

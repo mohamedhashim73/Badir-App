@@ -41,7 +41,7 @@ class DrawerItem extends StatelessWidget{
     LayoutCubit cubit = LayoutCubit.getInstance(context);
     ClubsCubit clubsCubit = ClubsCubit.getInstance(context);
     if( cubit.userData == null ) cubit.getMyData();
-    if( clubsCubit.dataAboutClubYouLead == null ) clubsCubit.getInfoForClubThatILead(clubID: cubit.userData!.clubIDThatHeLead!);
+    if( clubsCubit.dataAboutClubYouLead == null && cubit.userData!.clubIDThatHeLead!.isNotEmpty ) clubsCubit.getInfoForClubThatILead(clubID: cubit.userData!.clubIDThatHeLead!);
     return Drawer(
         child: BlocBuilder<LayoutCubit,LayoutStates>(
           buildWhen: (last,current) => current is GetMyDataSuccessState ,
