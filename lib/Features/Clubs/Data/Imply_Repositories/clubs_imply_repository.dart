@@ -8,7 +8,7 @@ import 'package:bader_user_app/Features/Clubs/Domain/Contract_Repositories/club_
 import 'package:bader_user_app/Features/Clubs/Domain/Entities/club_entity.dart';
 import 'package:bader_user_app/Features/Layout/Domain/Entities/user_entity.dart';
 import 'package:dartz/dartz.dart';
-
+import '../../Domain/Entities/request_membership_entity.dart';
 import '../Models/club_model.dart';
 
 class ClubsImplyRepository implements ClubsContractRepository{
@@ -28,12 +28,6 @@ class ClubsImplyRepository implements ClubsContractRepository{
     {
       return Left(ServerFailure(errorMessage: exception.exceptionMessage));
     }
-  }
-
-  @override
-  Future<bool> acceptOrRefuseMembershipRequest({required String requestSenderID}) {
-    // TODO: implement acceptOrRefuseMembershipRequest
-    throw UnimplementedError();
   }
 
   @override
@@ -86,6 +80,32 @@ class ClubsImplyRepository implements ClubsContractRepository{
     }
     on ServerException catch(e){
       return Left(ServerFailure(errorMessage: e.exceptionMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> acceptOrRejectMembershipRequest({required String requestSenderID, required String clubID, required bool respondStatus}) async {
+    try
+    {
+      final clubs = await remoteClubsDataSource.acceptOrRejectMembershipRequest(requestSenderID: requestSenderID, clubID: clubID, respondStatus: respondStatus);
+      return const Right(unit);
+    }
+    on ServerException catch(exception)
+    {
+      return Left(ServerFailure(errorMessage: exception.exceptionMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure,List<RequestMembershipEntity>>> getMembershipRequests({required String clubID}) async {
+    try
+    {
+      final requests = await remoteClubsDataSource.getMembershipRequests(clubID: clubID);
+      return Right(requests);
+    }
+    on ServerException catch(exception)
+    {
+      return Left(ServerFailure(errorMessage: exception.exceptionMessage));
     }
   }
 

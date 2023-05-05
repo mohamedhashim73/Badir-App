@@ -1,6 +1,8 @@
 import 'package:bader_user_app/Core/Constants/constants.dart';
+import 'package:bader_user_app/Core/Errors/exceptions.dart';
 import 'package:bader_user_app/Features/Layout/Data/Models/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../../../Core/Constants/enumeration.dart';
 import '../Models/notification_model.dart';
 
 class LayoutRemoteDataSource {
@@ -36,6 +38,19 @@ class LayoutRemoteDataSource {
         notifications.add(NotifyModel.fromJson(json: item.data()));
       }
     return notifications;
+  }
+
+  Future<void> sendNotification({required String senderID,required String receiverID,required String clubID,required String notifyContent,required NotificationType notifyType}) async {
+    try
+    {
+      NotifyModel notifyModel = NotifyModel(Constants.getTimeNow(), clubID, notifyContent, false, senderID, notifyType.toString());
+      await FirebaseFirestore.instance.collection(Constants.kUsersCollectionName).doc(receiverID).
+      collection(Constants.kNotificationsCollectionName).add(notifyModel.toJson());
+    }
+    on FirebaseException catch(e)
+    {
+      throw ServerException(exceptionMessage: e.code);
+    }
   }
 
 }

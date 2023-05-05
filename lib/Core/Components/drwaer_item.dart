@@ -1,5 +1,6 @@
 import 'package:bader_user_app/Core/Theme/app_colors.dart';
 import 'package:bader_user_app/Core/Utils/app_strings.dart';
+import 'package:bader_user_app/Features/Clubs/Presentation/Controller/clubs_cubit.dart';
 import 'package:bader_user_app/Features/Layout/Presentation/Controller/Layout_Cubit/layout_cubit.dart';
 import 'package:bader_user_app/Features/Layout/Presentation/Controller/Layout_Cubit/layout_states.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +26,7 @@ class DrawerItem extends StatelessWidget{
     {
       'title' : 'طلبات العضوية',
       'iconData' : Icons.request_page,
-      'routeName' : 'ask_for_membership_screen'
+      'routeName' : AppStrings.kMembershipRequestsScreen
     },
     {
       'title' : 'تحديث بيانات النادي',
@@ -38,7 +39,9 @@ class DrawerItem extends StatelessWidget{
   @override
   Widget build(BuildContext context){
     LayoutCubit cubit = LayoutCubit.getInstance(context);
+    ClubsCubit clubsCubit = ClubsCubit.getInstance(context);
     if( cubit.userData == null ) cubit.getMyData();
+    if( clubsCubit.dataAboutClubYouLead == null ) clubsCubit.getInfoForClubThatILead(clubID: cubit.userData!.clubIDThatHeLead!);
     return Drawer(
         child: BlocBuilder<LayoutCubit,LayoutStates>(
           buildWhen: (last,current) => current is GetMyDataSuccessState ,

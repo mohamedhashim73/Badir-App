@@ -3,6 +3,7 @@ import 'package:bader_user_app/Features/Layout/Presentation/Screens/profile_scre
 
 import '../../Features/Auth/Presentation/Screens/login_screen.dart';
 import '../../Features/Auth/Presentation/Screens/register_screen.dart';
+import '../../Features/Clubs/Presentation/Screens/display_membership_requests.dart';
 import '../../Features/Clubs/Presentation/Screens/view_clubs.dart';
 import '../../Features/Layout/Presentation/Screens/edit_profile_screen.dart';
 import '../../Features/Layout/Presentation/Screens/layout_screen.dart';
@@ -18,5 +19,6 @@ class AppRoutes{
     AppStrings.kLayoutScreen : (context) => const LayoutScreen(),
     AppStrings.kProfileScreen : (context) => const ProfileScreen(),
     AppStrings.kUpdateClubScreen : (context) => UpdateClubScreen(),
+    AppStrings.kMembershipRequestsScreen : (context) => const MembershipRequestsScreen(),
   };
 }

@@ -1,6 +1,17 @@
 abstract class ClubsStates{}
 
 class ClubsInitialState extends ClubsStates{}
+class GetMembershipRequestLoadingState extends ClubsStates{}
+class AcceptOrRejectMembershipRequestSuccessState extends ClubsStates{}
+class FailedToAcceptOrRejectMembershipRequestState extends ClubsStates{
+  final String message;
+  FailedToAcceptOrRejectMembershipRequestState({required this.message});
+}
+class GetMembershipRequestSuccessState extends ClubsStates{}
+class FailedToGetMembershipRequestsState extends ClubsStates{
+  final String message;
+  FailedToGetMembershipRequestsState({required this.message});
+}
 class ClubUpdatedSuccessState extends ClubsStates{}
 class UpdateClubLoadingState extends ClubsStates{}
 class FailedToUpdateClubState extends ClubsStates{

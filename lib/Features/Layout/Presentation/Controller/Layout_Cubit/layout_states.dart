@@ -9,6 +9,12 @@ class UpdateMyDataSuccessState extends LayoutStates{}
 class UpdateMyDataLoadingState extends LayoutStates{}
 class FailedToUpdateMyDataState extends LayoutStates{}
 
+class SendNotificationSuccessState extends LayoutStates{}
+class FailedSendNotificationState extends LayoutStates{
+  final String message;
+  FailedSendNotificationState({required this.message});
+}
+
 class GetMyDataSuccessState extends LayoutStates{}
 class FailedToGetUserDataState extends LayoutStates{
   final String message;

@@ -19,10 +19,12 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final layoutCubit = LayoutCubit.getInstance(context);
-    final clubsCubit = ClubsCubit.getInstance(context);
+    if( layoutCubit.userData == null ) layoutCubit.getMyData();
+    final clubsCubit = ClubsCubit.getInstance(context)..getInfoForClubThatILead(clubID: layoutCubit.userData!.clubIDThatHeLead!);
     final eventsCubit = EventsCubit.getInstance(context);
     if(clubsCubit.clubs.isEmpty) clubsCubit.getClubsData();
     if(eventsCubit.events.isEmpty) eventsCubit.getEventsData();
+    ClubsCubit.getInstance(context);
     return SafeArea(
       child: Directionality(
         textDirection: TextDirection.rtl,

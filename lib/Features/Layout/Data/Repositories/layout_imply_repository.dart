@@ -1,3 +1,4 @@
+import 'package:bader_user_app/Core/Errors/exceptions.dart';
 import 'package:bader_user_app/Core/Errors/failure.dart';
 import 'package:bader_user_app/Features/Layout/Data/Data_Source/layout_data_source.dart';
 import 'package:bader_user_app/Features/Layout/Domain/Entities/notification_entity.dart';
@@ -5,6 +6,7 @@ import 'package:bader_user_app/Features/Layout/Domain/Entities/user_entity.dart'
 import 'package:bader_user_app/Features/Layout/Domain/Repositories/layout_contract_repo.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
+import '../../../../Core/Constants/enumeration.dart';
 import '../../../Events/Domain/Entities/event_entity.dart';
 
 class LayoutImplyRepository implements LayoutBaseRepository {
@@ -46,9 +48,15 @@ class LayoutImplyRepository implements LayoutBaseRepository {
   }
 
   @override
-  Future<bool> sendANotification({required String receiverID}) {
-    // TODO: implement sendANotification
-    throw UnimplementedError();
+  Future<Either<Failure,Unit>> sendNotification({required String senderID,required String receiverID,required String clubID,required String notifyContent,required NotificationType notifyType}) async {
+    try
+    {
+      await layoutRemoteDataSource.sendNotification(senderID: senderID, receiverID: receiverID, clubID: clubID, notifyContent: notifyContent, notifyType: notifyType);
+      return const Right(unit);
+    }
+    on ServerException catch(e){
+      return Left(ServerFailure(errorMessage: e.exceptionMessage));
+    }
   }
 
 }

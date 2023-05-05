@@ -3,9 +3,11 @@ import 'package:bader_user_app/Features/Layout/Domain/Entities/user_entity.dart'
 import 'package:bader_user_app/Features/Layout/Presentation/Screens/profile_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
+import '../../../../../Core/Constants/enumeration.dart';
 import '../../../Domain/Entities/notification_entity.dart';
 import '../../../Domain/Use Cases/get_my_data_use_case.dart';
 import '../../../Domain/Use Cases/get_notifications_use_case.dart';
+import '../../../Domain/Use Cases/send_notification.dart';
 import '../../../Domain/Use Cases/update_my_data_use_case.dart';
 import '../../Screens/home_screen.dart';
 import '../../Screens/notification_screen.dart';
@@ -84,6 +86,16 @@ class LayoutCubit extends Cubit<LayoutStates> {
       {
         emit(FailedToUpdateMyDataState());
       }
+  }
+
+  Future<void> sendNotification({required String senderID,required String receiverID,required String clubID,required String notifyContent,required NotificationType notifyType}) async {
+    var result = await sl<SendNotificationUseCase>().execute(clubID: clubID,receiverID: receiverID,notifyType: notifyType,notifyContent: notifyContent,senderID: senderID);
+    result.fold(
+            (serverFailure) => emit(FailedSendNotificationState(message: serverFailure.errorMessage)),
+            (unit)
+            {
+              emit(SendNotificationSuccessState());
+            });
   }
 
 }

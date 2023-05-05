@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:jiffy/jiffy.dart';
 import '../../Features/Auth/Presentation/Controller/auth_cubit.dart';
 import '../../Features/Clubs/Presentation/Controller/clubs_cubit.dart';
 import '../../Features/Events/Presentation/Controller/events_cubit.dart';
@@ -10,7 +11,7 @@ class Constants{
     BlocProvider(create: (context) => AuthCubit()),
     BlocProvider(create: (context) => ClubsCubit()),
     BlocProvider(create: (context) => EventsCubit()),
-    BlocProvider(create: (context) => LayoutCubit()),
+    BlocProvider(create: (context) => LayoutCubit()..getMyData()),
   ];
   static String? userID;
   static List<String> colleges = ["كليه حاسبات ومعلومات","كليه هندسه","كليه صيدله","كليه تمريض","كليه طب","كليه تربيه رياضيه"];
@@ -20,7 +21,8 @@ class Constants{
   static String kUsersCollectionName = "Users";
   static String kClubsCollectionName = "Clubs";
   static String kMembershipRequestsCollectionName = "Membership Requests";
+  static String kMembersDataCollectionName = "Members Data";
   static String kEventsCollectionName = "Events";
   static String kReportsCollectionName = "Reports";
-  static String getTimeNow() => DateFormat('dd MMMM yyyy', 'ar').format(DateTime.now());
+  static String getTimeNow() => Jiffy(DateTime.now()).yMMMd;
 }

@@ -113,12 +113,12 @@ Widget _clubItem({required ClubEntity club,required BuildContext context,require
     [
       if( club.image.isNotEmpty )
         Container(
-          height: 80.h,
-          width: 120.w,
+          height: 100.h,
+          width: 200.w,
           decoration: BoxDecoration(
-            image: DecorationImage(image: NetworkImage(club.image)),
+            image: DecorationImage(image: NetworkImage(club.image),fit: BoxFit.cover),
             border: Border.all(color: Colors.black.withOpacity(0.5)),
-            borderRadius: BorderRadius.circular(8)
+            borderRadius: BorderRadius.circular(4)
           ),
         ),
       Text(club.name,style: TextStyle(fontSize: 18.sp,fontWeight: FontWeight.bold),),

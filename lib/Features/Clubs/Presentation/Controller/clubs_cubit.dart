@@ -1,12 +1,17 @@
+import 'package:bader_user_app/Core/Constants/enumeration.dart';
 import 'package:bader_user_app/Core/Utils/service_locators.dart';
 import 'package:bader_user_app/Features/Clubs/Data/Models/club_model.dart';
 import 'package:bader_user_app/Features/Clubs/Domain/Entities/club_entity.dart';
 import 'package:bader_user_app/Features/Clubs/Domain/Use_Cases/get_all_clubs_use_case.dart';
 import 'package:bader_user_app/Features/Clubs/Domain/Use_Cases/upload_image_to_storage_use_case.dart';
+import 'package:bader_user_app/Features/Layout/Presentation/Controller/Layout_Cubit/layout_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../../Core/Constants/constants.dart';
+import '../../Domain/Entities/request_membership_entity.dart';
+import '../../Domain/Use_Cases/accept_or_reject_membership_request_use_case.dart';
+import '../../Domain/Use_Cases/get_all_membership_requests_use_case.dart';
 import '../../Domain/Use_Cases/request_membership_use_case.dart';
 import '../../Domain/Use_Cases/update_club_use_case.dart';
 import 'clubs_states.dart';
@@ -127,6 +132,34 @@ class ClubsCubit extends Cubit<ClubsStates> {
               emit(ClubUpdatedSuccessState());
             }
         ));
+  }
+
+  void acceptOrRejectMembershipRequest({required LayoutCubit layoutCubit,required String requestSenderID,required String clubID,required bool respondStatus,required String clubName}) async {
+    final result = await sl<AcceptOrRejectMembershipRequestUseCase>().execute(clubID: clubID,requestSenderID: requestSenderID,respondStatus: respondStatus);
+    result.fold(
+            (serverFailure){
+              emit(FailedToAcceptOrRejectMembershipRequestState(message: serverFailure.errorMessage));
+            },
+            (unit) async {
+              await layoutCubit.sendNotification(senderID: layoutCubit.userData!.id!, receiverID: requestSenderID, clubID: clubID, notifyContent: respondStatus ? "لقد تم قبول طلب العضوية في $clubName" : "لقد تم رفض طلب العضوية في $clubName", notifyType: respondStatus ? NotificationType.acceptYourMembershipRequest : NotificationType.rejectYourMembershipRequest);
+              emit(AcceptOrRejectMembershipRequestSuccessState());
+            }
+    );
+  }
+
+  List<RequestMembershipEntity> membershipRequests = [];
+  void getMembershipRequests({required String clubID}) async {
+    emit(GetMembershipRequestLoadingState());
+    final result = await sl<GetMembershipRequestsUseCase>().execute(clubID: clubID);
+    result.fold(
+            (serverFailure){
+              emit(FailedToGetMembershipRequestsState(message: serverFailure.errorMessage));
+            },
+            (requests) async {
+              membershipRequests = requests;
+              emit(GetMembershipRequestSuccessState());
+            }
+    );
   }
 
 }
