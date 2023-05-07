@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bader_user_app/Core/Errors/exceptions.dart';
 import 'package:bader_user_app/Core/Errors/failure.dart';
 import 'package:bader_user_app/Features/Layout/Data/Data_Source/layout_data_source.dart';
@@ -53,6 +55,18 @@ class LayoutImplyRepository implements LayoutBaseRepository {
     {
       await layoutRemoteDataSource.sendNotification(senderID: senderID, receiverID: receiverID, clubID: clubID, notifyContent: notifyContent, notifyType: notifyType);
       return const Right(unit);
+    }
+    on ServerException catch(e){
+      return Left(ServerFailure(errorMessage: e.exceptionMessage));
+    }
+  }
+
+  // TODO: Will return Image Url
+  @override
+  Future<Either<Failure,String>> uploadClubImageToStorage({required File imgFile}) async {
+    try
+    {
+      return Right(await layoutRemoteDataSource.uploadImageToStorage(imgFile: imgFile));
     }
     on ServerException catch(e){
       return Left(ServerFailure(errorMessage: e.exceptionMessage));

@@ -12,6 +12,7 @@ class EventModel extends EventEntity{
   Map<String,dynamic> toJson(){
     return {
       'name' : super.name,
+      'description' : super.description,
       'id' : super.id,
       'image' : super.image,
       'forPublic' : super.forPublic,

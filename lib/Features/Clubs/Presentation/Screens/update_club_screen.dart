@@ -84,7 +84,7 @@ class UpdateClubScreen extends StatelessWidget {
                                     ),
                                     child: GestureDetector(
                                         onTap: () => cubit.getClubImage(),
-                                        child: cubit.dataAboutClubYouLead!.image.isEmpty ? Image.file(cubit.clubImage!,fit: BoxFit.cover,) : Image.network(cubit.dataAboutClubYouLead!.image!,fit: BoxFit.cover,)),
+                                        child: cubit.clubImage != null ? Image.file(cubit.clubImage!,fit: BoxFit.cover,) : Image.network(cubit.dataAboutClubYouLead!.image!,fit: BoxFit.cover,)),
                                   )
                                 ],
                               ),

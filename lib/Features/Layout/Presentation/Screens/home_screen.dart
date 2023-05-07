@@ -25,7 +25,7 @@ class HomeScreen extends StatelessWidget {
     final clubsCubit = ClubsCubit.getInstance(context);
     final eventsCubit = EventsCubit.getInstance(context);
     if(clubsCubit.clubs.isEmpty) clubsCubit.getClubsData();
-    if(eventsCubit.events.isEmpty) eventsCubit.getEventsData();
+    if(eventsCubit.allEvents.isEmpty) eventsCubit.getAllEvents();
     if(layoutCubit.userData != null && layoutCubit.userData!.clubIDThatHeLead!.isNotEmpty ) clubsCubit.getInfoForClubThatILead(clubID: layoutCubit.userData!.clubIDThatHeLead!);
     ClubsCubit.getInstance(context);
     return SafeArea(
@@ -134,34 +134,36 @@ class HomeScreen extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 12.h,),
-                BlocBuilder<EventsCubit,EventsStates>(
-                    buildWhen: (previousState,currentState) => currentState is GetEventsDataSuccessState && previousState != currentState,
-                    builder: (context,state) {
-                      return eventsCubit.events.isNotEmpty ?
-                      SizedBox(
-                        width: double.infinity,
-                        height: 120.h,
-                        child: ListView.separated(
-                          separatorBuilder: (context,index) => SizedBox(width: 10.w,),
-                          scrollDirection: Axis.horizontal,
-                          shrinkWrap: true,
-                          itemCount: eventsCubit.events.length,
-                          itemBuilder: (context,index)
-                          {
-                            return LayoutBuilder(
-                              builder: (context,constraints)
-                              {
-                                return _displayEventOverView(context:context,eventEntity: eventsCubit.events[index]);
-                              },
-                            );
-                          },
-                        ),
-                      ) : SizedBox(
-                        height: 50.h,
-                        width: double.infinity,
-                        child: Text("لا يتم اضافة فعاليات بعد",textAlign: TextAlign.center,style: TextStyle(color: Colors.grey,fontSize: 15.5.sp,fontWeight: FontWeight.w400),),
-                      );
-                    }
+                Expanded(
+                  child: BlocBuilder<EventsCubit,EventsStates>(
+                      buildWhen: (previousState,currentState) => currentState is GetEventsDataSuccessState && previousState != currentState,
+                      builder: (context,state) {
+                        return eventsCubit.allEvents.isNotEmpty ?
+                        SizedBox(
+                          width: double.infinity,
+                          height: 200.h,
+                          child: ListView.separated(
+                            separatorBuilder: (context,index) => SizedBox(width: 10.w,),
+                            scrollDirection: Axis.horizontal,
+                            shrinkWrap: true,
+                            itemCount: eventsCubit.allEvents.length,
+                            itemBuilder: (context,index)
+                            {
+                              return LayoutBuilder(
+                                builder: (context,constraints)
+                                {
+                                  return _displayEventOverView(context:context,eventEntity: eventsCubit.allEvents[index]);
+                                },
+                              );
+                            },
+                          ),
+                        ) : SizedBox(
+                          height: 50.h,
+                          width: double.infinity,
+                          child: Text("لا يتم اضافة فعاليات بعد",textAlign: TextAlign.center,style: TextStyle(color: Colors.grey,fontSize: 15.5.sp,fontWeight: FontWeight.w400),),
+                        );
+                      }
+                  ),
                 ),
               ],
             ),
@@ -224,6 +226,7 @@ class HomeScreen extends StatelessWidget {
         // TODO: Open Event Details
       },
       child: Container(
+        width: 150.w,
         padding: EdgeInsets.symmetric(horizontal: 10.w,vertical: 10.h),
         decoration: BoxDecoration(
           color: AppColors.kMainColor,
@@ -235,14 +238,17 @@ class HomeScreen extends StatelessWidget {
           [
             Text("# ${eventEntity.name}",maxLines:2,style: TextStyle(color: AppColors.kYellowColor,fontWeight: FontWeight.w500,fontSize: 15.sp),),
             Expanded(
-              child: Text(eventEntity.description,style: TextStyle(color: AppColors.kWhiteColor,fontWeight: FontWeight.w500,fontSize: 15.sp),),
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 7.h),
+                child: Text(eventEntity.description!,style: TextStyle(color: AppColors.kWhiteColor,overflow:TextOverflow.ellipsis,fontWeight: FontWeight.w500,fontSize: 12.sp),maxLines: 2,),
+              ),
             ),
             SizedBox(width: 4.w,),
             Align(
               alignment: AlignmentDirectional.topEnd,
               child: MaterialButton(
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8)
+                  borderRadius: BorderRadius.circular(4)
                 ),
                 onPressed: ()
                 {

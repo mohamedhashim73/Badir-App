@@ -9,7 +9,7 @@ class GetAllEventsUseCase{
   GetAllEventsUseCase({required this.eventsContractRepository});
 
   Future<Either<Failure, List<EventEntity>>> execute() async {
-    return await eventsContractRepository.getEvents();
+    return await eventsContractRepository.getAllEvents();
   }
 
 }

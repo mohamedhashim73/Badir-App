@@ -1,7 +1,13 @@
+import 'dart:io';
+
 import 'package:bader_user_app/Core/Constants/constants.dart';
 import 'package:bader_user_app/Core/Errors/exceptions.dart';
+import 'package:bader_user_app/Core/Errors/failure.dart';
 import 'package:bader_user_app/Features/Layout/Data/Models/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dartz/dartz.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:path/path.dart';
 import '../../../../Core/Constants/enumeration.dart';
 import '../Models/notification_model.dart';
 
@@ -50,6 +56,19 @@ class LayoutRemoteDataSource {
     on FirebaseException catch(e)
     {
       throw ServerException(exceptionMessage: e.code);
+    }
+  }
+
+  Future<String> uploadImageToStorage({required File imgFile}) async {
+    try
+    {
+      Reference imageRef = FirebaseStorage.instance.ref(basename(imgFile.path));
+      await imageRef.putFile(imgFile);
+      return await imageRef.getDownloadURL();
+    }
+    catch(e)
+    {
+      throw ServerException(exceptionMessage: e.toString());
     }
   }
 

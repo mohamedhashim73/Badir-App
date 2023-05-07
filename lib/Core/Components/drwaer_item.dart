@@ -33,6 +33,11 @@ class DrawerItem extends StatelessWidget{
       'iconData' : Icons.update,
       'routeName' : AppStrings.kUpdateClubScreen
     },
+    {
+      'title' : 'إدارة الفعاليات',
+      'iconData' : Icons.manage_accounts,
+      'routeName' : AppStrings.kCreateEventScreen
+    },
   ];
 
   DrawerItem({super.key});

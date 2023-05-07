@@ -31,12 +31,6 @@ class ClubsImplyRepository implements ClubsContractRepository{
   }
 
   @override
-  Future<bool> addClub({required Map<String, dynamic> toJson}) {
-    // TODO: implement addClub
-    throw UnimplementedError();
-  }
-
-  @override
   Future<bool> deleteClub({required String clubID}) {
     // TODO: implement deleteClub
     throw UnimplementedError();
@@ -66,8 +60,8 @@ class ClubsImplyRepository implements ClubsContractRepository{
       String imageUrl = await remoteClubsDataSource.uploadClubImageToStorage(imgFile: imgFile);
       return Right(imageUrl);
     }
-    on NoNetworkException catch(e){
-      return Left(NoNetworkFailure(errorMessage: e.exceptionMessage));
+    on ServerException catch(e){
+      return Left(ServerFailure(errorMessage: e.exceptionMessage));
     }
   }
 

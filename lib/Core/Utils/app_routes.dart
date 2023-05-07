@@ -1,4 +1,5 @@
 import 'package:bader_user_app/Features/Clubs/Presentation/Screens/update_club_screen.dart';
+import 'package:bader_user_app/Features/Events/Presentation/Screens/create_event_screen.dart';
 import 'package:bader_user_app/Features/Layout/Presentation/Screens/profile_screen.dart';
 
 import '../../Features/Auth/Presentation/Screens/login_screen.dart';
@@ -19,6 +20,7 @@ class AppRoutes{
     AppStrings.kLayoutScreen : (context) => const LayoutScreen(),
     AppStrings.kProfileScreen : (context) => const ProfileScreen(),
     AppStrings.kUpdateClubScreen : (context) => UpdateClubScreen(),
+    AppStrings.kCreateEventScreen : (context) => CreateEventScreen(),
     AppStrings.kMembershipRequestsScreen : (context) => const MembershipRequestsScreen(),
   };
 }

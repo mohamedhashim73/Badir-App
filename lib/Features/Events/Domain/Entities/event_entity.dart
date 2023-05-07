@@ -1,19 +1,19 @@
 import 'package:equatable/equatable.dart';
 
 class EventEntity extends Equatable{
-  final String name;
-  final String id;
-  final String description;
-  final String image;
-  final String startDate;
-  final String endDate;
-  final String time;
-  final bool forPublic;
-  final String location;
-  final String link;
-  final List speakers;
-  final String clubName;
-  final String clubID;
+  final String? name;
+  final String? id;
+  final String? description;
+  final String? image;
+  final String? startDate;
+  final String? endDate;
+  final String? time;
+  final String? forPublic;
+  final String? location;
+  final String? link;
+  final List? speakers;
+  final String? clubName;
+  final String? clubID;
 
   const EventEntity(
       this.name,

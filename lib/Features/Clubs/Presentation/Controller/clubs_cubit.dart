@@ -1,5 +1,5 @@
 import 'package:bader_user_app/Core/Constants/enumeration.dart';
-import 'package:bader_user_app/Core/Utils/service_locators.dart';
+import 'package:bader_user_app/Core/Service%20Locators/service_locators.dart';
 import 'package:bader_user_app/Features/Clubs/Data/Models/club_model.dart';
 import 'package:bader_user_app/Features/Clubs/Domain/Entities/club_entity.dart';
 import 'package:bader_user_app/Features/Clubs/Domain/Use_Cases/get_all_clubs_use_case.dart';
@@ -80,9 +80,16 @@ class ClubsCubit extends Cubit<ClubsStates> {
 
   File? clubImage;
   void getClubImage() async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
-    pickedFile != null ? emit(ChooseClubImageSuccess()) : emit(ChooseClubImageFailure());
-    clubImage = File(pickedFile!.path);
+    XFile? pickedFile = await Constants.getImageFromGallery();
+    if( pickedFile != null )
+      {
+        clubImage = File(pickedFile!.path);
+        emit(ChooseClubImageSuccess());
+      }
+    else
+      {
+        emit(ChooseClubImageFailure());
+      }
   }
 
   Future<String?> uploadClubImageToStorage() async {

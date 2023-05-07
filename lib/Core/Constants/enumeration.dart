@@ -4,3 +4,7 @@ enum NotificationType{
   acceptYourMembershipRequest,
   rejectYourMembershipRequest,
 }
+
+enum EventForPublicOrNot{
+  private,public
+}

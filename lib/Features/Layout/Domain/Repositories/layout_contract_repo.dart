@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bader_user_app/Features/Layout/Domain/Entities/notification_entity.dart';
 import 'package:dartz/dartz.dart';
 import '../../../../Core/Constants/enumeration.dart';
@@ -16,5 +18,8 @@ abstract class LayoutBaseRepository{
   // TODO: Notifications
   Future<Either<Failure,List<NotificationEntity>>> getNotifications();
   Future<Either<Failure,Unit>> sendNotification({required String senderID,required String receiverID,required String clubID,required String notifyContent,required NotificationType notifyType});
+
+  // TODO: Upload Image to Storage
+  Future<Either<Failure,String>> uploadClubImageToStorage({required File imgFile});
 
 }

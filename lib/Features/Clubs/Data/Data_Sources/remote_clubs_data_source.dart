@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:bader_user_app/Core/Errors/exceptions.dart';
 import 'package:bader_user_app/Features/Clubs/Data/Models/member_model.dart';
 import 'package:bader_user_app/Features/Clubs/Domain/Entities/club_entity.dart';
@@ -14,13 +13,14 @@ import '../Models/request_membership_model.dart';
 class RemoteClubsDataSource{
 
   Future<String> uploadClubImageToStorage({required File imgFile}) async {
-    try{
+    try
+    {
       Reference imageRef = FirebaseStorage.instance.ref(basename(imgFile.path));
       await imageRef.putFile(imgFile);
       return imageRef.getDownloadURL();
     }
     catch(e){
-      throw NoNetworkException(exceptionMessage: "Something went wrong, try again later");
+      throw ServerException(exceptionMessage: "Something went wrong, try again later");
     }
   }
 

@@ -1,4 +1,7 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:jiffy/jiffy.dart';
 import '../../Features/Auth/Presentation/Controller/auth_cubit.dart';
@@ -26,4 +29,12 @@ class Constants{
   static String kEventsCollectionName = "Events";
   static String kReportsCollectionName = "Reports";
   static String getTimeNow() => Jiffy(DateTime.now()).yMMMd;
+  static Future<TimeOfDay?> selectTime({required BuildContext context}) async => await showTimePicker(context: context,initialTime: TimeOfDay.now());
+  static Future<DateTime?> selectDate({required BuildContext context}) async => await showDatePicker(
+    context: context,
+    initialDate: DateTime.now(),
+    firstDate: DateTime.now(),
+    lastDate: DateTime.now().add(const Duration(days: 365)),
+  );
+  static Future<XFile?> getImageFromGallery() async => await ImagePicker().pickImage(source: ImageSource.gallery);
 }

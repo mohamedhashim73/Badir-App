@@ -11,7 +11,6 @@ abstract class ClubsContractRepository{
   Future<Either<Failure,List<ClubEntity>>> getClubs();
 
   // TODO: CLUBS -- LEADER ROLE
-  Future<bool> addClub({required Map<String,dynamic> toJson});
   Future<Either<Failure,String>> uploadClubImageToStorage({required File imgFile});
   // Unit replace void role
   Future<Either<Failure,Unit>> updateClubData({required String clubID,required String image,required String name,required int memberNum,required String aboutClub,required ContactMeansForClubModel contactInfo});

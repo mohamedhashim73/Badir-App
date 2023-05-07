@@ -2,7 +2,7 @@ import 'package:bader_user_app/Features/Auth/Data/Repositories/auth_remote_repos
 import 'package:bader_user_app/Features/Auth/Domain/UseCases/login_use_case.dart';
 import 'package:bader_user_app/Features/Auth/Domain/UseCases/register_use_case.dart';
 import 'package:bader_user_app/Core/Constants/constants.dart';
-import 'package:bader_user_app/Core/Utils/service_locators.dart';
+import 'package:bader_user_app/Core/Service%20Locators/service_locators.dart';
 import 'package:bader_user_app/Features/Layout/Data/Models/user_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
