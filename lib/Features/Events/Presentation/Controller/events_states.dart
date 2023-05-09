@@ -1,6 +1,7 @@
 abstract class EventsStates{}
 
 class EventsInitialState extends EventsStates{}
+class GetEventsCreatedByMeSuccessState extends EventsStates{}
 class EventForPublicOrNotSelectedSuccessState extends EventsStates{}
 
 class GetEventsForYourOwnClubSuccessState extends EventsStates{}

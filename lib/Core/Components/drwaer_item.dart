@@ -1,8 +1,8 @@
 import 'package:bader_user_app/Core/Theme/app_colors.dart';
 import 'package:bader_user_app/Core/Utils/app_strings.dart';
 import 'package:bader_user_app/Features/Clubs/Presentation/Controller/clubs_cubit.dart';
-import 'package:bader_user_app/Features/Layout/Presentation/Controller/Layout_Cubit/layout_cubit.dart';
-import 'package:bader_user_app/Features/Layout/Presentation/Controller/Layout_Cubit/layout_states.dart';
+import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_cubit.dart';
+import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -36,7 +36,7 @@ class DrawerItem extends StatelessWidget{
     {
       'title' : 'إدارة الفعاليات',
       'iconData' : Icons.manage_accounts,
-      'routeName' : AppStrings.kCreateEventScreen
+      'routeName' : AppStrings.kManageEventsScreen
     },
   ];
 

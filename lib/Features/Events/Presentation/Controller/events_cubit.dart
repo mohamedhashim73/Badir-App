@@ -1,11 +1,9 @@
 import 'dart:io';
-import 'dart:math';
-
+import 'package:jiffy/jiffy.dart';
 import 'package:bader_user_app/Core/Constants/constants.dart';
 import 'package:bader_user_app/Core/Service%20Locators/service_locators.dart';
-import 'package:bader_user_app/Features/Events/Data/Models/event_model.dart';
 import 'package:bader_user_app/Features/Events/Domain/Use_Cases/add_event_use_case.dart';
-import 'package:bader_user_app/Features/Layout/Presentation/Controller/Layout_Cubit/layout_cubit.dart';
+import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -29,12 +27,45 @@ class EventsCubit extends Cubit<EventsStates> {
               allEvents.clear();
               emit(FailedToGetEventsDataState(message: serverFailure.errorMessage));
             },
-            (eventsData){
+            (eventsData) async {
               allEvents = eventsData;
-              debugPrint("Events Number is : ${eventsData.length}");
+              await getPastAndNewEvents();
+              debugPrint("Past Events Number is : ${pastEvents.length}");
+              debugPrint("New Events Number is : ${newEvents.length}");
               emit(GetEventsDataSuccessState());
             }
     );
+  }
+
+  // TODO: USE IT TO FILTER EVENTS TO NEW AND PAST
+  List<EventEntity> pastEvents = [];
+  List<EventEntity> newEvents = [];
+  List<EventEntity> ownEvents = [];      // Mean that created by me
+  Future<void> getPastAndNewEvents() async {
+    ownEvents.clear();
+    for( int i = 0 ; i < allEvents.length ; i++ )
+    {
+      DateTime eventDate = Jiffy("${allEvents[i].endDate!.trim()} ${allEvents[i].time!.trim()}", "MMMM dd, yyyy h:mm a").dateTime;
+      if (DateTime.now().isAfter(eventDate))
+      {
+        pastEvents.add(allEvents[i]);
+      }
+      else
+      {
+        newEvents.add(allEvents[i]);
+      }
+    }
+  }
+
+  void getEventsCreatedByMe({required String idForClubThatYouLead}) {
+    for( int i = 0 ; i < allEvents.length ; i++ )
+    {
+      if( allEvents[i].clubID == idForClubThatYouLead )
+        {
+          ownEvents.add(allEvents[i]);
+        }
+    }
+    emit(GetEventsCreatedByMeSuccessState());
   }
 
   void createEvent({required LayoutCubit layoutCubit,required EventForPublicOrNot forPublic,required String name,required String description,required String startDate,required String endDate,required String time,required String location,required String link,required String clubID,required String clubName}) async {
@@ -43,7 +74,7 @@ class EventsCubit extends Cubit<EventsStates> {
     String? imageUrl = await layoutCubit.uploadImageToStorage(imgFile: eventImage!);
     if( imageUrl != null )
       {
-        final result = await sl<CreateEventUseCase>().execute(forPublic: forPublic, name: name, description: description, imageUrl: imageUrl!, startDate: startDate, endDate: endDate, time: time, location: location, link: link, clubID: clubID, clubName: clubName);
+        final result = await sl<CreateEventUseCase>().execute(forPublic: forPublic, name: name, description: description, imageUrl: imageUrl, startDate: startDate, endDate: endDate, time: time, location: location, link: link, clubID: clubID, clubName: clubName);
         result.fold(
                 (serverFailure){
               emit(FailedToCreateEventState(message: serverFailure.errorMessage));

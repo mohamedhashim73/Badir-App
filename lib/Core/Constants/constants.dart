@@ -1,13 +1,11 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 import 'package:jiffy/jiffy.dart';
 import '../../Features/Auth/Presentation/Controller/auth_cubit.dart';
 import '../../Features/Clubs/Presentation/Controller/clubs_cubit.dart';
 import '../../Features/Events/Presentation/Controller/events_cubit.dart';
-import '../../Features/Layout/Presentation/Controller/Layout_Cubit/layout_cubit.dart';
+import '../../Features/Layout/Presentation/Controller/layout_cubit.dart';
 
 class Constants{
   static dynamic providers = [

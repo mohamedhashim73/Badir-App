@@ -1,7 +1,7 @@
 import 'package:bader_user_app/Core/Components/button_item.dart';
 import 'package:bader_user_app/Core/Theme/app_colors.dart';
 import 'package:bader_user_app/Features/Clubs/Domain/Entities/request_membership_entity.dart';
-import 'package:bader_user_app/Features/Layout/Presentation/Controller/Layout_Cubit/layout_cubit.dart';
+import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

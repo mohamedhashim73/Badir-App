@@ -2,8 +2,8 @@ import 'package:bader_user_app/Core/Constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../Core/Theme/app_colors.dart';
-import '../Controller/Layout_Cubit/layout_cubit.dart';
-import '../Controller/Layout_Cubit/layout_states.dart';
+import '../Controller/layout_cubit.dart';
+import '../Controller/layout_states.dart';
 
 class LayoutScreen extends StatelessWidget {
   const LayoutScreen({Key? key}) : super(key: key);

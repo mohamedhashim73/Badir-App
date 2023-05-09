@@ -2,7 +2,7 @@ import 'package:bader_user_app/Core/Constants/constants.dart';
 import 'package:bader_user_app/Core/Utils/app_strings.dart';
 import 'package:bader_user_app/Features/Clubs/Domain/Entities/club_entity.dart';
 import 'package:bader_user_app/Features/Events/Presentation/Controller/events_cubit.dart';
-import 'package:bader_user_app/Features/Layout/Presentation/Controller/Layout_Cubit/layout_cubit.dart';
+import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_cubit.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,6 +14,7 @@ import '../../../Clubs/Presentation/Controller/clubs_cubit.dart';
 import '../../../Clubs/Presentation/Controller/clubs_states.dart';
 import '../../../Events/Presentation/Controller/events_states.dart';
 import '../../../Clubs/Presentation/Screens/club_details_screen.dart';
+import '../../../Events/Presentation/Screens/event_details_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -44,7 +45,7 @@ class HomeScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children:
               [
-                _headingText(title: "احصائيات تهمك"),
+                _headingText(title: "احصائيات قد تهمك"),
                 SizedBox(height: 7.h,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -66,7 +67,7 @@ class HomeScreen extends StatelessWidget {
                           builder: (context,event)
                           {
                             int membersNum = event.data != null ? event.data!.data()!['total'] : 0;
-                            return FittedBox(fit:BoxFit.scaleDown,child: Text("$membersNum عضو",style: TextStyle(fontWeight: FontWeight.w500,fontSize: 15.5.sp),));
+                            return FittedBox(fit:BoxFit.scaleDown,child: Text(membersNum > 10 ? "$membersNum عضو" : "$membersNum أعضاء",style: TextStyle(fontWeight: FontWeight.w500,fontSize: 15.5.sp),));
                           },
                         )
                       ],
@@ -127,7 +128,7 @@ class HomeScreen extends StatelessWidget {
                     GestureDetector(
                       onTap: ()
                       {
-
+                        Navigator.pushNamed(context, AppStrings.kPastAndNewEventsScreen);
                       },
                       child: Text("عرض الكل",style: TextStyle(color: AppColors.kYellowColor),),
                     )
@@ -146,13 +147,13 @@ class HomeScreen extends StatelessWidget {
                             separatorBuilder: (context,index) => SizedBox(width: 10.w,),
                             scrollDirection: Axis.horizontal,
                             shrinkWrap: true,
-                            itemCount: eventsCubit.allEvents.length,
+                            itemCount: eventsCubit.newEvents.length,
                             itemBuilder: (context,index)
                             {
                               return LayoutBuilder(
                                 builder: (context,constraints)
                                 {
-                                  return _displayEventOverView(context:context,eventEntity: eventsCubit.allEvents[index]);
+                                  return _displayEventOverView(context:context,eventEntity: eventsCubit.newEvents[index]);
                                 },
                               );
                             },
@@ -196,7 +197,8 @@ class HomeScreen extends StatelessWidget {
         Navigator.push(context, MaterialPageRoute(builder: (context) => ViewClubDetailsScreen(club: clubEntity)));
       },
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10.w),
+        width: 200.w,
+        padding: EdgeInsets.symmetric(horizontal: 12.w),
         decoration: BoxDecoration(
             color: AppColors.kMainColor,
             borderRadius: BorderRadius.circular(4.w)
@@ -206,8 +208,8 @@ class HomeScreen extends StatelessWidget {
           mainAxisSize: MainAxisSize.max,
           children:
           [
-            FittedBox(fit:BoxFit.scaleDown,child: Text(clubEntity.name,style: TextStyle(color: AppColors.kYellowColor,fontWeight: FontWeight.w500,fontSize: 15.sp),)),
-            SizedBox(width: 10.w,),
+            Expanded(child: Text(clubEntity.name,maxLines:1,style: TextStyle(overflow:TextOverflow.ellipsis,color: AppColors.kYellowColor,fontWeight: FontWeight.w500,fontSize: 16.sp),)),
+            SizedBox(width: 7.5.w,),
             CircleAvatar(
               radius: 28.w,
               backgroundImage: clubEntity.image.isNotEmpty ? NetworkImage(clubEntity.image) : null,
@@ -223,10 +225,11 @@ class HomeScreen extends StatelessWidget {
     return GestureDetector(
       onTap: ()
       {
-        // TODO: Open Event Details
+        // TODO: pass eventDateExpired : false as Only New Events Display on This Screen
+        Navigator.push(context, MaterialPageRoute(builder: (context) => EventDetailsScreen(event: eventEntity,eventDateExpired: false)));
       },
       child: Container(
-        width: 150.w,
+        width: 160.w,
         padding: EdgeInsets.symmetric(horizontal: 10.w,vertical: 10.h),
         decoration: BoxDecoration(
           color: AppColors.kMainColor,

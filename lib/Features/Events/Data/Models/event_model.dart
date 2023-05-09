@@ -14,6 +14,7 @@ class EventModel extends EventEntity{
       'name' : super.name,
       'description' : super.description,
       'id' : super.id,
+      'link' : super.link,
       'image' : super.image,
       'forPublic' : super.forPublic,
       'startDate' : super.startDate,

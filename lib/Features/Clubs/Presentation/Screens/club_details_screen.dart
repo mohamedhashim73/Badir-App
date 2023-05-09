@@ -20,19 +20,14 @@ class ViewClubDetailsScreen extends StatelessWidget {
               children:
               [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children:
                   [
-                    Text(club.name,style: TextStyle(color: AppColors.kYellowColor,fontWeight: FontWeight.bold,fontSize: 20.sp),),
+                    Expanded(child: Text(club.name,style: TextStyle(color: AppColors.kYellowColor,fontWeight: FontWeight.bold,fontSize: 18.5.sp),)),
+                    SizedBox(width: 10.w,),
                     if( club.image.isNotEmpty )
-                      Container(
-                        height: 80.h,
-                        width: 120.w,
-                        decoration: BoxDecoration(
-                            image: DecorationImage(image: NetworkImage(club.image),fit: BoxFit.cover),
-                            border: Border.all(color: Colors.black.withOpacity(0.5)),
-                            borderRadius: BorderRadius.circular(2.5)
-                        ),
+                      CircleAvatar(
+                        radius: 50.h,
+                        backgroundImage: NetworkImage(club.image),
                       ),
                   ],
                 ),

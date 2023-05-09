@@ -5,7 +5,7 @@ import 'package:bader_user_app/Features/Clubs/Domain/Entities/club_entity.dart';
 import 'package:bader_user_app/Features/Layout/Domain/Entities/user_entity.dart';
 import 'package:bader_user_app/Features/Clubs/Presentation/Components/alert_dialog_for_ask_membership.dart';
 import 'package:bader_user_app/Features/Clubs/Presentation/Controller/clubs_cubit.dart';
-import 'package:bader_user_app/Features/Layout/Presentation/Controller/Layout_Cubit/layout_cubit.dart';
+import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_cubit.dart';
 import 'package:bader_user_app/Features/Clubs/Presentation/Screens/club_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
