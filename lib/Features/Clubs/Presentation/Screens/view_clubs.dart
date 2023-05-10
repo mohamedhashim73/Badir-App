@@ -2,7 +2,6 @@ import 'package:bader_user_app/Core/Components/button_item.dart';
 import 'package:bader_user_app/Core/Components/snackBar_item.dart';
 import 'package:bader_user_app/Core/Theme/app_colors.dart';
 import 'package:bader_user_app/Features/Clubs/Domain/Entities/club_entity.dart';
-import 'package:bader_user_app/Features/Layout/Domain/Entities/user_entity.dart';
 import 'package:bader_user_app/Features/Clubs/Presentation/Components/alert_dialog_for_ask_membership.dart';
 import 'package:bader_user_app/Features/Clubs/Presentation/Controller/clubs_cubit.dart';
 import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_cubit.dart';
@@ -10,7 +9,6 @@ import 'package:bader_user_app/Features/Clubs/Presentation/Screens/club_details_
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import '../Controller/clubs_states.dart';
 
 class ViewClubsScreen extends StatelessWidget {
@@ -111,17 +109,17 @@ Widget _clubItem({required ClubEntity club,required BuildContext context,require
     crossAxisAlignment: CrossAxisAlignment.center,
     children:
     [
-      if( club.image.isNotEmpty )
+      if( club.image != null )
         Container(
           height: 100.h,
           width: 200.w,
           decoration: BoxDecoration(
-            image: DecorationImage(image: NetworkImage(club.image),fit: BoxFit.cover),
+            image: DecorationImage(image: NetworkImage(club.image!),fit: BoxFit.cover),
             border: Border.all(color: Colors.black.withOpacity(0.5)),
             borderRadius: BorderRadius.circular(4)
           ),
         ),
-      Text(club.name,style: TextStyle(fontSize: 18.sp,fontWeight: FontWeight.bold),),
+      Text(club.name!,style: TextStyle(fontSize: 18.sp,fontWeight: FontWeight.bold),),
       SizedBox(height: 7.h,),
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,

@@ -88,7 +88,7 @@ class ProfileScreen extends StatelessWidget {
                             ),
                             SizedBox(height: 15.h),
                             // TODO: This Will be show if he is a member on any club
-                            if( cubit.userData!.committeeName!.isNotEmpty )
+                            if( cubit.userData!.committeeName != null )
                               Container(
                                 padding: EdgeInsets.symmetric(vertical: 12.h,horizontal: 15.w),
                                 decoration: BoxDecoration(

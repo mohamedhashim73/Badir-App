@@ -48,7 +48,7 @@ class CreateEventScreen extends StatelessWidget {
                   _linkController.clear();
                   _locationController.clear();
                   cubit.eventImage = null;
-                  cubit.getEventsCreatedByMe(idForClubThatYouLead: layoutCubit.userData!.clubIDThatHeLead!);   // TODO: TO UPDATE MY EVENTS
+                  cubit.getEventsCreatedByMe(idForClubThatYouLead: layoutCubit.userData!.idForClubLead!);   // TODO: TO UPDATE MY EVENTS
                   Navigator.pushReplacementNamed(context, AppStrings.kLayoutScreen);
                 }
                 if( state is FailedToCreateEventState )
@@ -134,7 +134,7 @@ class CreateEventScreen extends StatelessWidget {
                         }
                         else if( cubit.eventImage != null && _timeController.text.isNotEmpty &&_nameController.text.isNotEmpty &&_descriptionController.text.isNotEmpty &&_endDateController.text.isNotEmpty &&_startDateController.text.isNotEmpty &&_linkController.text.isNotEmpty &&_locationController.text.isNotEmpty)
                         {
-                          cubit.createEvent(layoutCubit: layoutCubit, forPublic: cubit.eventForPublic, name: _nameController.text, description: _descriptionController.text, startDate: _startDateController.text, endDate: _endDateController.text, time: _timeController.text, location: _locationController.text, link: _linkController.text, clubID: clubsCubit.dataAboutClubYouLead!.id.toString(), clubName: clubsCubit.dataAboutClubYouLead!.name);
+                          cubit.createEvent(layoutCubit: layoutCubit, forPublic: cubit.eventForPublic, name: _nameController.text, description: _descriptionController.text, startDate: _startDateController.text, endDate: _endDateController.text, time: _timeController.text, location: _locationController.text, link: _linkController.text, clubID: clubsCubit.dataAboutClubYouLead!.id.toString(), clubName: clubsCubit.dataAboutClubYouLead!.name!);
                         }
                         else
                         {

@@ -24,10 +24,9 @@ class HomeScreen extends StatelessWidget {
     final layoutCubit = LayoutCubit.getInstance(context);
     if( layoutCubit.userData == null ) layoutCubit.getMyData();
     final clubsCubit = ClubsCubit.getInstance(context);
+    if( clubsCubit.clubs.isEmpty ) clubsCubit.getClubsData();
     final eventsCubit = EventsCubit.getInstance(context);
-    if(clubsCubit.clubs.isEmpty) clubsCubit.getClubsData();
-    if(eventsCubit.allEvents.isEmpty) eventsCubit.getAllEvents();
-    if(layoutCubit.userData != null && layoutCubit.userData!.clubIDThatHeLead!.isNotEmpty ) clubsCubit.getInfoForClubThatILead(clubID: layoutCubit.userData!.clubIDThatHeLead!);
+    if( eventsCubit.allEvents.isEmpty ) eventsCubit.getAllEvents();
     ClubsCubit.getInstance(context);
     return SafeArea(
       child: Directionality(
@@ -41,53 +40,65 @@ class HomeScreen extends StatelessWidget {
           ),
           body: Padding(
             padding: EdgeInsets.symmetric(horizontal: 12.w,vertical: 7.5.h),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: ListView(
+              shrinkWrap: true,
               children:
               [
                 _headingText(title: "احصائيات قد تهمك"),
                 SizedBox(height: 7.h,),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children:
                   [
-                    BlocBuilder<ClubsCubit,ClubsStates>(
+                    Expanded(
+                      child: BlocBuilder<ClubsCubit,ClubsStates>(
                         buildWhen: (previousState,currentState) => currentState is GetClubsDataSuccessState && previousState != currentState,
                         builder: (context,state) =>  _staticsDataItem(imagePath: "assets/images/clubs_num_icon.png", title: clubsCubit.clubs.length <= 10 ? "${clubsCubit.clubs.length} أندية" : "${clubsCubit.clubs.length} نادي"),
+                      ),
                     ),
-                    _staticsDataItem(imagePath: "assets/images/clock_icon.png", title: "0 ساعة"),
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children:
-                      [
-                        Image.asset("assets/images/members_num_icon.png",height: 70.h,width: 70.w,),
-                        SizedBox(height: 2.5.h,),
-                        StreamBuilder(
-                          stream: FirebaseFirestore.instance.collection(Constants.kMembersNumberCollectionName).doc('Number').snapshots(),
-                          builder: (context,event)
-                          {
-                            int membersNum = event.data != null ? event.data!.data()!['total'] : 0;
-                            return FittedBox(fit:BoxFit.scaleDown,child: Text(membersNum > 10 ? "$membersNum عضو" : "$membersNum أعضاء",style: TextStyle(fontWeight: FontWeight.w500,fontSize: 15.5.sp),));
-                          },
-                        )
-                      ],
+                    Expanded(child: _staticsDataItem(imagePath: "assets/images/clock_icon.png", title: "0 ساعة")),
+                    Expanded(
+                      child: Column(
+                        children:
+                        [
+                          Image.asset("assets/images/members_num_icon.png",height: 70.h,width: 70.w,),
+                          SizedBox(height: 2.5.h,),
+                          StreamBuilder(
+                            stream: FirebaseFirestore.instance.collection(Constants.kMembersNumberCollectionName).doc('Number').snapshots(),
+                            builder: (context,event)
+                            {
+                              if( event.hasData )
+                              {
+                                int membersNum = event.data!.data() != null ? event.data!.data()!['total'] : 0;
+                                return FittedBox(fit:BoxFit.scaleDown,child: Text(membersNum > 10 ? "$membersNum عضو" : "$membersNum أعضاء",style: TextStyle(fontWeight: FontWeight.w500,fontSize: 15.5.sp),));
+                              }
+                              else
+                              {
+                                return FittedBox(fit:BoxFit.scaleDown,child: Text("لا يوجد أعضاء",style: TextStyle(fontWeight: FontWeight.w500,fontSize: 15.5.sp),));
+                              }
+                            },
+                          )
+                        ],
+                      ),
                     )
                   ],
                 ),
                 SizedBox(height: 12.h,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children:
-                  [
-                    _headingText(title: "الأندية الطلابية"),
-                    GestureDetector(
-                      onTap: ()
-                      {
-                        Navigator.pushNamed(context, AppStrings.kViewClubsScreen);
-                      },
-                      child: Text("عرض الكل",style: TextStyle(color: AppColors.kYellowColor),),
-                    )
-                  ],
+                SizedBox(
+                  width: double.infinity,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children:
+                    [
+                      _headingText(title: "الأندية الطلابية"),
+                      GestureDetector(
+                        onTap: ()
+                        {
+                          Navigator.pushNamed(context, AppStrings.kViewClubsScreen);
+                        },
+                        child: Text("عرض الكل",style: TextStyle(color: AppColors.kYellowColor),),
+                      )
+                    ],
+                  ),
                 ),
                 SizedBox(height: 7.h,),
                 BlocBuilder<ClubsCubit,ClubsStates>(
@@ -120,51 +131,52 @@ class HomeScreen extends StatelessWidget {
                   }
                 ),
                 SizedBox(height: 12.h,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children:
-                  [
-                    _headingText(title: "الفعاليات القادمة"),
-                    GestureDetector(
-                      onTap: ()
-                      {
-                        Navigator.pushNamed(context, AppStrings.kPastAndNewEventsScreen);
-                      },
-                      child: Text("عرض الكل",style: TextStyle(color: AppColors.kYellowColor),),
-                    )
-                  ],
+                SizedBox(
+                  width: double.infinity,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children:
+                    [
+                      _headingText(title: "الفعاليات القادمة"),
+                      GestureDetector(
+                        onTap: ()
+                        {
+                          Navigator.pushNamed(context, AppStrings.kPastAndNewEventsScreen);
+                        },
+                        child: Text("عرض الكل",style: TextStyle(color: AppColors.kYellowColor),),
+                      )
+                    ],
+                  ),
                 ),
                 SizedBox(height: 12.h,),
-                Expanded(
-                  child: BlocBuilder<EventsCubit,EventsStates>(
-                      buildWhen: (previousState,currentState) => currentState is GetEventsDataSuccessState && previousState != currentState,
-                      builder: (context,state) {
-                        return eventsCubit.allEvents.isNotEmpty ?
-                        SizedBox(
-                          width: double.infinity,
-                          height: 200.h,
-                          child: ListView.separated(
-                            separatorBuilder: (context,index) => SizedBox(width: 10.w,),
-                            scrollDirection: Axis.horizontal,
-                            shrinkWrap: true,
-                            itemCount: eventsCubit.newEvents.length,
-                            itemBuilder: (context,index)
-                            {
-                              return LayoutBuilder(
-                                builder: (context,constraints)
-                                {
-                                  return _displayEventOverView(context:context,eventEntity: eventsCubit.newEvents[index]);
-                                },
-                              );
-                            },
-                          ),
-                        ) : SizedBox(
-                          height: 50.h,
-                          width: double.infinity,
-                          child: Text("لا يتم اضافة فعاليات بعد",textAlign: TextAlign.center,style: TextStyle(color: Colors.grey,fontSize: 15.5.sp,fontWeight: FontWeight.w400),),
-                        );
-                      }
-                  ),
+                BlocBuilder<EventsCubit,EventsStates>(
+                    buildWhen: (previousState,currentState) => currentState is GetEventsDataSuccessState && previousState != currentState,
+                    builder: (context,state) {
+                      return eventsCubit.allEvents.isNotEmpty ?
+                      SizedBox(
+                        width: double.infinity,
+                        height: 200.h,
+                        child: ListView.separated(
+                          separatorBuilder: (context,index) => SizedBox(width: 10.w,),
+                          scrollDirection: Axis.horizontal,
+                          shrinkWrap: true,
+                          itemCount: eventsCubit.newEvents.length,
+                          itemBuilder: (context,index)
+                          {
+                            return LayoutBuilder(
+                              builder: (context,constraints)
+                              {
+                                return _displayEventOverView(context:context,eventEntity: eventsCubit.newEvents[index]);
+                              },
+                            );
+                          },
+                        ),
+                      ) : SizedBox(
+                        height: 50.h,
+                        width: double.infinity,
+                        child: Text("لا يتم اضافة فعاليات بعد",textAlign: TextAlign.center,style: TextStyle(color: Colors.grey,fontSize: 15.5.sp,fontWeight: FontWeight.w400),),
+                      );
+                    }
                 ),
               ],
             ),
@@ -208,12 +220,12 @@ class HomeScreen extends StatelessWidget {
           mainAxisSize: MainAxisSize.max,
           children:
           [
-            Expanded(child: Text(clubEntity.name,maxLines:1,style: TextStyle(overflow:TextOverflow.ellipsis,color: AppColors.kYellowColor,fontWeight: FontWeight.w500,fontSize: 16.sp),)),
+            Expanded(child: Text(clubEntity.name!,maxLines:1,style: TextStyle(overflow:TextOverflow.ellipsis,color: AppColors.kYellowColor,fontWeight: FontWeight.w500,fontSize: 16.sp),)),
             SizedBox(width: 7.5.w,),
             CircleAvatar(
               radius: 28.w,
-              backgroundImage: clubEntity.image.isNotEmpty ? NetworkImage(clubEntity.image) : null,
-              backgroundColor: clubEntity.image.isNotEmpty ? null : Colors.grey,
+              backgroundImage: clubEntity.image != null ? NetworkImage(clubEntity.image!) : null,
+              backgroundColor: clubEntity.image != null ? null : Colors.grey,
             )
           ],
         ),

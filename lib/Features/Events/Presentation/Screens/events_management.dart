@@ -14,7 +14,7 @@ class EventsManagementScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String idForClubThatYouLead = LayoutCubit.getInstance(context).userData!.clubIDThatHeLead!;
+    String idForClubThatYouLead = LayoutCubit.getInstance(context).userData!.idForClubLead!;
     final eventCubit = EventsCubit.getInstance(context);
     if( eventCubit.ownEvents.isEmpty ) eventCubit.getEventsCreatedByMe(idForClubThatYouLead: idForClubThatYouLead);
     return Directionality(

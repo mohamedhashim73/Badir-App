@@ -22,12 +22,12 @@ class ViewClubDetailsScreen extends StatelessWidget {
                 Row(
                   children:
                   [
-                    Expanded(child: Text(club.name,style: TextStyle(color: AppColors.kYellowColor,fontWeight: FontWeight.bold,fontSize: 18.5.sp),)),
+                    Expanded(child: Text(club.name!,style: TextStyle(color: AppColors.kYellowColor,fontWeight: FontWeight.bold,fontSize: 18.5.sp),)),
                     SizedBox(width: 10.w,),
-                    if( club.image.isNotEmpty )
+                    if( club.image != null )
                       CircleAvatar(
                         radius: 50.h,
-                        backgroundImage: NetworkImage(club.image),
+                        backgroundImage: NetworkImage(club.image!),
                       ),
                   ],
                 ),
@@ -46,13 +46,13 @@ class ViewClubDetailsScreen extends StatelessWidget {
                 SizedBox(height: 10.h,),
                 Container(
                   width: double.infinity,
-                  alignment: club.description.isEmpty ? AlignmentDirectional.center : AlignmentDirectional.topStart,
-                  padding: EdgeInsets.symmetric(vertical: club.description.isNotEmpty? 7.5.h : 20.h,horizontal: 7.5.w),
+                  alignment: club.description != null ? AlignmentDirectional.center : AlignmentDirectional.topStart,
+                  padding: EdgeInsets.symmetric(vertical: club.description != null ? 7.5.h : 20.h,horizontal: 7.5.w),
                   decoration: BoxDecoration(
                       border: Border.all(color: Colors.black.withOpacity(0.5)),
                       borderRadius: BorderRadius.circular(4)
                   ),
-                  child: Text(club.description.isNotEmpty ? club.description : "لم يتم اضافة وصف للنادي حتي الآن",style: TextStyle(fontSize: 14.5.sp,fontWeight: FontWeight.w600),),
+                  child: Text(club.description != null ? club.description! : "لم يتم اضافة وصف للنادي حتي الآن",style: TextStyle(fontSize: 14.5.sp,fontWeight: FontWeight.w600),),
                 ),
               ],
             ),

@@ -2,17 +2,17 @@ import 'package:bader_user_app/Features/Clubs/Data/Models/club_model.dart';
 import 'package:equatable/equatable.dart';
 
 class ClubEntity extends Equatable{
-  final String name;
-  final int id;
-  final String description;
-  final String image;
-  final String leaderEmail;
-  final String leaderID;
-  final String leaderName;
-  final String college;
-  final List committees;
-  final int memberNum;
-  final ContactMeansForClubModel contactAccounts;
+  final String? name;
+  final int? id;
+  final String? description;
+  final String? image;
+  final String? leaderEmail;
+  final String? leaderID;
+  final String? leaderName;
+  final String? college;
+  final List? committees;
+  final int? memberNum;
+  final ContactMeansForClubModel? contactAccounts;
 
   const ClubEntity(
       this.name,

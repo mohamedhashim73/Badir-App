@@ -68,8 +68,11 @@ class ClubsCubit extends Cubit<ClubsStates> {
 
   List<ClubEntity> filteredClubsData = [];
   void searchAboutClub({required String input}){
-    filteredClubsData = clubs.where((element) => element.name.toLowerCase().contains(input.toLowerCase())).toList();
-    emit(GetFilteredClubsSuccessStatus());
+    if( clubs.isNotEmpty )
+      {
+        filteredClubsData = clubs.where((element) => element.name!.toLowerCase().contains(input.toLowerCase())).toList();
+        emit(GetFilteredClubsSuccessStatus());
+      }
   }
 
   ClubEntity? dataAboutClubYouLead;

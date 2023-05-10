@@ -46,7 +46,7 @@ class DrawerItem extends StatelessWidget{
     LayoutCubit cubit = LayoutCubit.getInstance(context);
     ClubsCubit clubsCubit = ClubsCubit.getInstance(context);
     if( cubit.userData == null ) cubit.getMyData();
-    if( clubsCubit.dataAboutClubYouLead == null && cubit.userData!.clubIDThatHeLead!.isNotEmpty ) clubsCubit.getInfoForClubThatILead(clubID: cubit.userData!.clubIDThatHeLead!);
+    if( cubit.userData!.idForClubLead != null ) clubsCubit.getInfoForClubThatILead(clubID: cubit.userData!.idForClubLead!);
     return Drawer(
         child: BlocBuilder<LayoutCubit,LayoutStates>(
           buildWhen: (last,current) => current is GetMyDataSuccessState ,
@@ -71,7 +71,7 @@ class DrawerItem extends StatelessWidget{
                 if( cubit.userData != null )
                 Expanded(
                   child: ListView.builder(
-                      itemCount: cubit.userData!.clubIDThatHeLead!.isNotEmpty && cubit.userData!.clubIDThatHeLead != null ? drawerData.length : 3,
+                      itemCount: cubit.userData!.idForClubLead != null ? drawerData.length : 3,
                       itemBuilder: (context,index){
                         return ListTile(
                           onTap: ()

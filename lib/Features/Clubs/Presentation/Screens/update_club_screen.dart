@@ -22,14 +22,14 @@ class UpdateClubScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String clubID = LayoutCubit.getInstance(context).userData!.clubIDThatHeLead!;
+    String clubID = LayoutCubit.getInstance(context).userData!.idForClubLead!;
     final cubit = ClubsCubit.getInstance(context)..getInfoForClubThatILead(clubID: clubID);
-    _nameController.text = cubit.dataAboutClubYouLead!.name;
-    _collegeController.text = cubit.dataAboutClubYouLead!.college;
-    _aboutClubController.text = cubit.dataAboutClubYouLead!.description;
-    _membersNumController.text = cubit.dataAboutClubYouLead!.memberNum.toString();
-    _phoneController.text = cubit.dataAboutClubYouLead!.contactAccounts.phone != null ? cubit.dataAboutClubYouLead!.contactAccounts.phone.toString() : '';
-    _twitterController.text = cubit.dataAboutClubYouLead!.contactAccounts.twitter != null ? cubit.dataAboutClubYouLead!.contactAccounts.twitter.toString() : '';
+    _nameController.text = cubit.dataAboutClubYouLead!.name!;
+    _collegeController.text = cubit.dataAboutClubYouLead!.college!;
+    _aboutClubController.text = cubit.dataAboutClubYouLead!.description ?? "";
+    _membersNumController.text = cubit.dataAboutClubYouLead!.memberNum != null ? cubit.dataAboutClubYouLead!.memberNum.toString() : "";
+    _phoneController.text = cubit.dataAboutClubYouLead!.contactAccounts != null ? cubit.dataAboutClubYouLead!.contactAccounts!.phone.toString() : '';
+    _twitterController.text = cubit.dataAboutClubYouLead!.contactAccounts != null ? cubit.dataAboutClubYouLead!.contactAccounts!.twitter.toString() : '';
     return SafeArea(
       child: Directionality(
         textDirection: TextDirection.rtl,
@@ -68,7 +68,7 @@ class UpdateClubScreen extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              if( cubit.clubImage != null || cubit.dataAboutClubYouLead!.image.isNotEmpty )
+                              if( cubit.clubImage != null || cubit.dataAboutClubYouLead!.image != null )
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children:
@@ -88,7 +88,7 @@ class UpdateClubScreen extends StatelessWidget {
                                   )
                                 ],
                               ),
-                              if( cubit.clubImage == null && cubit.dataAboutClubYouLead!.image.isEmpty )
+                              if( cubit.clubImage == null && cubit.dataAboutClubYouLead!.image == null )
                               OutlinedButton(
                                 onPressed : () => cubit.getClubImage(),
                                 child: Padding(
@@ -126,7 +126,7 @@ class UpdateClubScreen extends StatelessWidget {
                         width: double.infinity,
                         onTap: ()
                         {
-                          if( cubit.clubImage == null && cubit.dataAboutClubYouLead!.image.isEmpty )
+                          if( cubit.clubImage == null && cubit.dataAboutClubYouLead!.image != null )
                             {
                               showSnackBar(context: context, message: "برجاء اختيار صورة",backgroundColor: AppColors.kRedColor);
                             }
@@ -136,7 +136,7 @@ class UpdateClubScreen extends StatelessWidget {
                           }
                           else
                           {
-                            cubit.updateClubWithoutImage(clubID: clubID, imgUrl: cubit.dataAboutClubYouLead!.image, name: _nameController.text, memberNum: int.parse(_membersNumController.text), aboutClub: _aboutClubController.text ,phone: _phoneController.text, twitter: _twitterController.text);
+                            cubit.updateClubWithoutImage(clubID: clubID, imgUrl: cubit.dataAboutClubYouLead!.image!, name: _nameController.text, memberNum: int.parse(_membersNumController.text), aboutClub: _aboutClubController.text ,phone: _phoneController.text, twitter: _twitterController.text);
                           }
                         },
                         title: state is UpdateClubLoadingState ? "جاري التعديل" : "حفظ التعديلات",

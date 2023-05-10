@@ -6,7 +6,7 @@ class ClubModel extends ClubEntity{
 
   factory ClubModel.fromJson({required json})
   {
-    return ClubModel(json['name'], json['id'], json['description'], json['image'], json['leaderEmail'], json['leaderID'], json['leaderName'], json['college'], json['committees'], json['memberNum'], ContactMeansForClubModel.fromJson(json: json['contactAccounts']));
+    return ClubModel(json['name'], json['id'], json['description'], json['image'], json['leaderEmail'], json['leaderID'], json['leaderName'], json['college'], json['committees'], json['memberNum'], json['ContactMeansForClubModel'] != null ? ContactMeansForClubModel.fromJson(json: json['contactAccounts']) : null);
   }
 
   Map<String,dynamic> toJson(){
@@ -21,7 +21,7 @@ class ClubModel extends ClubEntity{
       'leaderName' : super.leaderName,
       'committees' : super.committees,
       'memberNum' : super.memberNum,
-      'contactAccounts' : super.contactAccounts.toJson(),
+      'contactAccounts' : super.contactAccounts != null ? super.contactAccounts!.toJson() : null,
     };
   }
 
