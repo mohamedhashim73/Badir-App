@@ -23,6 +23,17 @@ class RemoteEventsDataSource{
     }
   }
 
+  Future<Unit> deleteEvent({required String eventID}) async {
+    try
+    {
+      await FirebaseFirestore.instance.collection(Constants.kEventsCollectionName).doc(eventID).delete();
+      return unit;
+    }
+    on FirebaseException catch(e){
+      throw ServerException(exceptionMessage: e.code);
+    }
+  }
+
   // TODO: All Events throw App not to specific Club
   Future<List<EventModel>> getAllEvents() async {
     try

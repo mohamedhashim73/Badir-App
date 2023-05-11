@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:bader_user_app/Features/Events/Domain/Use_Cases/delete_event_use_case.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:bader_user_app/Core/Constants/constants.dart';
 import 'package:bader_user_app/Core/Service%20Locators/service_locators.dart';
@@ -17,7 +18,10 @@ class EventsCubit extends Cubit<EventsStates> {
 
   static EventsCubit getInstance(BuildContext context) => BlocProvider.of(context);
 
-  // TODO: Get Notifications
+  // TODO: USE IT TO FILTER EVENTS TO NEW AND PAST
+  List<EventEntity> pastEvents = [];
+  List<EventEntity> newEvents = [];
+  List<EventEntity> ownEvents = [];      // TODO: Mean that created by me | Related Club That I lead
   List<EventEntity> allEvents = [];
   Future<void> getAllEvents() async {
     emit(GetEventsLoadingState());
@@ -33,14 +37,10 @@ class EventsCubit extends Cubit<EventsStates> {
               debugPrint("Past Events Number is : ${pastEvents.length}");
               debugPrint("New Events Number is : ${newEvents.length}");
               emit(GetEventsDataSuccessState());
-            }
+        }
     );
   }
 
-  // TODO: USE IT TO FILTER EVENTS TO NEW AND PAST
-  List<EventEntity> pastEvents = [];
-  List<EventEntity> newEvents = [];
-  List<EventEntity> ownEvents = [];      // Mean that created by me
   Future<void> getPastAndNewEvents() async {
     ownEvents.clear();
     for( int i = 0 ; i < allEvents.length ; i++ )
@@ -57,7 +57,7 @@ class EventsCubit extends Cubit<EventsStates> {
     }
   }
 
-  void getEventsCreatedByMe({required String idForClubThatYouLead}) {
+  Future<void> getEventsCreatedByMe({required String idForClubThatYouLead}) async {
     for( int i = 0 ; i < allEvents.length ; i++ )
     {
       if( allEvents[i].clubID == idForClubThatYouLead )
@@ -115,5 +115,21 @@ class EventsCubit extends Cubit<EventsStates> {
   void chooseEventForPublicOrNot({required EventForPublicOrNot value}) {
     eventForPublic = value;
     emit(EventForPublicOrNotSelectedSuccessState());
+  }
+
+  void deleteEvent({required String eventID,required String idForClubILead}) async {
+    emit(DeleteEventLoadingState());
+    final result = await sl<DeleteEventUseCase>().execute(eventID: eventID);
+    result.fold(
+            (serverFailure){
+                emit(FailedToDeleteEventState(message: serverFailure.errorMessage));
+            },
+            (unit) async
+            {
+              await getEventsCreatedByMe(idForClubThatYouLead: idForClubILead);
+              await getAllEvents();    // TODO: as it updated
+              emit(DeleteEventSuccessState());
+            }
+    );
   }
 }

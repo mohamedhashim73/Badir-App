@@ -5,18 +5,21 @@ import 'package:bader_user_app/Features/Events/Presentation/Controller/events_cu
 import 'package:bader_user_app/Features/Events/Presentation/Controller/events_states.dart';
 import 'package:bader_user_app/Features/Events/Presentation/Screens/event_details_screen.dart';
 import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_cubit.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jiffy/jiffy.dart';
+import '../../../../Core/Components/alert_dialog_for_loading_item.dart';
+
 class EventsManagementScreen extends StatelessWidget {
   const EventsManagementScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    String idForClubThatYouLead = LayoutCubit.getInstance(context).userData!.idForClubLead!;
+    String idForClubILead = LayoutCubit.getInstance(context).userData!.idForClubLead!;
     final eventCubit = EventsCubit.getInstance(context);
-    if( eventCubit.ownEvents.isEmpty ) eventCubit.getEventsCreatedByMe(idForClubThatYouLead: idForClubThatYouLead);
+    if( eventCubit.ownEvents.isEmpty ) eventCubit.getEventsCreatedByMe(idForClubThatYouLead: idForClubILead);
     return Directionality(
       textDirection: TextDirection.rtl,
       child: SafeArea(
@@ -30,16 +33,30 @@ class EventsManagementScreen extends StatelessWidget {
             backgroundColor: AppColors.kMainColor,
             child: const Icon(Icons.add),
           ),
-          body: BlocBuilder<EventsCubit,EventsStates>(
+          body: BlocConsumer<EventsCubit,EventsStates>(
             buildWhen: (past,currentState) => currentState is GetEventsCreatedByMeSuccessState,
+            listener: (context,state)
+            {
+              if( state is DeleteEventLoadingState )
+                {
+                  // Loading Text will be shown to User...
+                  showLoadingDialog(context:context);
+                }
+              if( state is DeleteEventSuccessState )
+                {
+                  Navigator.pop(context);   // To get out from Alert Dialog
+                }
+            },
             builder: (context,state) {
               return Padding(
                 padding: EdgeInsets.symmetric(vertical: 10.h,horizontal: 10.w),
-                child: ListView.separated(
+                child: eventCubit.ownEvents.isNotEmpty ? ListView.separated(
                   physics: const BouncingScrollPhysics(),
-                  itemCount: eventCubit.ownEvents.length,
+                  itemCount: eventCubit.ownEvents.length,   // TODO: Events Related to Club I lead
                   separatorBuilder: (context,index) => SizedBox(height: 15.h,),
-                  itemBuilder: (context,index) => _eventItem(context: context,eventData: eventCubit.ownEvents[index])
+                  itemBuilder: (context,index) => _eventItem(idForClubILead: idForClubILead,cubit:eventCubit,context: context,eventData: eventCubit.ownEvents[index])
+                ) : Center(
+                  child: Text("لا توجد فعاليات بعد",style: TextStyle(fontSize: 15.sp,color: Colors.black.withOpacity(0.4),fontWeight: FontWeight.bold),),
                 ),
               );
             }
@@ -49,7 +66,7 @@ class EventsManagementScreen extends StatelessWidget {
     );
   }
 
-  Widget _eventItem({required EventEntity eventData,required BuildContext context}){
+  Widget _eventItem({required String idForClubILead,required EventEntity eventData,required BuildContext context,required EventsCubit cubit}){
     return GestureDetector(
       onTap: ()
       {
@@ -68,7 +85,13 @@ class EventsManagementScreen extends StatelessWidget {
             SizedBox(width: 5.w,),
             _buttonItem(title: 'المسجلين', onTap: (){}),
             SizedBox(width: 5.w,),
-            _buttonItem(title: 'حذف', onTap: (){}),
+            _buttonItem(
+                title: 'حذف',
+                onTap: ()
+                {
+                  cubit.deleteEvent(eventID: eventData.id!,idForClubILead: idForClubILead);
+                }
+            ),
           ],
         ),
       ),

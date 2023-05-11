@@ -23,3 +23,9 @@ class FailedToCreateEventState extends EventsStates{
   final String message;
   FailedToCreateEventState({required this.message});
 }
+class DeleteEventSuccessState extends EventsStates{}
+class DeleteEventLoadingState extends EventsStates{}
+class FailedToDeleteEventState extends EventsStates{
+  final String message;
+  FailedToDeleteEventState({required this.message});
+}
