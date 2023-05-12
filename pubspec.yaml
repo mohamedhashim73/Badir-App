@@ -33,7 +33,7 @@ dependencies:
   shared_preferences: ^2.0.18
   fluttertoast: ^8.2.1
   cloud_firestore: ^4.5.0
-  file_picker: ^5.2.7
+  file_picker: ^5.3.0
   path: ^1.8.0
   image_picker: ^0.8.7+1
   equatable: ^2.0.5

@@ -4,6 +4,7 @@ import 'package:bader_user_app/Core/Constants/constants.dart';
 import 'package:bader_user_app/Core/Errors/exceptions.dart';
 import 'package:bader_user_app/Core/Errors/failure.dart';
 import 'package:bader_user_app/Features/Clubs/Presentation/Controller/clubs_cubit.dart';
+import 'package:bader_user_app/Features/Layout/Data/Models/report_model.dart';
 import 'package:bader_user_app/Features/Layout/Data/Models/user_model.dart';
 import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_cubit.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -106,6 +107,22 @@ class LayoutRemoteDataSource {
           }
       });
       return users;
+    }
+    on FirebaseException catch(e)
+    {
+      throw ServerException(exceptionMessage: e.toString());
+    }
+  }
+
+  Future<Unit> uploadReport({required String pdfLink,required String clubID,required String reportType}) async {
+    try
+    {
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection(Constants.kReportsCollectionName).get();
+      int newReportID = querySnapshot.docs.isNotEmpty ? int.parse(querySnapshot.docs.last.id) : 0;
+      ++newReportID;
+      ReportModel report = ReportModel(reportID: newReportID.toString(), fileType: reportType, clubID: clubID, pdfLink: pdfLink);
+      await FirebaseFirestore.instance.collection(Constants.kReportsCollectionName).doc(newReportID.toString()).set(report.toJson());
+      return unit;
     }
     on FirebaseException catch(e)
     {

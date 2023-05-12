@@ -70,7 +70,7 @@ class EventsCubit extends Cubit<EventsStates> {
   void createEvent({required LayoutCubit layoutCubit,required EventForPublicOrNot forPublic,required String name,required String description,required String startDate,required String endDate,required String time,required String location,required String link,required String clubID,required String clubName}) async {
     emit(CreateEventLoadingState());
     // TODO: Upload Image to Storage, get link
-    String? imageUrl = await layoutCubit.uploadImageToStorage(imgFile: eventImage!);
+    String? imageUrl = await layoutCubit.uploadFileToStorage(file: eventImage!);
     if( imageUrl != null )
       {
         final result = await sl<CreateEventUseCase>().execute(forPublic: forPublic, name: name, description: description, imageUrl: imageUrl, startDate: startDate, endDate: endDate, time: time, location: location, link: link, clubID: clubID, clubName: clubName);

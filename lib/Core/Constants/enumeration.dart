@@ -8,3 +8,7 @@ enum NotificationType{
 enum EventForPublicOrNot{
   private,public
 }
+
+enum ReportType{
+  annualPlan,relatedToAnEvent,volunteerHours
+}

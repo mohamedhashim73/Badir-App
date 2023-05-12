@@ -4,6 +4,7 @@ import 'package:bader_user_app/Features/Clubs/Data/Data_Sources/local_clubs_data
 import 'package:bader_user_app/Features/Clubs/Data/Data_Sources/remote_clubs_data_source.dart';
 import 'package:bader_user_app/Features/Clubs/Data/Imply_Repositories/clubs_imply_repository.dart';
 import 'package:bader_user_app/Features/Clubs/Domain/Use_Cases/accept_or_reject_membership_request_use_case.dart';
+import 'package:bader_user_app/Features/Clubs/Domain/Use_Cases/create_meeting_use_case.dart';
 import 'package:bader_user_app/Features/Clubs/Domain/Use_Cases/get_all_clubs_use_case.dart';
 import 'package:bader_user_app/Features/Clubs/Domain/Use_Cases/update_club_use_case.dart';
 import 'package:bader_user_app/Features/Events/Domain/Use_Cases/delete_event_use_case.dart';
@@ -27,6 +28,7 @@ import '../../Features/Layout/Domain/Use Cases/get_all_users_on_app_use_case.dar
 import '../../Features/Layout/Domain/Use Cases/get_my_data_use_case.dart';
 import '../../Features/Layout/Domain/Use Cases/get_notifications_use_case.dart';
 import '../../Features/Layout/Domain/Use Cases/update_my_data_use_case.dart';
+import '../../Features/Layout/Domain/Use Cases/upload_report_to_admin_use_case.dart';
 
 final GetIt sl = GetIt.instance;
 
@@ -68,6 +70,7 @@ class ServiceLocators{
     sl.registerLazySingleton<GetAllClubsUseCase>(() => GetAllClubsUseCase(clubsContractRepository: sl<ClubsImplyRepository>()));
     sl.registerLazySingleton<UploadClubImageToStorageUseCase>(() => UploadClubImageToStorageUseCase(clubsContractRepository: sl<ClubsImplyRepository>()));
     sl.registerLazySingleton<UpdateClubUseCase>(() => UpdateClubUseCase(clubsContractRepository: sl<ClubsImplyRepository>()));
+    sl.registerLazySingleton<CreateMeetingUseCase>(() => CreateMeetingUseCase(clubsContractRepository: sl<ClubsImplyRepository>()));
     sl.registerLazySingleton<AcceptOrRejectMembershipRequestUseCase>(() => AcceptOrRejectMembershipRequestUseCase(clubsContractRepository: sl<ClubsImplyRepository>()));
     sl.registerLazySingleton<GetMembershipRequestsUseCase>(() => GetMembershipRequestsUseCase(clubsContractRepository: sl<ClubsImplyRepository>()));
 
@@ -78,6 +81,7 @@ class ServiceLocators{
 
     // LAYOUT USE CASES
     sl.registerLazySingleton<UpdateMyDataUseCase>(() => UpdateMyDataUseCase(layoutBaseRepository: sl<LayoutImplyRepository>()));
+    sl.registerLazySingleton<UploadReportToAdminUseCase>(() => UploadReportToAdminUseCase(layoutBaseRepository: sl<LayoutImplyRepository>()));
     sl.registerLazySingleton<GetAllUsersOnAppUseCase>(() => GetAllUsersOnAppUseCase(layoutBaseRepository: sl<LayoutImplyRepository>()));
     sl.registerLazySingleton<UploadImageToStorageUseCase>(() => UploadImageToStorageUseCase(layoutBaseRepository: sl<LayoutImplyRepository>()));
     sl.registerLazySingleton<LogOutUseCase>(() => LogOutUseCase(layoutBaseRepository: sl<LayoutImplyRepository>()));

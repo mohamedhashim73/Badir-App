@@ -9,7 +9,7 @@ class UploadImageToStorageUseCase{
   UploadImageToStorageUseCase({required this.layoutBaseRepository});
 
   Future<Either<Failure, String>> execute({required File imgFile}) async {
-    return await layoutBaseRepository.uploadClubImageToStorage(imgFile: imgFile);
+    return await layoutBaseRepository.uploadFileToStorage(file: imgFile);
   }
 
 }

@@ -1,3 +1,4 @@
+import 'package:bader_user_app/Core/Components/click_to_choose_file.dart';
 import 'package:bader_user_app/Core/Constants/constants.dart';
 import 'package:bader_user_app/Core/Constants/enumeration.dart';
 import 'package:bader_user_app/Core/Theme/app_colors.dart';
@@ -79,21 +80,7 @@ class CreateEventScreen extends StatelessWidget {
                                     child: Image.file(cubit.eventImage!,fit: BoxFit.fill,width: double.infinity,height: double.infinity,)),
                               ),
                             if( cubit.eventImage == null )
-                              OutlinedButton(
-                                onPressed : () => cubit.getEventImage(),
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 10.h,horizontal: 15.w),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children:
-                                    [
-                                      const Icon(Icons.image,color: Colors.green,),
-                                      SizedBox(width: 10.w,),
-                                      Text("اضغط لاختيار صورة",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15.5.sp),)
-                                    ],
-                                  ),
-                                ),
-                              ),
+                              ClickToChooseFile(onTap : () => cubit.getEventImage(),text: "اضغط لاختيار صورة"),
                             SizedBox(height: 12.5.h,),
                             _textField(controller: _nameController,title:  'اسم الفعالية'),
                             _textField(controller:_descriptionController,title: 'الوصف'),

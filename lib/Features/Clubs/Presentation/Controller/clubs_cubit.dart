@@ -13,6 +13,7 @@ import 'package:image_picker/image_picker.dart';
 import '../../../../Core/Constants/constants.dart';
 import '../../Domain/Entities/request_membership_entity.dart';
 import '../../Domain/Use_Cases/accept_or_reject_membership_request_use_case.dart';
+import '../../Domain/Use_Cases/create_meeting_use_case.dart';
 import '../../Domain/Use_Cases/get_all_membership_requests_use_case.dart';
 import '../../Domain/Use_Cases/request_membership_use_case.dart';
 import '../../Domain/Use_Cases/update_club_use_case.dart';
@@ -39,6 +40,21 @@ class ClubsCubit extends Cubit<ClubsStates> {
               debugPrint("Clubs Number is : ${clubsData.length}");
               emit(GetClubsDataSuccessState());
             }
+    );
+  }
+
+  // TODO: CREATE MEETING
+  Future<void> createMeeting({required String idForClubILead,required String name,required String description,required String startDate,required String endDate,required String time,required String location,required String link}) async {
+    emit(CreateMeetingLoadingState());
+    final result = await sl<CreateMeetingUseCase>().execute(idForClubILead: idForClubILead, name: name, description: description, startDate: startDate, endDate: endDate, time: time, location: location, link: link);
+    result.fold(
+        (serverFailure){
+          emit(CreateMeetingWithFailureState(message: serverFailure.errorMessage));
+        },
+        (unit){
+          // TODO: GET MEETINGS
+          emit(CreateMeetingSuccessState());
+        }
     );
   }
 

@@ -28,6 +28,8 @@ class FailedToLogOut extends LayoutStates{
 }
 
 class ChangeBottomNavIndexState extends LayoutStates{}
+class PdfSelectedSuccessState extends LayoutStates{}
+class PdfSelectedWithFailureState extends LayoutStates{}
 
 // Notifications
 class FailedToGetNotificationsState extends LayoutStates{
@@ -36,6 +38,13 @@ class FailedToGetNotificationsState extends LayoutStates{
 }
 class GetNotificationsSuccessState extends LayoutStates{}
 class GetNotificationsLoadingState extends LayoutStates{}
+
+class UploadReportToAdminWithFailureState extends LayoutStates{
+  final String message;
+  UploadReportToAdminWithFailureState({required this.message});
+}
+class UploadReportToAdminLoadingState extends LayoutStates{}
+class UploadReportToAdminSuccessState extends LayoutStates{}
 
 class FailedToGetAllUsersOnAppState extends LayoutStates{
   final String message;

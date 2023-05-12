@@ -1,3 +1,4 @@
+import 'package:bader_user_app/Core/Constants/enumeration.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -16,11 +17,13 @@ class Constants{
   ];
   static String? userID;
   static List<String> colleges = ["كليه حاسبات ومعلومات","كليه هندسه","كليه صيدله","كليه تمريض","كليه طب","كليه تربيه رياضيه"];
+  static List<String> reportTypes = [ReportType.annualPlan.name,ReportType.relatedToAnEvent.name,ReportType.volunteerHours.name];
   static List<String> committees = ["العلمية","الرياضية","الفنية"];
   static List<String> genderStatus = ["ذكر","أنثي"];
   static String kNotificationsCollectionName = "Notifications";
   static String kUsersCollectionName = "Users";
   static String kClubsCollectionName = "Clubs";
+  static String kMeetingsCollectionName = "Meeting";
   static String kMembershipRequestsCollectionName = "Membership Requests";
   static String kMembersDataCollectionName = "Members Data";
   static String kMembersNumberCollectionName = "Members Number";

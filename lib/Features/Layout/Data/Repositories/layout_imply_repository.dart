@@ -48,6 +48,17 @@ class LayoutImplyRepository implements LayoutBaseRepository {
   }
 
   @override
+  Future<Either<Failure,Unit>> uploadReport({required String pdfLink,required String clubID,required String reportType}) async {
+    try
+    {
+      return Right(await layoutRemoteDataSource.uploadReport(pdfLink: pdfLink, clubID: clubID, reportType: reportType));
+    }
+    on ServerException catch(e)
+    {
+      return Left(ServerFailure(errorMessage: e.exceptionMessage));
+    }
+  }
+  @override
   Future<Either<Failure,List<UserEntity>>> getAllUsersOnApp() async {
     try
     {
@@ -84,10 +95,10 @@ class LayoutImplyRepository implements LayoutBaseRepository {
 
   // TODO: Will return Image Url
   @override
-  Future<Either<Failure,String>> uploadClubImageToStorage({required File imgFile}) async {
+  Future<Either<Failure,String>> uploadFileToStorage({required File file}) async {
     try
     {
-      return Right(await layoutRemoteDataSource.uploadImageToStorage(imgFile: imgFile));
+      return Right(await layoutRemoteDataSource.uploadImageToStorage(imgFile: file));
     }
     on ServerException catch(e){
       return Left(ServerFailure(errorMessage: e.exceptionMessage));

@@ -5,6 +5,7 @@ import 'package:bader_user_app/Features/Layout/Domain/Entities/user_entity.dart'
 import 'package:bader_user_app/Features/Layout/Domain/Use%20Cases/log_out_use_case.dart';
 import 'package:bader_user_app/Features/Layout/Domain/Use%20Cases/upload_image_to_storage_use_case.dart';
 import 'package:bader_user_app/Features/Layout/Presentation/Screens/profile_screen.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import '../../../../Core/Constants/enumeration.dart';
@@ -16,6 +17,7 @@ import '../../Domain/Use Cases/get_my_data_use_case.dart';
 import '../../Domain/Use Cases/get_notifications_use_case.dart';
 import '../../Domain/Use Cases/send_notification.dart';
 import '../../Domain/Use Cases/update_my_data_use_case.dart';
+import '../../Domain/Use Cases/upload_report_to_admin_use_case.dart';
 import '../Screens/home_screen.dart';
 import '../Screens/notification_screen.dart';
 import 'layout_states.dart';
@@ -38,6 +40,48 @@ class LayoutCubit extends Cubit<LayoutStates> {
     emit(ChangeBottomNavIndexState());
   }
 
+  File? pdfFile;
+  void getPDF() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['pdf'],
+      allowMultiple: false
+    );
+    if (result != null && result.files.isNotEmpty && result.files.first.extension == 'pdf')
+    {
+      // TODO: Convert PlatformFile to File to be able to upload it
+      pdfFile = File(result.files.first.path!);
+      emit(PdfSelectedSuccessState());
+    }
+    else
+    {
+      emit(PdfSelectedWithFailureState());
+    }
+  }
+
+  Future<void> uploadReport({required LayoutCubit layoutCubit,required String clubID,required String reportType}) async{
+    emit(UploadReportToAdminLoadingState());
+    String? pdfUrl = await layoutCubit.uploadFileToStorage(file: pdfFile!);
+    // TODO: Connect with Firestore
+    if( pdfUrl != null )
+      {
+        final result = await sl<UploadReportToAdminUseCase>().execute(clubID: clubID,pdfLink: pdfUrl,reportType: reportType);
+        result.fold(
+            (serverFailure)
+            {
+              emit(UploadReportToAdminWithFailureState(message: serverFailure.errorMessage));
+            },
+            (unit){
+              emit(UploadReportToAdminSuccessState());
+            }
+        );
+      }
+    else
+      {
+        emit(UploadReportToAdminWithFailureState(message: 'حدث خطأ اثناء رفع الملف برجاء المحاوله لاحقا'));
+      }
+  }
+
   String? selectedCollege;
   void chooseCollege({required String college}){
     selectedCollege = college;
@@ -47,6 +91,13 @@ class LayoutCubit extends Cubit<LayoutStates> {
   String? selectedGender;
   void chooseGender({required String gender}){
     selectedGender = gender;
+    emit(GenderChosenSuccessState());
+  }
+
+  // TODO: USE it on Upload Report To Admin Screen
+  String? reportType;
+  void chooseReportType({required String chosen}){
+    reportType = chosen;
     emit(GenderChosenSuccessState());
   }
 
@@ -104,9 +155,9 @@ class LayoutCubit extends Cubit<LayoutStates> {
             });
   }
 
-  Future<String?> uploadImageToStorage({required File imgFile}) async {
+  Future<String?> uploadFileToStorage({required File file}) async {
     String? url;
-    var result = await sl<UploadImageToStorageUseCase>().execute(imgFile: imgFile);
+    var result = await sl<UploadImageToStorageUseCase>().execute(imgFile: file);
     result.fold(
             (serverFailure) => emit(FailedToGetUserDataState(message: serverFailure.errorMessage)),
             (imgUrl){ url = imgUrl; emit(GetMyDataSuccessState()); });

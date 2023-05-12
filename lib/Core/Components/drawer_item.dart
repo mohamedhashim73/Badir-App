@@ -35,6 +35,11 @@ class DrawerItem extends StatelessWidget{
       'routeName' : AppStrings.kUpdateClubScreen
     },
     {
+      'title' : 'رفع التقارير',
+      'iconData' : Icons.report,
+      'routeName' : AppStrings.kUploadReportScreen
+    },
+    {
       'title' : 'إداره الأعضاء',
       'iconData' : Icons.people,
       'routeName' : AppStrings.kViewMembersOnMyClubScreen
@@ -43,6 +48,11 @@ class DrawerItem extends StatelessWidget{
       'title' : 'إدارة الفعاليات',
       'iconData' : Icons.manage_accounts,
       'routeName' : AppStrings.kManageEventsScreen
+    },
+    {
+      'title' : 'إدارة الإجتماعات',
+      'iconData' : Icons.meeting_room_sharp,
+      'routeName' : AppStrings.kManageMeetingsScreen
     },
     {
       'title' : 'تسجيل الخروج',
@@ -87,6 +97,7 @@ class DrawerItem extends StatelessWidget{
                     [
                       Expanded(
                         child: ListView.builder(
+                            physics: const BouncingScrollPhysics(),
                             // TODO: make length-1 as i display last item ( log out ) on the bottom of Drawer
                             itemCount: layoutCubit.userData!.idForClubLead != null ? drawerData.length-1 : 3,
                             itemBuilder: (context,index){

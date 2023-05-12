@@ -25,5 +25,6 @@ abstract class ClubsContractRepository{
   // TODO: Invitation to be a member on Specific Club ( Public Member, Leader on this club will be accept or refuse )
   Future<bool> requestAMembershipOnSpecificClub({required String clubID,required String requestUserName,required String userAskForMembershipID,required String infoAboutAsker,required String committeeName});
   Future<Either<Failure,List<RequestMembershipEntity>>> getMembershipRequests({required String clubID});
+  Future<Either<Failure,Unit>> createMeeting({required String idForClubILead,required String name,required String description,required String startDate,required String endDate,required String time,required String location,required String link});
 
 }

@@ -82,6 +82,17 @@ class ClubsImplyRepository implements ClubsContractRepository{
   }
 
   @override
+  Future<Either<Failure,Unit>> createMeeting({required String idForClubILead,required String name,required String description,required String startDate,required String endDate,required String time,required String location,required String link}) async {
+    try
+    {
+      return Right(await remoteClubsDataSource.createMeeting(idForClubILead: idForClubILead, name: name, description: description, startDate: startDate, endDate: endDate, time: time, location: location, link: link));
+    }
+    on ServerException catch(e){
+      return Left(ServerFailure(errorMessage: e.exceptionMessage));
+    }
+  }
+
+  @override
   Future<Either<Failure, Unit>> acceptOrRejectMembershipRequest({required String requestSenderID, required String clubID, required bool respondStatus}) async {
     try
     {

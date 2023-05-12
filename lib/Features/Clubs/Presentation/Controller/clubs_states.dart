@@ -41,6 +41,13 @@ class FailedToGetClubsDataState extends ClubsStates{
   FailedToGetClubsDataState({required this.message});
 }
 
+class CreateMeetingLoadingState extends ClubsStates{}
+class CreateMeetingSuccessState extends ClubsStates{}
+class CreateMeetingWithFailureState extends ClubsStates{
+  final String message;
+  CreateMeetingWithFailureState({required this.message});
+}
+
 class GetMembersOnMyClubDataLoadingState extends ClubsStates{}
 class GetMembersOnMyClubDataSuccessState extends ClubsStates{}
 class GetMembersOnMyClubDataWithFailureState extends ClubsStates{
