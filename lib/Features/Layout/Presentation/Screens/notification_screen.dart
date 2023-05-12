@@ -4,7 +4,7 @@ import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_st
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../../Core/Components/drwaer_item.dart';
+import '../../../../Core/Components/drawer_item.dart';
 import '../../../../Core/Theme/app_colors.dart';
 
 class NotificationsScreen extends StatelessWidget {

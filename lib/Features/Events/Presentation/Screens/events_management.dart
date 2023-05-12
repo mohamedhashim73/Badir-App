@@ -5,7 +5,6 @@ import 'package:bader_user_app/Features/Events/Presentation/Controller/events_cu
 import 'package:bader_user_app/Features/Events/Presentation/Controller/events_states.dart';
 import 'package:bader_user_app/Features/Events/Presentation/Screens/event_details_screen.dart';
 import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_cubit.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -18,8 +17,9 @@ class EventsManagementScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String idForClubILead = LayoutCubit.getInstance(context).userData!.idForClubLead!;
+    debugPrint("ID for Club I Lead is : ${LayoutCubit.getInstance(context).userData!.idForClubLead!}");
     final eventCubit = EventsCubit.getInstance(context);
-    if( eventCubit.ownEvents.isEmpty ) eventCubit.getEventsCreatedByMe(idForClubThatYouLead: idForClubILead);
+    if( eventCubit.ownEvents.isEmpty ) eventCubit.getPastAndNewAndMyEvents(idForClubILead: idForClubILead);
     return Directionality(
       textDirection: TextDirection.rtl,
       child: SafeArea(
@@ -34,7 +34,7 @@ class EventsManagementScreen extends StatelessWidget {
             child: const Icon(Icons.add),
           ),
           body: BlocConsumer<EventsCubit,EventsStates>(
-            buildWhen: (past,currentState) => currentState is GetEventsCreatedByMeSuccessState,
+            buildWhen: (past,currentState) => currentState is EventsClassifiedSuccessState,
             listener: (context,state)
             {
               if( state is DeleteEventLoadingState )
@@ -50,7 +50,7 @@ class EventsManagementScreen extends StatelessWidget {
             builder: (context,state) {
               return Padding(
                 padding: EdgeInsets.symmetric(vertical: 10.h,horizontal: 10.w),
-                child: eventCubit.ownEvents.isNotEmpty ? ListView.separated(
+                child: state is EventsClassifiedLoadingState ? const Center(child: CircularProgressIndicator()) : eventCubit.ownEvents.isNotEmpty ? ListView.separated(
                   physics: const BouncingScrollPhysics(),
                   itemCount: eventCubit.ownEvents.length,   // TODO: Events Related to Club I lead
                   separatorBuilder: (context,index) => SizedBox(height: 15.h,),

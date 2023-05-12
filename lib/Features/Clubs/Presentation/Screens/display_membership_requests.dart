@@ -85,7 +85,7 @@ Widget _buttonItem({required bool responseStatus,required ClubsCubit cubit,requi
   return MaterialButton(
     shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
     height:30.h,
-    onPressed: () => cubit.acceptOrRejectMembershipRequest(requestSenderID: requestSenderID, clubID: clubID, respondStatus: responseStatus,layoutCubit: layoutCubit,clubName: clubName),
+    onPressed: () => cubit.acceptOrRejectMembershipRequest(idForClubILead: clubID,requestSenderID: requestSenderID, clubID: clubID, respondStatus: responseStatus,layoutCubit: layoutCubit,clubName: clubName),
     color: responseStatus ? AppColors.kGreenColor : AppColors.kRedColor,
     child: Text(responseStatus ? 'قبول' : "رفض",)
   );

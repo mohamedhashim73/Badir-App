@@ -40,7 +40,7 @@ class EventDetailsScreen extends StatelessWidget {
               children:
               [
                 CircleAvatar(
-                  radius: 60.h,
+                  radius: 45.h,
                   backgroundImage: NetworkImage(event.image!),
                 ),
                 SizedBox(height: 12.5.h,),

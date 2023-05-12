@@ -7,8 +7,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'event_details_screen.dart';
 
-class PastAndNewEventsScreen extends StatelessWidget {
-  const PastAndNewEventsScreen({Key? key}) : super(key: key);
+class ViewAllEventsThrowAppScreen extends StatelessWidget {
+  const ViewAllEventsThrowAppScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +67,7 @@ class PastAndNewEventsScreen extends StatelessWidget {
                     Row(
                       children:
                       [
-                        Text(events[index].startDate!.trim(),style: TextStyle(color: AppColors.kRedColor),),
+                        Text(events[index].startDate!.trim(),style: TextStyle(color: AppColors.kYellowColor),),
                         Text(" , ${events[index].location!.trim()}"),
                       ],
                     ),

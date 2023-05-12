@@ -23,7 +23,8 @@ class EventsCubit extends Cubit<EventsStates> {
   List<EventEntity> newEvents = [];
   List<EventEntity> ownEvents = [];      // TODO: Mean that created by me | Related Club That I lead
   List<EventEntity> allEvents = [];
-  Future<void> getAllEvents() async {
+  // TODO: انا عامل idForClubILead مش required لأن هستعمله في حاله اذا كان المستخدم ده بالفعل ليدر ف هحتاج اباصيه عشان اسند الفعاليات اللي هو انشأها لل List بتاعته واللي هيا ownEvents
+  Future<void> getAllEvents({String? idForClubILead}) async {
     emit(GetEventsLoadingState());
     final result = await sl<GetAllEventsUseCase>().execute();
     result.fold(
@@ -33,7 +34,7 @@ class EventsCubit extends Cubit<EventsStates> {
             },
             (eventsData) async {
               allEvents = eventsData;
-              await getPastAndNewEvents();
+              await getPastAndNewAndMyEvents(idForClubILead: idForClubILead);   // TODO: Notice that id not required...
               debugPrint("Past Events Number is : ${pastEvents.length}");
               debugPrint("New Events Number is : ${newEvents.length}");
               emit(GetEventsDataSuccessState());
@@ -41,10 +42,18 @@ class EventsCubit extends Cubit<EventsStates> {
     );
   }
 
-  Future<void> getPastAndNewEvents() async {
+  Future<void> getPastAndNewAndMyEvents({String? idForClubILead}) async {
     ownEvents.clear();
+    debugPrint("All Events number is : ${allEvents.length}");
+    if( idForClubILead != null ) emit(EventsClassifiedLoadingState());  // TODO: لأن هستعملها فقط في صفحه اداره الفعاليات عشان اعمل CircleProgressIndicator()
     for( int i = 0 ; i < allEvents.length ; i++ )
     {
+      // TODO: OWN EVENTS will be shown on events management Screen
+      if( idForClubILead != null && allEvents[i].clubID == idForClubILead )
+        {
+          ownEvents.add(allEvents[i]);
+        }
+      // TODO: Classify Events to Old or New
       DateTime eventDate = Jiffy("${allEvents[i].endDate!.trim()} ${allEvents[i].time!.trim()}", "MMMM dd, yyyy h:mm a").dateTime;
       if (DateTime.now().isAfter(eventDate))
       {
@@ -55,17 +64,7 @@ class EventsCubit extends Cubit<EventsStates> {
         newEvents.add(allEvents[i]);
       }
     }
-  }
-
-  Future<void> getEventsCreatedByMe({required String idForClubThatYouLead}) async {
-    for( int i = 0 ; i < allEvents.length ; i++ )
-    {
-      if( allEvents[i].clubID == idForClubThatYouLead )
-        {
-          ownEvents.add(allEvents[i]);
-        }
-    }
-    emit(GetEventsCreatedByMeSuccessState());
+    emit(EventsClassifiedSuccessState());
   }
 
   void createEvent({required LayoutCubit layoutCubit,required EventForPublicOrNot forPublic,required String name,required String description,required String startDate,required String endDate,required String time,required String location,required String link,required String clubID,required String clubName}) async {
@@ -89,12 +88,6 @@ class EventsCubit extends Cubit<EventsStates> {
       {
         FailedToCreateEventState(message: "حدثت مشكله اثناء رفع الصورة برجاء المحاوله لاحقا");
       }
-  }
-
-  List<EventEntity> ownEventsData = [];
-  void getEventsRelatedToYourOwnClub({required String idForClubYouLead}) async {
-    ownEventsData = allEvents.where((element) => element.clubID == idForClubYouLead).toList();
-    emit(GetEventsForYourOwnClubSuccessState());
   }
 
   File? eventImage;
@@ -121,13 +114,13 @@ class EventsCubit extends Cubit<EventsStates> {
     emit(DeleteEventLoadingState());
     final result = await sl<DeleteEventUseCase>().execute(eventID: eventID);
     result.fold(
-            (serverFailure){
-                emit(FailedToDeleteEventState(message: serverFailure.errorMessage));
+            (serverFailure)
+            {
+              emit(FailedToDeleteEventState(message: serverFailure.errorMessage));
             },
             (unit) async
             {
-              await getEventsCreatedByMe(idForClubThatYouLead: idForClubILead);
-              await getAllEvents();    // TODO: as it updated
+              await getAllEvents(idForClubILead: idForClubILead);    // TODO: as it updated
               emit(DeleteEventSuccessState());
             }
     );

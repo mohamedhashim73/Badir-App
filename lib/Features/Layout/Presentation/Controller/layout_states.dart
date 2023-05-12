@@ -21,6 +21,12 @@ class FailedToGetUserDataState extends LayoutStates{
   FailedToGetUserDataState({required this.message});
 }
 
+class LogOutSuccessState extends LayoutStates{}
+class FailedToLogOut extends LayoutStates{
+  final String message;
+  FailedToLogOut({required this.message});
+}
+
 class ChangeBottomNavIndexState extends LayoutStates{}
 
 // Notifications
@@ -30,3 +36,9 @@ class FailedToGetNotificationsState extends LayoutStates{
 }
 class GetNotificationsSuccessState extends LayoutStates{}
 class GetNotificationsLoadingState extends LayoutStates{}
+
+class FailedToGetAllUsersOnAppState extends LayoutStates{
+  final String message;
+  FailedToGetAllUsersOnAppState({required this.message});
+}
+class GetAllUsersOnAppSuccessState extends LayoutStates{}

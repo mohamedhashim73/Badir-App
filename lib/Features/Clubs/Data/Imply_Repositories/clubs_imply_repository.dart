@@ -6,7 +6,6 @@ import 'package:bader_user_app/Features/Clubs/Data/Data_Sources/local_clubs_data
 import 'package:bader_user_app/Features/Clubs/Data/Data_Sources/remote_clubs_data_source.dart';
 import 'package:bader_user_app/Features/Clubs/Domain/Contract_Repositories/club_contract_repository.dart';
 import 'package:bader_user_app/Features/Clubs/Domain/Entities/club_entity.dart';
-import 'package:bader_user_app/Features/Layout/Domain/Entities/user_entity.dart';
 import 'package:dartz/dartz.dart';
 import '../../Domain/Entities/request_membership_entity.dart';
 import '../Models/club_model.dart';
@@ -43,9 +42,14 @@ class ClubsImplyRepository implements ClubsContractRepository{
   }
 
   @override
-  Future<List<UserEntity>> viewClubMembersInfo({required String clubID}) {
-    // TODO: implement viewClubMembersInfo
-    throw UnimplementedError();
+  Future<Either<Failure,Set<String>>> getMembersOnMyClub({required String idForClubILead}) async {
+    try
+    {
+      return Right(await remoteClubsDataSource.getMembersOnMyClub(clubID: idForClubILead));
+    }
+    on ServerException catch(e){
+      return Left(ServerFailure(errorMessage: e.exceptionMessage));
+    }
   }
 
   @override

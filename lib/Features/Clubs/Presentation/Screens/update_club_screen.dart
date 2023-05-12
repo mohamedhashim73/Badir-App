@@ -23,7 +23,7 @@ class UpdateClubScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String clubID = LayoutCubit.getInstance(context).userData!.idForClubLead!;
-    final cubit = ClubsCubit.getInstance(context)..getInfoForClubThatILead(clubID: clubID);
+    final cubit = ClubsCubit.getInstance(context)..getCLubDataThatILead(clubID: clubID);
     _nameController.text = cubit.dataAboutClubYouLead!.name!;
     _collegeController.text = cubit.dataAboutClubYouLead!.college!;
     _aboutClubController.text = cubit.dataAboutClubYouLead!.description ?? "";

@@ -2,12 +2,16 @@ import 'dart:io';
 
 import 'package:bader_user_app/Core/Service%20Locators/service_locators.dart';
 import 'package:bader_user_app/Features/Layout/Domain/Entities/user_entity.dart';
+import 'package:bader_user_app/Features/Layout/Domain/Use%20Cases/log_out_use_case.dart';
 import 'package:bader_user_app/Features/Layout/Domain/Use%20Cases/upload_image_to_storage_use_case.dart';
 import 'package:bader_user_app/Features/Layout/Presentation/Screens/profile_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import '../../../../Core/Constants/enumeration.dart';
+import '../../../Clubs/Presentation/Controller/clubs_cubit.dart';
+import '../../../Events/Presentation/Controller/events_cubit.dart';
 import '../../Domain/Entities/notification_entity.dart';
+import '../../Domain/Use Cases/get_all_users_on_app_use_case.dart';
 import '../../Domain/Use Cases/get_my_data_use_case.dart';
 import '../../Domain/Use Cases/get_notifications_use_case.dart';
 import '../../Domain/Use Cases/send_notification.dart';
@@ -63,6 +67,29 @@ class LayoutCubit extends Cubit<LayoutStates> {
     );
   }
 
+  // TODO: Get All Users On App | Use it to get Members on Club that I lead .....
+  List<UserEntity> allUsersDataOnApp = [];
+  Future<void> getAllUsersOnApp () async {
+    final result = await sl<GetAllUsersOnAppUseCase>().execute();
+    result.fold(
+            (serverFailure){
+          emit(FailedToGetAllUsersOnAppState(message: serverFailure.errorMessage));
+        },
+            (users){
+          allUsersDataOnApp = users;
+          emit(GetAllUsersOnAppSuccessState());
+        }
+    );
+  }
+
+  Future<void> logout({required EventsCubit eventsCubit,required ClubsCubit clubsCubit,required LayoutCubit layoutCubit,}) async {
+    var result = await sl<LogOutUseCase>().execute(layoutCubit: layoutCubit,clubsCubit: clubsCubit,eventsCubit: eventsCubit);
+    result.fold(
+            (serverFailure) => emit(FailedToLogOut(message: serverFailure.errorMessage)),
+            (unit){
+               emit(LogOutSuccessState());
+            });
+  }
 
   // TODO: USER
   UserEntity? userData;
@@ -70,9 +97,9 @@ class LayoutCubit extends Cubit<LayoutStates> {
     var result = await sl<GetMyDataUseCase>().execute();
     result.fold(
             (serverFailure) => emit(FailedToGetUserDataState(message: serverFailure.errorMessage)),
-            (userEntity)
+            (user)
             {
-              userData = userEntity;
+              userData = user;
               emit(GetMyDataSuccessState());
             });
   }

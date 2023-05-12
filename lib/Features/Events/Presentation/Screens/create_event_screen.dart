@@ -48,7 +48,6 @@ class CreateEventScreen extends StatelessWidget {
                   _linkController.clear();
                   _locationController.clear();
                   cubit.eventImage = null;
-                  cubit.getEventsCreatedByMe(idForClubThatYouLead: layoutCubit.userData!.idForClubLead!);   // TODO: TO UPDATE MY EVENTS
                   Navigator.pushReplacementNamed(context, AppStrings.kLayoutScreen);
                 }
                 if( state is FailedToCreateEventState )

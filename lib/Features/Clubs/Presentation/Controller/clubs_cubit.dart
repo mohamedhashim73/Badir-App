@@ -3,7 +3,9 @@ import 'package:bader_user_app/Core/Service%20Locators/service_locators.dart';
 import 'package:bader_user_app/Features/Clubs/Data/Models/club_model.dart';
 import 'package:bader_user_app/Features/Clubs/Domain/Entities/club_entity.dart';
 import 'package:bader_user_app/Features/Clubs/Domain/Use_Cases/get_all_clubs_use_case.dart';
+import 'package:bader_user_app/Features/Clubs/Domain/Use_Cases/get_members_on_my_club_use_case.dart';
 import 'package:bader_user_app/Features/Clubs/Domain/Use_Cases/upload_image_to_storage_use_case.dart';
+import 'package:bader_user_app/Features/Layout/Domain/Entities/user_entity.dart';
 import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
@@ -37,6 +39,34 @@ class ClubsCubit extends Cubit<ClubsStates> {
               debugPrint("Clubs Number is : ${clubsData.length}");
               emit(GetClubsDataSuccessState());
             }
+    );
+  }
+
+  // TODO: Get Notifications
+  List<UserEntity> membersDataOnMyClub = [];    // TODO: I lead
+  Future<void> getMembersDataOnMyClub({required LayoutCubit layoutCubit,required String idForClubILead}) async {
+    await layoutCubit.getAllUsersOnApp();
+    List<UserEntity> usersOnApp = layoutCubit.allUsersDataOnApp;    // TODO: As it take value from getAllUsersOnApp() method
+    emit(GetMembersOnMyClubDataLoadingState());
+    final result = await sl<GetMembersDataOnMyClubUseCase>().execute(idForClubILead: idForClubILead);
+    result.fold(
+            (serverFailure){
+              emit(GetMembersOnMyClubDataWithFailureState(message: serverFailure.errorMessage));
+            },
+            (membersID){
+              debugPrint("All Users on App num is : ${usersOnApp.length}");
+              // هنا هلوب علي المستخدمين بالكامل ولو لقيت id بتاعه في set اللي جايه من ال result هضيفه للداتا تبع الأعضاء
+              for( var userEntity in usersOnApp )
+                {
+                  // TODO: Mean that this User already Member on Club I lead .....
+                  if( membersID.contains(userEntity.id) )
+                    {
+                      membersDataOnMyClub.add(userEntity);
+                    }
+                }
+              debugPrint("Members on My Club Number is : ${membersDataOnMyClub.length}");
+              emit(GetMembersOnMyClubDataSuccessState());
+           }
     );
   }
 
@@ -76,7 +106,7 @@ class ClubsCubit extends Cubit<ClubsStates> {
   }
 
   ClubEntity? dataAboutClubYouLead;
-  void getInfoForClubThatILead({required String clubID}){
+  void getCLubDataThatILead({required String clubID}){
     dataAboutClubYouLead = clubs.firstWhere((element) => element.id == int.parse(clubID.trim()));
     if( dataAboutClubYouLead != null ) emit(GetInfoForClubThatILeadSuccess());
   }
@@ -134,9 +164,9 @@ class ClubsCubit extends Cubit<ClubsStates> {
     final clubUpdateResult = await sl<UpdateClubUseCase>().execute(clubID: clubID, image: imgUrl, name: name, memberNum: memberNum, aboutClub: aboutClub, contactInfo: contactMeansModel);
     await Future.value(
         clubUpdateResult.fold(
-                (serverFailure){
+            (serverFailure){
               emit(FailedToUpdateClubState(message: serverFailure.errorMessage));
-            },
+              },
                 (unit) async {
               await getClubsData();
               emit(ClubUpdatedSuccessState());
@@ -144,7 +174,7 @@ class ClubsCubit extends Cubit<ClubsStates> {
         ));
   }
 
-  void acceptOrRejectMembershipRequest({required LayoutCubit layoutCubit,required String requestSenderID,required String clubID,required bool respondStatus,required String clubName}) async {
+  void acceptOrRejectMembershipRequest({required LayoutCubit layoutCubit,required String idForClubILead,required String requestSenderID,required String clubID,required bool respondStatus,required String clubName}) async {
     final result = await sl<AcceptOrRejectMembershipRequestUseCase>().execute(clubID: clubID,requestSenderID: requestSenderID,respondStatus: respondStatus);
     result.fold(
             (serverFailure){
@@ -152,6 +182,7 @@ class ClubsCubit extends Cubit<ClubsStates> {
             },
             (unit) async {
               await layoutCubit.sendNotification(senderID: layoutCubit.userData!.id!, receiverID: requestSenderID, clubID: clubID, notifyContent: respondStatus ? "لقد تم قبول طلب العضوية في $clubName" : "لقد تم رفض طلب العضوية في $clubName", notifyType: respondStatus ? NotificationType.acceptYourMembershipRequest : NotificationType.rejectYourMembershipRequest);
+              await getMembersDataOnMyClub(layoutCubit: layoutCubit, idForClubILead: idForClubILead);
               emit(AcceptOrRejectMembershipRequestSuccessState());
             }
     );

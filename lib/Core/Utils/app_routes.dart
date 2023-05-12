@@ -6,6 +6,7 @@ import '../../Features/Auth/Presentation/Screens/login_screen.dart';
 import '../../Features/Auth/Presentation/Screens/register_screen.dart';
 import '../../Features/Clubs/Presentation/Screens/display_membership_requests.dart';
 import '../../Features/Clubs/Presentation/Screens/view_clubs.dart';
+import '../../Features/Clubs/Presentation/Screens/view_memebrs_on_my_club_screen.dart';
 import '../../Features/Events/Presentation/Screens/events_management.dart';
 import '../../Features/Events/Presentation/Screens/view_events_screen.dart';
 import '../../Features/Layout/Presentation/Screens/edit_profile_screen.dart';
@@ -17,6 +18,8 @@ class AppRoutes{
   static Map<String, Widget Function(BuildContext)> routes = {
     AppStrings.kLoginScreen : (context) => LoginScreen(),
     AppStrings.kViewClubsScreen : (context) => ViewClubsScreen(),
+    AppStrings.kViewMembersOnMyClubScreen : (context) => ViewMembersOnMyClubScreen(),
+    AppStrings.kViewEventsScreen : (context) => const ViewAllEventsThrowAppScreen(),
     AppStrings.kEditProfileScreen : (context) => EditProfileScreen(),
     AppStrings.kRegisterScreen : (context) => RegisterScreen(),
     AppStrings.kLayoutScreen : (context) => const LayoutScreen(),
@@ -24,7 +27,7 @@ class AppRoutes{
     AppStrings.kUpdateClubScreen : (context) => UpdateClubScreen(),
     AppStrings.kCreateEventScreen : (context) => CreateEventScreen(),
     AppStrings.kManageEventsScreen : (context) => const EventsManagementScreen(),
-    AppStrings.kPastAndNewEventsScreen : (context) => const PastAndNewEventsScreen(),
+    AppStrings.kPastAndNewEventsScreen : (context) => const ViewAllEventsThrowAppScreen(),
     AppStrings.kMembershipRequestsScreen : (context) => const MembershipRequestsScreen(),
   };
 }

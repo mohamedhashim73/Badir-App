@@ -40,6 +40,23 @@ class RemoteClubsDataSource{
     }
   }
 
+  Future<Set<String>> getMembersOnMyClub({required String clubID}) async {
+    Set<String> membersID = {};
+    try
+    {
+      await FirebaseFirestore.instance.collection(Constants.kClubsCollectionName).doc(clubID).collection(Constants.kMembersDataCollectionName).get().then((value){
+        for( var item in value.docs )
+          {
+            membersID.add(item.data()['memberID']);
+          }
+      });
+      return membersID;
+    }
+    on FirebaseException catch(e){
+      throw ServerException(exceptionMessage: e.code);
+    }
+  }
+
   // TODO: ASK FOR MEMBERSHIP
   Future<bool> requestAMembershipOnSpecificClub({required String clubID,required String requestUserName,required String userAskForMembershipID,required String infoAboutAsker,required String committeeName}) async {
     try{

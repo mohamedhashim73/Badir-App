@@ -1,4 +1,5 @@
 import 'package:bader_user_app/Features/Clubs/Data/Models/club_model.dart';
+import 'package:bader_user_app/Features/Clubs/Domain/Entities/member_entity.dart';
 import 'package:bader_user_app/Features/Clubs/Domain/Entities/request_membership_entity.dart';
 import 'package:dartz/dartz.dart';
 import '../../../../Core/Errors/failure.dart';
@@ -19,7 +20,7 @@ abstract class ClubsContractRepository{
   // TODO: ACCEPT OR REFUSE MEMBERSHIP REQUEST -- LEADER ROLE
   Future<Either<Failure,Unit>> acceptOrRejectMembershipRequest({required String requestSenderID,required String clubID,required bool respondStatus});
   Future<bool> deleteMemberFromClub({required String memberID});
-  Future<List<UserEntity>> viewClubMembersInfo({required String clubID});
+  Future<Either<Failure,Set<String>>> getMembersOnMyClub({required String idForClubILead});
 
   // TODO: Invitation to be a member on Specific Club ( Public Member, Leader on this club will be accept or refuse )
   Future<bool> requestAMembershipOnSpecificClub({required String clubID,required String requestUserName,required String userAskForMembershipID,required String infoAboutAsker,required String committeeName});
