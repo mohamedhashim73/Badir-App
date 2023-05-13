@@ -17,7 +17,7 @@ class Constants{
   ];
   static String? userID;
   static List<String> colleges = ["كليه حاسبات ومعلومات","كليه هندسه","كليه صيدله","كليه تمريض","كليه طب","كليه تربيه رياضيه"];
-  static List<String> reportTypes = [ReportType.annualPlan.name,ReportType.relatedToAnEvent.name,ReportType.volunteerHours.name];
+  static List<String> reportTypes = ["خطة سنوية","فعالية","ساعات تطوعية"];
   static List<String> committees = ["العلمية","الرياضية","الفنية"];
   static List<String> genderStatus = ["ذكر","أنثي"];
   static String kNotificationsCollectionName = "Notifications";

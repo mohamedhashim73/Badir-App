@@ -20,79 +20,87 @@ class UploadReportToAdminScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     LayoutCubit layoutCubit = LayoutCubit.getInstance(context);
     String clubID = layoutCubit.userData!.idForClubLead!;
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(title: const Text("رفع التقارير"),),
-        body: Padding(
-          padding: EdgeInsets.symmetric(vertical: 10.h,horizontal: 12.w),
-          child: BlocConsumer<LayoutCubit,LayoutStates>(
-            listener: (context,state)
-            {
-              if( state is UploadReportToAdminLoadingState ) showLoadingDialog(context: context);
-              if( state is UploadReportToAdminSuccessState )
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: SafeArea(
+        child: Scaffold(
+          appBar: AppBar(title: const Text("رفع التقارير"),),
+          body: Padding(
+            padding: EdgeInsets.symmetric(vertical: 10.h,horizontal: 12.w),
+            child: BlocConsumer<LayoutCubit,LayoutStates>(
+              listener: (context,state)
               {
-                layoutCubit.reportType = null;
-                layoutCubit.pdfFile = null;
-                Navigator.pop(context);   // TODO : TO get out from Alert Dialog
-                Navigator.pushReplacementNamed(context, AppStrings.kLayoutScreen);
-              }
-              if( state is UploadReportToAdminWithFailureState )
-              {
-                Navigator.pop(context);   // TODO : TO get out from Alert Dialog
-                showSnackBar(context: context, message: state.message,backgroundColor: AppColors.kRedColor);
-              }
-            },
-            builder: (context,state){
-              return Column(
-                children:
-                [
-                  Container(
-                    margin: EdgeInsets.only(bottom: 5.h),
-                    child: Text("نوع التقرير",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 17.sp),)
-                    ),
-                  dropDownComponent(
-                      items: Constants.reportTypes,
-                      onChanged: (reportType)
-                      {
-                        layoutCubit.chooseReportType(chosen: reportType!);
-                      },
-                      value: layoutCubit.reportType
-                  ),
-                  if( layoutCubit.pdfFile != null )
-                    Card(
-                      child: Row(
-                        children:
-                        [
-                          Icon(Icons.picture_as_pdf,color: AppColors.kRedColor,),
-                          SizedBox(width: 7.5.w,),
-                          Expanded(child: Text(basename(layoutCubit.pdfFile!.path),style: const TextStyle(overflow: TextOverflow.ellipsis),))
-                        ],
+                if( state is UploadReportToAdminLoadingState ) showLoadingDialog(context: context);
+                if( state is UploadReportToAdminSuccessState )
+                {
+                  layoutCubit.reportType = null;
+                  layoutCubit.pdfFile = null;
+                  Navigator.pop(context);   // TODO : TO get out from Alert Dialog
+                  Navigator.pushReplacementNamed(context, AppStrings.kLayoutScreen);
+                }
+                if( state is UploadReportToAdminWithFailureState )
+                {
+                  Navigator.pop(context);   // TODO : TO get out from Alert Dialog
+                  showSnackBar(context: context, message: state.message,backgroundColor: AppColors.kRedColor);
+                }
+              },
+              builder: (context,state){
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children:
+                  [
+                    Container(
+                      margin: EdgeInsets.only(bottom: 7.h),
+                      child: Text("نوع التقرير",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 17.sp),)
                       ),
+                    dropDownComponent(
+                        items: Constants.reportTypes,
+                        onChanged: (reportType)
+                        {
+                          layoutCubit.chooseReportType(chosen: reportType!);
+                        },
+                        value: layoutCubit.reportType
                     ),
-                  if( layoutCubit.pdfFile == null )
-                    ClickToChooseFile(onTap : () => layoutCubit.getPDF(),text: "اضغط لاختيار ملف"),
-                  SizedBox(height: 10.h,),
-                  DefaultButton(
-                    width: double.infinity,
-                    onTap: ()
-                    {
-                      if( layoutCubit.reportType != null && layoutCubit.pdfFile != null )
+                    SizedBox(height: 10.h,),
+                    if( layoutCubit.pdfFile != null )
+                      Card(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10.w,vertical: 10.h),
+                          child: Row(
+                            children:
+                            [
+                              Icon(Icons.picture_as_pdf,color: AppColors.kRedColor,),
+                              SizedBox(width: 7.5.w,),
+                              Expanded(child: Text(basename(layoutCubit.pdfFile!.path),style: const TextStyle(overflow: TextOverflow.ellipsis),))
+                            ],
+                          ),
+                        ),
+                      ),
+                    if( layoutCubit.pdfFile == null )
+                      ClickToChooseFile(onTap : () => layoutCubit.getPDF(),text: "اضغط لاختيار ملف"),
+                    SizedBox(height: 15.h,),
+                    DefaultButton(
+                      width: double.infinity,
+                      onTap: ()
                       {
-                        layoutCubit.uploadReport(reportType: layoutCubit.reportType!,clubID: clubID,layoutCubit: layoutCubit);
-                      }
-                      else
-                      {
-                        showSnackBar(context: context, message: "برجاء إدخال البيانات كامله",backgroundColor: Colors.red,seconds: 2);
-                      }
-                    },
-                    title: "إرسال"
-                  ),
-                ],
-              );
-            }
-          ),
+                        if( layoutCubit.reportType != null && layoutCubit.pdfFile != null )
+                        {
+                          layoutCubit.uploadReport(reportType: layoutCubit.reportType!,clubID: clubID,layoutCubit: layoutCubit);
+                        }
+                        else
+                        {
+                          showSnackBar(context: context, message: "برجاء إدخال البيانات كامله",backgroundColor: Colors.red,seconds: 2);
+                        }
+                      },
+                      title: "إرسال"
+                    ),
+                  ],
+                );
+              }
+            ),
+        ),
+        )
       ),
-      )
     );
   }
 }
