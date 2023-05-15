@@ -3,9 +3,12 @@ import 'package:bader_user_app/Core/Errors/exceptions.dart';
 import 'package:bader_user_app/Features/Clubs/Data/Models/meeting_model.dart';
 import 'package:bader_user_app/Features/Clubs/Data/Models/member_model.dart';
 import 'package:bader_user_app/Features/Clubs/Domain/Entities/club_entity.dart';
+import 'package:bader_user_app/Features/Layout/Data/Models/user_model.dart';
+import 'package:bader_user_app/Features/Layout/Domain/Entities/user_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import '../../../../Core/Constants/constants.dart';
 import '../Models/club_model.dart';
@@ -96,15 +99,31 @@ class RemoteClubsDataSource{
     return membersNum;
   }
 
-  Future<void> acceptOrRejectMembershipRequest({required String requestSenderID,required String clubID,required bool respondStatus}) async {
+  Future<void> acceptOrRejectMembershipRequest({required String committeeNameForRequestSender,required String requestSenderID,required String clubID,required bool respondStatus}) async {
     try
     {
-      // ف كلا الحالتين هحذف م الطلبات
+      // TODO: ف كلا الحالتين هحذف م الطلبات
       await FirebaseFirestore.instance.collection(Constants.kClubsCollectionName).doc(clubID).collection(Constants.kMembershipRequestsCollectionName).doc(requestSenderID).delete();
       if( respondStatus )     // TODO: Request Accepted
         {
-          int membersNum = await getMembersNum();
+          // TODO: Get Data about RequestSender....
+          DocumentSnapshot requestSenderDocumentSnapshot = await FirebaseFirestore.instance.collection(Constants.kUsersCollectionName).doc(requestSenderID).get();
+          UserModel requestSenderUserModel = UserModel.fromJson(json: requestSenderDocumentSnapshot.data());
+          List? idForClubsThatSenderMemberIn = requestSenderUserModel.idForClubsMemberIn ?? [];
+          List? committeesNameForRequestSender = requestSenderUserModel.committeesName ?? [];
+          // TODO: بالنسبه لتاريخ بدء العضوية للشخص ده لو في قيمه مش هعدل عليها لو مفيش هبعت التاريخ الحالي
+          String memberShipStartDateForRequestSender = requestSenderUserModel.membershipStartDate ?? Constants.getTimeNow();
+          // TODO: في key في الداتا بتاع العضو اسمها idForClubMemberIn محتاج ابعت id بتاع النادي لها بما ان اصبح عضو فيه
+          idForClubsThatSenderMemberIn.add(clubID); // TODO: I will update requestSenderData specially the key ( idForClubsMemberIn )
+          if( committeesNameForRequestSender.contains(committeeNameForRequestSender) == false ) committeesNameForRequestSender.add(committeeNameForRequestSender); // TODO: I will update requestSenderData specially the key ( idForClubsMemberIn )
+          // TODO: هنا مش هضيف اسم اللجنه لو هو بالفعل مثلا عضو في نادي تاني بس منضم لنفس اللجنة
+          await FirebaseFirestore.instance.collection(Constants.kUsersCollectionName).doc(requestSenderID).update({
+            'idForClubsMemberIn' : idForClubsThatSenderMemberIn,
+            'committeesName' : committeesNameForRequestSender,
+            'membershipStartDate' : memberShipStartDateForRequestSender
+          });
           // TODO: Update Value of Members Number on its Collection as I listen for it on Home Screen
+          int membersNum = await getMembersNum();
           await FirebaseFirestore.instance.collection(Constants.kMembersNumberCollectionName).doc('Number').set({
             'total' : ++membersNum
           });
@@ -152,5 +171,30 @@ class RemoteClubsDataSource{
     }
   }
 
+  // TODO: Leader can remove A Member from the Club That he lead .....
+  Future<Unit> removeMemberFromClubILead({required String memberID,required String clubID}) async {
+    try
+    {
+      // TODO: Get Data about RequestSender....
+      DocumentSnapshot memberDocumentSnapshot = await FirebaseFirestore.instance.collection(Constants.kUsersCollectionName).doc(memberID).get();
+      UserModel memberModel = UserModel.fromJson(json: memberDocumentSnapshot.data());
+      List? idForClubsThatHeMemberIn = memberModel.idForClubsMemberIn!;
+      await Future.value(idForClubsThatHeMemberIn.remove(clubID));  // TODO: Delete Club ID from This list, will update his date on Firestore)
+      await FirebaseFirestore.instance.collection(Constants.kUsersCollectionName).doc(memberID).update({
+        'idForClubsMemberIn' : idForClubsThatHeMemberIn.isNotEmpty ? idForClubsThatHeMemberIn : null
+      });
+      // TODO: Delete his document from Members Data that on the Club
+      await FirebaseFirestore.instance.collection(Constants.kClubsCollectionName).doc(clubID).collection(Constants.kMembersDataCollectionName).doc(memberID).delete();
+      // TODO: reduce the number of members on Member Num collection by 1
+      int membersNum = await getMembersNum();
+      await FirebaseFirestore.instance.collection(Constants.kMembersNumberCollectionName).doc('Number').update({
+        'total' : --membersNum
+      });
+      return unit;
+    }
+    on FirebaseException catch(e){
+      throw ServerException(exceptionMessage: e.code);
+    }
+  }
 
 }

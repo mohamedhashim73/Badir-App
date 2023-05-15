@@ -1,13 +1,10 @@
 import 'package:bader_user_app/Core/Components/drawer_item.dart';
 import 'package:bader_user_app/Core/Utils/app_strings.dart';
-import 'package:bader_user_app/Features/Layout/Domain/Entities/user_entity.dart';
 import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_cubit.dart';
 import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-import '../../../../Core/Constants/constants.dart';
 import '../../../../Core/Theme/app_colors.dart';
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -88,7 +85,7 @@ class ProfileScreen extends StatelessWidget {
                             ),
                             SizedBox(height: 15.h),
                             // TODO: This Will be show if he is a member on any club
-                            if( cubit.userData!.committeeName != null )
+                            if( cubit.userData!.idForClubsMemberIn != null )
                               Container(
                                 padding: EdgeInsets.symmetric(vertical: 12.h,horizontal: 15.w),
                                 decoration: BoxDecoration(
@@ -97,11 +94,11 @@ class ProfileScreen extends StatelessWidget {
                                 child: Column(
                                   children:
                                   [
-                                    _titleBehindDescriptionItem(title: "اللجنة", description: "العلمية"),
+                                    _titleBehindDescriptionItem(title: "اللجنة", description: cubit.userData!.committeesName!.join(',')),
                                     SizedBox(height: 2.h,),
-                                    _titleBehindDescriptionItem(title: "الساعات التطوعية", description: "100 ساعة"),
+                                    _titleBehindDescriptionItem(title: "الساعات التطوعية", description: "${cubit.userData!.volunteerHoursNumber ?? 0}"),
                                     SizedBox(height: 2.h,),
-                                    _titleBehindDescriptionItem(title: "بداية العضوية", description: "10/10/2024"),
+                                    _titleBehindDescriptionItem(title: "بداية العضوية", description: cubit.userData!.membershipStartDate!),
                                   ],
                                 ),
                               )

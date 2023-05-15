@@ -15,6 +15,7 @@ import '../../Domain/Entities/request_membership_entity.dart';
 import '../../Domain/Use_Cases/accept_or_reject_membership_request_use_case.dart';
 import '../../Domain/Use_Cases/create_meeting_use_case.dart';
 import '../../Domain/Use_Cases/get_all_membership_requests_use_case.dart';
+import '../../Domain/Use_Cases/remove_member_from_club_use_case.dart';
 import '../../Domain/Use_Cases/request_membership_use_case.dart';
 import '../../Domain/Use_Cases/update_club_use_case.dart';
 import 'clubs_states.dart';
@@ -62,6 +63,7 @@ class ClubsCubit extends Cubit<ClubsStates> {
   List<UserEntity> membersDataOnMyClub = [];    // TODO: I lead
   Future<void> getMembersDataOnMyClub({required LayoutCubit layoutCubit,required String idForClubILead}) async {
     await layoutCubit.getAllUsersOnApp();
+    membersDataOnMyClub.clear();    // TODO: To Get New Data Every time i call it
     List<UserEntity> usersOnApp = layoutCubit.allUsersDataOnApp;    // TODO: As it take value from getAllUsersOnApp() method
     emit(GetMembersOnMyClubDataLoadingState());
     final result = await sl<GetMembersDataOnMyClubUseCase>().execute(idForClubILead: idForClubILead);
@@ -190,8 +192,9 @@ class ClubsCubit extends Cubit<ClubsStates> {
         ));
   }
 
-  void acceptOrRejectMembershipRequest({required LayoutCubit layoutCubit,required String idForClubILead,required String requestSenderID,required String clubID,required bool respondStatus,required String clubName}) async {
-    final result = await sl<AcceptOrRejectMembershipRequestUseCase>().execute(clubID: clubID,requestSenderID: requestSenderID,respondStatus: respondStatus);
+  void acceptOrRejectMembershipRequest({required LayoutCubit layoutCubit,required String committeeNameForRequestSender,required String idForClubILead,required String requestSenderID,required String clubID,required bool respondStatus,required String clubName}) async {
+    emit(AcceptOrRejectMembershipRequestLoadingState());
+    final result = await sl<AcceptOrRejectMembershipRequestUseCase>().execute(committeeNameForRequestSender: committeeNameForRequestSender,clubID: clubID,requestSenderID: requestSenderID,respondStatus: respondStatus);
     result.fold(
             (serverFailure){
               emit(FailedToAcceptOrRejectMembershipRequestState(message: serverFailure.errorMessage));
@@ -201,6 +204,21 @@ class ClubsCubit extends Cubit<ClubsStates> {
               await getMembersDataOnMyClub(layoutCubit: layoutCubit, idForClubILead: idForClubILead);
               emit(AcceptOrRejectMembershipRequestSuccessState());
             }
+    );
+  }
+
+  void removeMemberFromCLubILead({required String idForClubILead,required String memberID,required LayoutCubit layoutCubit}) async {
+    emit(RemoveMemberFromClubLoadingState());
+    final result = await sl<RemoveMemberFromClubILeadUseCase>().execute(memberID: memberID, clubID: idForClubILead);
+    result.fold(
+        (serverFailure)
+        {
+          emit(RemoveMemberFromClubWithFailureState(message: serverFailure.errorMessage));
+        },
+        (unit) async {
+          getMembersDataOnMyClub(layoutCubit: layoutCubit, idForClubILead: idForClubILead);
+          emit(RemoveMemberFromClubSuccessState());
+        }
     );
   }
 

@@ -93,10 +93,10 @@ class ClubsImplyRepository implements ClubsContractRepository{
   }
 
   @override
-  Future<Either<Failure, Unit>> acceptOrRejectMembershipRequest({required String requestSenderID, required String clubID, required bool respondStatus}) async {
+  Future<Either<Failure, Unit>> acceptOrRejectMembershipRequest({required String committeeNameForRequestSender,required String requestSenderID, required String clubID, required bool respondStatus}) async {
     try
     {
-      final clubs = await remoteClubsDataSource.acceptOrRejectMembershipRequest(requestSenderID: requestSenderID, clubID: clubID, respondStatus: respondStatus);
+      final clubs = await remoteClubsDataSource.acceptOrRejectMembershipRequest(committeeNameForRequestSender: committeeNameForRequestSender,requestSenderID: requestSenderID, clubID: clubID, respondStatus: respondStatus);
       return const Right(unit);
     }
     on ServerException catch(exception)
@@ -111,6 +111,18 @@ class ClubsImplyRepository implements ClubsContractRepository{
     {
       final requests = await remoteClubsDataSource.getMembershipRequests(clubID: clubID);
       return Right(requests);
+    }
+    on ServerException catch(exception)
+    {
+      return Left(ServerFailure(errorMessage: exception.exceptionMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> removeMemberFromClubILead({required String memberID, required String clubID}) async {
+    try
+    {
+      return Right(await remoteClubsDataSource.removeMemberFromClubILead(memberID: memberID, clubID: clubID));
     }
     on ServerException catch(exception)
     {

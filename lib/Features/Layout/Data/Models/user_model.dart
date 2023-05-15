@@ -1,10 +1,10 @@
 import 'package:bader_user_app/Features/Layout/Domain/Entities/user_entity.dart';
 
 class UserModel extends UserEntity {
-  const UserModel(super.name, super.id,super.idForClubLead, super.email, super.role, super.password, super.gender, super.college, super.phone,super.isALeader,super.committeeName,super.membershipStartDate,super.volunteerHoursNumber);
+  const UserModel(super.name, super.id,super.idForClubLead, super.email, super.role, super.password, super.gender, super.college, super.phone,super.isALeader,super.committeesName,super.membershipStartDate,super.volunteerHoursNumber,super.idForClubsMemberIn);
 
   factory UserModel.fromJson({required json}) {
-    return UserModel(json['name'], json['id'],json['idForClubLead'], json['email'], json['role'], json['password'], json['gender'], json['college'], json['phone'],json['isALeader'],json['committeeName'],json['membershipStartDate'],json['volunteerHoursNumber']);
+    return UserModel(json['name'], json['id'],json['idForClubLead'], json['email'], json['role'], json['password'], json['gender'], json['college'], json['phone'],json['isALeader'],json['committeesName'],json['membershipStartDate'],json['volunteerHoursNumber'],json['idForClubsMemberIn']);
   }
 
   Map<String,dynamic> toJson(){
@@ -20,8 +20,9 @@ class UserModel extends UserEntity {
       'idForClubLead' : super.idForClubLead,
       'isALeader' : super.isALeader,
       'membershipStartDate' : super.membershipStartDate,
-      'committeeName' : super.committeeName,
+      'committeesName' : super.committeesName,
       'volunteerHoursNumber' : super.volunteerHoursNumber,
+      'idForClubsMemberIn' : super.idForClubsMemberIn,
     };
   }
 

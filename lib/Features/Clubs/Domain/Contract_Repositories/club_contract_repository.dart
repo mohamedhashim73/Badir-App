@@ -13,12 +13,14 @@ abstract class ClubsContractRepository{
 
   // TODO: CLUBS -- LEADER ROLE
   Future<Either<Failure,String>> uploadClubImageToStorage({required File imgFile});
+  Future<Either<Failure,Unit>> removeMemberFromClubILead({required String memberID,required String clubID});
+
   // Unit replace void role
   Future<Either<Failure,Unit>> updateClubData({required String clubID,required String image,required String name,required int memberNum,required String aboutClub,required ContactMeansForClubModel contactInfo});
   Future<bool> deleteClub({required String clubID});
 
   // TODO: ACCEPT OR REFUSE MEMBERSHIP REQUEST -- LEADER ROLE
-  Future<Either<Failure,Unit>> acceptOrRejectMembershipRequest({required String requestSenderID,required String clubID,required bool respondStatus});
+  Future<Either<Failure,Unit>> acceptOrRejectMembershipRequest({required String committeeNameForRequestSender,required String requestSenderID,required String clubID,required bool respondStatus});
   Future<bool> deleteMemberFromClub({required String memberID});
   Future<Either<Failure,Set<String>>> getMembersOnMyClub({required String idForClubILead});
 

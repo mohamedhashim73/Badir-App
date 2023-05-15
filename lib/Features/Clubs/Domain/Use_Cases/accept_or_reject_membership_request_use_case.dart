@@ -8,8 +8,8 @@ class AcceptOrRejectMembershipRequestUseCase{
 
   AcceptOrRejectMembershipRequestUseCase({required this.clubsContractRepository});
 
-  Future<Either<Failure, Unit>> execute({required String requestSenderID,required String clubID,required bool respondStatus}) async {
-    return await clubsContractRepository.acceptOrRejectMembershipRequest(requestSenderID: requestSenderID, clubID: clubID, respondStatus: respondStatus);
+  Future<Either<Failure, Unit>> execute({required String committeeNameForRequestSender,required String requestSenderID,required String clubID,required bool respondStatus}) async {
+    return await clubsContractRepository.acceptOrRejectMembershipRequest(committeeNameForRequestSender: committeeNameForRequestSender,requestSenderID: requestSenderID, clubID: clubID, respondStatus: respondStatus);
   }
 
 }

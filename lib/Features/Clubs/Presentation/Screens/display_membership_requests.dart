@@ -1,4 +1,4 @@
-import 'package:bader_user_app/Core/Components/button_item.dart';
+import 'package:bader_user_app/Core/Components/alert_dialog_for_loading_item.dart';
 import 'package:bader_user_app/Core/Theme/app_colors.dart';
 import 'package:bader_user_app/Features/Clubs/Domain/Entities/request_membership_entity.dart';
 import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_cubit.dart';
@@ -27,7 +27,12 @@ class MembershipRequestsScreen extends StatelessWidget {
           {
             if( state is AcceptOrRejectMembershipRequestSuccessState )
               {
+                Navigator.pop(context);   // TODO: To get out from Alert Dialog ( showLoadingDialog )
                 cubit.getMembershipRequests(clubID: clubID);
+              }
+            if( state is AcceptOrRejectMembershipRequestLoadingState )
+              {
+                showLoadingDialog(context: context);
               }
           },
           builder: (context,state){
@@ -71,9 +76,9 @@ Widget _requestMembershipItem({required RequestMembershipEntity requestData,requ
           mainAxisAlignment: MainAxisAlignment.end,
           children:
           [
-            _buttonItem(clubID: clubID,cubit: cubit,responseStatus: true,requestSenderID: requestData.userAskForMembershipID!,layoutCubit: layoutCubit,clubName: clubName),
+            _buttonItem(committeeNameForRequestSender: requestData.committeeName!,clubID: clubID,cubit: cubit,responseStatus: true,requestSenderID: requestData.userAskForMembershipID!,layoutCubit: layoutCubit,clubName: clubName),
             SizedBox(width: 10.w,),
-            _buttonItem(clubID: clubID,cubit: cubit,responseStatus: false,requestSenderID: requestData.userAskForMembershipID!,layoutCubit: layoutCubit,clubName: clubName),
+            _buttonItem(committeeNameForRequestSender: requestData.committeeName!,clubID: clubID,cubit: cubit,responseStatus: false,requestSenderID: requestData.userAskForMembershipID!,layoutCubit: layoutCubit,clubName: clubName),
           ],
         )
       ],
@@ -81,11 +86,11 @@ Widget _requestMembershipItem({required RequestMembershipEntity requestData,requ
   );
 }
 
-Widget _buttonItem({required bool responseStatus,required ClubsCubit cubit,required String requestSenderID,required String clubID,required String clubName,required LayoutCubit layoutCubit}){
+Widget _buttonItem({required bool responseStatus,required ClubsCubit cubit,required String committeeNameForRequestSender,required String requestSenderID,required String clubID,required String clubName,required LayoutCubit layoutCubit}){
   return MaterialButton(
     shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
     height:30.h,
-    onPressed: () => cubit.acceptOrRejectMembershipRequest(idForClubILead: clubID,requestSenderID: requestSenderID, clubID: clubID, respondStatus: responseStatus,layoutCubit: layoutCubit,clubName: clubName),
+    onPressed: () => cubit.acceptOrRejectMembershipRequest(committeeNameForRequestSender: committeeNameForRequestSender,idForClubILead: clubID,requestSenderID: requestSenderID, clubID: clubID, respondStatus: responseStatus,layoutCubit: layoutCubit,clubName: clubName),
     color: responseStatus ? AppColors.kGreenColor : AppColors.kRedColor,
     child: Text(responseStatus ? 'قبول' : "رفض",)
   );

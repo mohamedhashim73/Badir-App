@@ -1,4 +1,3 @@
-import 'package:bader_user_app/Core/Constants/enumeration.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -8,7 +7,7 @@ import '../../Features/Clubs/Presentation/Controller/clubs_cubit.dart';
 import '../../Features/Events/Presentation/Controller/events_cubit.dart';
 import '../../Features/Layout/Presentation/Controller/layout_cubit.dart';
 
-class Constants{
+class Constants {
   static dynamic providers = [
     BlocProvider(create: (context) => AuthCubit()),
     BlocProvider(create: (context) => ClubsCubit()),
@@ -23,7 +22,7 @@ class Constants{
   static String kNotificationsCollectionName = "Notifications";
   static String kUsersCollectionName = "Users";
   static String kClubsCollectionName = "Clubs";
-  static String kMeetingsCollectionName = "Meeting";
+  static String kMeetingsCollectionName = "Meetings";
   static String kMembershipRequestsCollectionName = "Membership Requests";
   static String kMembersDataCollectionName = "Members Data";
   static String kMembersNumberCollectionName = "Members Number";
