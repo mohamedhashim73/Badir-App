@@ -33,7 +33,7 @@ class NotifyComponent extends StatelessWidget {
           SizedBox(height: 2.5.h,),
           Align(
             alignment: AlignmentDirectional.topEnd,
-            child: Text(notifyData.notifyDate!),
+            child: Text(notifyData.receiveDate!),
           )
         ],
       ),

@@ -56,7 +56,7 @@ class LayoutRemoteDataSource {
   Future<void> sendNotification({required String senderID,required String receiverID,required String clubID,required String notifyContent,required NotificationType notifyType}) async {
     try
     {
-      NotifyModel notifyModel = NotifyModel(Constants.getTimeNow(), clubID, notifyContent, false, senderID, notifyType.toString());
+      NotifyModel notifyModel = NotifyModel(Constants.getTimeNow(), senderID, notifyType.name, false, notifyContent,clubID);
       await FirebaseFirestore.instance.collection(Constants.kUsersCollectionName).doc(receiverID).
       collection(Constants.kNotificationsCollectionName).add(notifyModel.toJson());
     }

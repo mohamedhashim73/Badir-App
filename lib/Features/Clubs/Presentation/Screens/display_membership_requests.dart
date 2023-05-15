@@ -1,6 +1,7 @@
 import 'package:bader_user_app/Core/Components/alert_dialog_for_loading_item.dart';
 import 'package:bader_user_app/Core/Theme/app_colors.dart';
 import 'package:bader_user_app/Features/Clubs/Domain/Entities/request_membership_entity.dart';
+import 'package:bader_user_app/Features/Clubs/Presentation/Components/display_member_info_item.dart';
 import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -45,7 +46,7 @@ class MembershipRequestsScreen extends StatelessWidget {
                       separatorBuilder: (context,index) => SizedBox(height: 12.h,),
                       itemBuilder: (context,index)
                       {
-                        return _requestMembershipItem(clubName:clubName,layoutCubit:layoutCubit,cubit: cubit,requestData: cubit.membershipRequests[index],clubID: clubID);
+                        return _requestMembershipItem(context:context,clubName:clubName,layoutCubit:layoutCubit,cubit: cubit,requestData: cubit.membershipRequests[index],clubID: clubID);
                       },
                     ) : state is GetMembershipRequestLoadingState ?
                     CircularProgressIndicator(color: AppColors.kMainColor,) :
@@ -59,37 +60,40 @@ class MembershipRequestsScreen extends StatelessWidget {
   }
 }
 
-Widget _requestMembershipItem({required RequestMembershipEntity requestData,required LayoutCubit layoutCubit,required ClubsCubit cubit,required String clubID,required String clubName}){
-  return Container(
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(4),
-      color: AppColors.kYellowColor,
-    ),
-    padding: EdgeInsets.symmetric(vertical: 10.h,horizontal: 12.w),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children:
-      [
-        Text(requestData.requestUserName!,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15.5.sp),),
-        SizedBox(height: 5.h,),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children:
-          [
-            _buttonItem(committeeNameForRequestSender: requestData.committeeName!,clubID: clubID,cubit: cubit,responseStatus: true,requestSenderID: requestData.userAskForMembershipID!,layoutCubit: layoutCubit,clubName: clubName),
-            SizedBox(width: 10.w,),
-            _buttonItem(committeeNameForRequestSender: requestData.committeeName!,clubID: clubID,cubit: cubit,responseStatus: false,requestSenderID: requestData.userAskForMembershipID!,layoutCubit: layoutCubit,clubName: clubName),
-          ],
-        )
-      ],
+Widget _requestMembershipItem({required BuildContext context,required RequestMembershipEntity requestData,required LayoutCubit layoutCubit,required ClubsCubit cubit,required String clubID,required String clubName}){
+  return InkWell(
+    onTap: () => showMemberData(context: context, committeeName: requestData.committeeName!, aboutMember: requestData.infoAboutAsker!),
+    child: Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(4),
+        color: AppColors.kYellowColor,
+      ),
+      padding: EdgeInsets.symmetric(vertical: 10.h,horizontal: 12.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children:
+        [
+          Text(requestData.requestUserName!,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15.5.sp),),
+          SizedBox(height: 5.h,),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children:
+            [
+              _buttonItem(committeeNameForRequestSender: requestData.committeeName!,clubID: clubID,cubit: cubit,responseStatus: true,requestSenderID: requestData.userAskForMembershipID!,layoutCubit: layoutCubit,clubName: clubName),
+              SizedBox(width: 10.w,),
+              _buttonItem(committeeNameForRequestSender: requestData.committeeName!,clubID: clubID,cubit: cubit,responseStatus: false,requestSenderID: requestData.userAskForMembershipID!,layoutCubit: layoutCubit,clubName: clubName),
+            ],
+          )
+        ],
+      ),
     ),
   );
 }
 
 Widget _buttonItem({required bool responseStatus,required ClubsCubit cubit,required String committeeNameForRequestSender,required String requestSenderID,required String clubID,required String clubName,required LayoutCubit layoutCubit}){
   return MaterialButton(
-    shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-    height:30.h,
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+    height: 30.h,
     onPressed: () => cubit.acceptOrRejectMembershipRequest(committeeNameForRequestSender: committeeNameForRequestSender,idForClubILead: clubID,requestSenderID: requestSenderID, clubID: clubID, respondStatus: responseStatus,layoutCubit: layoutCubit,clubName: clubName),
     color: responseStatus ? AppColors.kGreenColor : AppColors.kRedColor,
     child: Text(responseStatus ? 'قبول' : "رفض",)
