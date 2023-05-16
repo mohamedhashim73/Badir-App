@@ -7,6 +7,7 @@ import '../../../Clubs/Domain/Entities/member_entity.dart';
 import '../../Domain/Contract_Repositories/events_contract_repository.dart';
 import '../Data_Sources/local_events_data_source.dart';
 import '../Data_Sources/remote_events_data_source.dart';
+import '../Models/event_model.dart';
 
 class EventsImplyRepository implements EventsContractRepository{
   final RemoteEventsDataSource remoteEventsDataSource;
@@ -52,9 +53,14 @@ class EventsImplyRepository implements EventsContractRepository{
   }
 
   @override
-  Future<bool> editEvent({required String eventID}) {
-    // TODO: implement editEvent
-    throw UnimplementedError();
+  Future<Either<Failure,Unit>> updateEvent({required String eventID,required EventModel eventModel}) async {
+    try
+    {
+      return Right(await remoteEventsDataSource.updateEvent(eventID: eventID,eventModel: eventModel));
+    }
+    on ServerException catch(e){
+      return Left(ServerFailure(errorMessage: e.exceptionMessage));
+    }
   }
 
   @override

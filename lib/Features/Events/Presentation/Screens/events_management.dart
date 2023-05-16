@@ -4,6 +4,7 @@ import 'package:bader_user_app/Features/Events/Domain/Entities/event_entity.dart
 import 'package:bader_user_app/Features/Events/Presentation/Controller/events_cubit.dart';
 import 'package:bader_user_app/Features/Events/Presentation/Controller/events_states.dart';
 import 'package:bader_user_app/Features/Events/Presentation/Screens/event_details_screen.dart';
+import 'package:bader_user_app/Features/Events/Presentation/Screens/update_event_screen.dart';
 import 'package:bader_user_app/Features/Events/Presentation/Screens/view_memebrs_on_an_event_screen.dart';
 import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_cubit.dart';
 import 'package:flutter/material.dart';
@@ -82,7 +83,13 @@ class EventsManagementScreen extends StatelessWidget {
           children:
           [
             Expanded(child: Text(eventData.name!,style: const TextStyle(fontWeight:FontWeight.bold,overflow: TextOverflow.ellipsis),)),
-            _buttonItem(title: 'تحديث', onTap: (){},),
+            _buttonItem(
+              title: 'تحديث',
+              onTap: ()
+              {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => UpdateEventScreen(eventEntity: eventData)));
+              },
+            ),
             SizedBox(width: 5.w,),
             _buttonItem(
                 title: 'المسجلين',

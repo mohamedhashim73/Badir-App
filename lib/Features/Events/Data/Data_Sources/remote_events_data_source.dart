@@ -1,4 +1,5 @@
 import 'package:bader_user_app/Features/Clubs/Data/Models/member_model.dart';
+import 'package:bader_user_app/Features/Events/Domain/Entities/event_entity.dart';
 import 'package:bader_user_app/Features/Layout/Data/Models/user_model.dart';
 import 'package:bader_user_app/Features/Layout/Domain/Entities/user_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -20,6 +21,17 @@ class RemoteEventsDataSource{
       ++newEventID;
       EventModel eventModel = EventModel(name, newEventID.toString(), description, imageUrl, startDate, endDate, time, forPublic.name, location, link, null, clubName, clubID);
       await FirebaseFirestore.instance.collection(Constants.kEventsCollectionName).doc(newEventID.toString().trim()).set(eventModel.toJson());
+      return unit;
+    }
+    on FirebaseException catch(e){
+      throw ServerException(exceptionMessage: e.code);
+    }
+  }
+
+  Future<Unit> updateEvent({required String eventID,required EventModel eventModel}) async {
+    try
+    {
+      await FirebaseFirestore.instance.collection(Constants.kEventsCollectionName).doc(eventID).update(eventModel.toJson());
       return unit;
     }
     on FirebaseException catch(e){

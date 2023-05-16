@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'package:bader_user_app/Features/Clubs/Domain/Entities/member_entity.dart';
+import 'package:bader_user_app/Features/Events/Data/Models/event_model.dart';
 import 'package:bader_user_app/Features/Events/Domain/Use_Cases/delete_event_use_case.dart';
 import 'package:bader_user_app/Features/Events/Domain/Use_Cases/get_members_on_an_event_use_case.dart';
 import 'package:bader_user_app/Features/Events/Domain/Use_Cases/join_to_event_use_case.dart';
+import 'package:bader_user_app/Features/Events/Domain/Use_Cases/update_event_use_case.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:bader_user_app/Core/Constants/constants.dart';
 import 'package:bader_user_app/Core/Service%20Locators/service_locators.dart';
@@ -58,6 +60,29 @@ class EventsCubit extends Cubit<EventsStates> {
           membersDataForAnEvent = members;
           debugPrint("Members num on this Event is : ${members.length}");
           emit(GetMembersOnAnEventSuccessState());
+        }
+    );
+  }
+
+  // TODO: related to Leader....
+  void updateEvent({required LayoutCubit layoutCubit,required String mainImageUrl,required String eventID,required String name,required EventForPublicOrNot forPublic,required String description,required String startDate,required String endDate,required String time,required String location,required String link,required String clubID,required String clubName}) async {
+    emit(UpdateEventLoadingState());
+    String? imgUrl ;
+    if( eventImage != null )
+      {
+        imgUrl = await layoutCubit.uploadFileToStorage(file: eventImage!);
+      }
+    EventModel eventModel = EventModel(name, eventID, description, imgUrl ?? mainImageUrl, startDate, endDate, time, forPublic.name, location, link, null, clubName, clubID);
+    final result = await sl<UpdateEventUseCase>().execute(eventID: eventID,eventModel:eventModel);
+    result.fold(
+        (serverFailure)
+        {
+          emit(FailedToUpdateEventState(message: serverFailure.errorMessage));
+        },
+        (unit) async
+        {
+          await getAllEvents(idForClubILead: clubID);
+          emit(UpdateEventSuccessState());
         }
     );
   }
