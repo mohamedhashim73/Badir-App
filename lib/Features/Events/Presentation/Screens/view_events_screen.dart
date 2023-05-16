@@ -1,4 +1,5 @@
 import 'package:bader_user_app/Core/Components/snackBar_item.dart';
+import 'package:bader_user_app/Core/Constants/constants.dart';
 import 'package:bader_user_app/Core/Theme/app_colors.dart';
 import 'package:bader_user_app/Features/Events/Domain/Entities/event_entity.dart';
 import 'package:bader_user_app/Features/Events/Presentation/Controller/events_cubit.dart';
@@ -8,6 +9,7 @@ import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_cu
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:jiffy/jiffy.dart';
 import '../../../../Core/Constants/enumeration.dart';
 import 'event_details_screen.dart';
 
@@ -17,7 +19,8 @@ class ViewAllEventsThrowAppScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final EventsCubit eventCubit = EventsCubit.getInstance(context);
-    final UserEntity userEntity = LayoutCubit.getInstance(context).userData!;
+    final LayoutCubit layoutCubit = LayoutCubit.getInstance(context);
+    final UserEntity userEntity = layoutCubit.userData!;
     return DefaultTabController(
       length: 2,
       child: SafeArea(
@@ -46,8 +49,8 @@ class ViewAllEventsThrowAppScreen extends StatelessWidget {
                     return TabBarView(
                       children:
                       [
-                        _displayEvents(userEntity: userEntity,context: context,newEventsOrNot: true,events: eventCubit.newEvents),
-                        _displayEvents(userEntity: userEntity,context: context,newEventsOrNot: false,events: eventCubit.pastEvents),
+                        _displayEvents(eventsCubit: eventCubit,layoutCubit: layoutCubit,userEntity: userEntity,context: context,newEventsOrNot: true,events: eventCubit.newEvents),
+                        _displayEvents(eventsCubit:eventCubit,layoutCubit:layoutCubit,userEntity: userEntity,context: context,newEventsOrNot: false,events: eventCubit.pastEvents),
                       ],
                     );
                   }
@@ -59,13 +62,15 @@ class ViewAllEventsThrowAppScreen extends StatelessWidget {
     );
   }
 
-  Widget _displayEvents({required UserEntity userEntity,required List<EventEntity> events,required bool newEventsOrNot,required BuildContext context}){
+  Widget _displayEvents({required EventsCubit eventsCubit,required LayoutCubit layoutCubit,required UserEntity userEntity,required List<EventEntity> events,required bool newEventsOrNot,required BuildContext context}){
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 12.w,vertical: 10.h),
       child: ListView.separated(
         itemCount: events.length,
         itemBuilder: (context,index)
         {
+          // TODO: eventFinished use it to know if i will give my opinion or not
+          bool eventFinished = DateTime.now().isAfter(Jiffy("${events[index].endDate!.trim()} ${events[index].time!.trim()}", "MMMM dd, yyyy h:mm a").dateTime);
           return GestureDetector(
             onTap: ()
             {
@@ -92,28 +97,32 @@ class ViewAllEventsThrowAppScreen extends StatelessWidget {
                     Align(
                       alignment: AlignmentDirectional.topEnd,
                       child: MaterialButton(
-                          color: userEntity.idForClubLead != null ? AppColors.kOrangeColor : userEntity.idForEventsJoined != null && userEntity.idForEventsJoined!.contains(events[index].id) == false ? AppColors.kRedColor : AppColors.kMainColor,
+                          elevation: 0,
+                          color: userEntity.idForClubLead != null ? AppColors.kMainColor : userEntity.idForEventsJoined != null && userEntity.idForEventsJoined!.contains(events[index].id) && eventFinished == false ? AppColors.kGreenColor : userEntity.idForEventsJoined != null && userEntity.idForEventsJoined!.contains(events[index].id) && eventFinished ? AppColors.kOrangeColor : ( ( userEntity.idForClubsMemberIn != null && userEntity.idForClubsMemberIn!.contains(events[index].clubID) ) || ( events[index].forPublic == EventForPublicOrNot.public.name ) ) && (eventFinished == false) ? AppColors.kMainColor : AppColors.kRedColor,
                           textColor: AppColors.kWhiteColor,
                           onPressed: ()
                           {
                             if( userEntity.idForClubLead != null )
                               {
                                 // TODO: Open Details ....
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => EventDetailsScreen(event: events[index],eventDateExpired: !newEventsOrNot)));
                               }
-                            else if ( userEntity.idForEventsJoined != null && userEntity.idForEventsJoined!.contains(events[index].id) == false && newEventsOrNot == true )
+                            else if ( ( ( userEntity.idForClubsMemberIn != null && userEntity.idForClubsMemberIn!.contains(events[index].clubID) ) || ( events[index].forPublic == EventForPublicOrNot.public.name ) ) && (eventFinished == false) )
                               {
                                 // TODO: Join to Event Function ...
+                                eventsCubit.joinToEvent(eventID: events[index].id!, layoutCubit: layoutCubit, memberID: userEntity.id ?? Constants.userID!);
                               }
-                            else if ( userEntity.idForEventsJoined != null && userEntity.idForEventsJoined!.contains(events[index].id) == false && newEventsOrNot == false )
+                            else if ( userEntity.idForEventsJoined != null && userEntity.idForEventsJoined!.contains(events[index].id) && eventFinished )
                               {
                                 // TODO: Give opinion Function ...
+                                debugPrint("Give an Opinion on event ...");
                               }
                             else
                               {
                                 showSnackBar(context: context, message: "هذا الفعالية خاصة بأعضاء نادي ${events[index].name}",backgroundColor: AppColors.kRedColor);
                               }
                           },
-                          child: Text(userEntity.idForClubLead != null ? "متابعة" : userEntity.idForEventsJoined != null && userEntity.idForEventsJoined!.contains(events[index].id) == false ? "خاصة" : newEventsOrNot ? 'انضمام' : 'شاركنا برأيك')
+                          child: Text(userEntity.idForClubLead != null ? "متابعة" : userEntity.idForEventsJoined != null && userEntity.idForEventsJoined!.contains(events[index].id) && eventFinished == false ? "تم التسجيل" : userEntity.idForEventsJoined != null && userEntity.idForEventsJoined!.contains(events[index].id) && eventFinished ? 'شاركنا برأيك' : ( ( userEntity.idForClubsMemberIn != null && userEntity.idForClubsMemberIn!.contains(events[index].clubID) ) || ( events[index].forPublic == EventForPublicOrNot.public.name ) ) && (eventFinished == false) ? "طلب انضمام" : "خاصة")
                       ),
                     )
                   ],

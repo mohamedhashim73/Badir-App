@@ -3,6 +3,8 @@ import 'package:bader_user_app/Features/Auth/Presentation/Screens/login_screen.d
 import 'package:bader_user_app/Core/Constants/constants.dart';
 import 'package:bader_user_app/Core/Network/sharedPref.dart';
 import 'package:bader_user_app/Core/Service%20Locators/service_locators.dart';
+import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_cubit.dart';
+import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_states.dart';
 import 'package:bader_user_app/Features/Layout/Presentation/Screens/layout_screen.dart';
 import 'package:bader_user_app/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -35,20 +37,25 @@ class MyApp extends StatelessWidget {
       builder: (context,child){
         return MultiBlocProvider(
           providers: Constants.providers,
-          child: MaterialApp(
-            routes: AppRoutes.routes,
-            theme: ThemeData(
-              fontFamily: 'Cairo',
-              appBarTheme: AppBarTheme(
-                backgroundColor: AppColors.kMainColor,
-                elevation: 0,
-              ),
-              buttonTheme: ButtonThemeData(
-                buttonColor: AppColors.kMainColor
-              )
-            ),
-            debugShowCheckedModeBanner: false,
-            home: Constants.userID != null ? const LayoutScreen() : LoginScreen()
+          child: BlocBuilder<LayoutCubit,LayoutStates>(
+            buildWhen: (pastState,currentState) => currentState is GetMyDataSuccessState,
+            builder: (context,state) {
+              return MaterialApp(
+                routes: AppRoutes.routes,
+                theme: ThemeData(
+                  fontFamily: 'Cairo',
+                  appBarTheme: AppBarTheme(
+                    backgroundColor: AppColors.kMainColor,
+                    elevation: 0,
+                  ),
+                  buttonTheme: ButtonThemeData(
+                    buttonColor: AppColors.kMainColor
+                  )
+                ),
+                debugShowCheckedModeBanner: false,
+                home: Constants.userID != null ? const LayoutScreen() : LoginScreen()
+              );
+            }
           ),
         );
       }

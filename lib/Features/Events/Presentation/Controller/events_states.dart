@@ -32,3 +32,10 @@ class FailedToDeleteEventState extends EventsStates{
   final String message;
   FailedToDeleteEventState({required this.message});
 }
+
+class JoinToEventLoadingState extends EventsStates{}
+class JoinToEventSuccessState extends EventsStates{}
+class FailedToJoinToEventState extends EventsStates{
+  final String message;
+  FailedToJoinToEventState({required this.message});
+}

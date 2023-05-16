@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:bader_user_app/Features/Events/Domain/Use_Cases/delete_event_use_case.dart';
+import 'package:bader_user_app/Features/Events/Domain/Use_Cases/join_to_event_use_case.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:bader_user_app/Core/Constants/constants.dart';
 import 'package:bader_user_app/Core/Service%20Locators/service_locators.dart';
@@ -52,15 +53,8 @@ class EventsCubit extends Cubit<EventsStates> {
     for( int i = 0 ; i < allEvents.length ; i++ )
     {
       DateTime eventDate = Jiffy("${allEvents[i].endDate!.trim()} ${allEvents[i].time!.trim()}", "MMMM dd, yyyy h:mm a").dateTime;
-      // TODO: Leader ..... OWN EVENTS will be shown on events management Screen
-      if( idForClubILead != null && allEvents[i].clubID == idForClubILead )
-        {
-          ownEvents.add(allEvents[i]);
-        }
-      else
-        {
-          DateTime.now().isAfter(eventDate) && allEvents[i].forPublic == EventForPublicOrNot.public.name ? pastEvents.add(allEvents[i]) : newEvents.add(allEvents[i]);
-        }
+      if( idForClubILead != null && allEvents[i].clubID == idForClubILead ) ownEvents.add(allEvents[i]);
+      DateTime.now().isAfter(eventDate) ? pastEvents.add(allEvents[i]) : newEvents.add(allEvents[i]);
     }
     emit(EventsClassifiedSuccessState());
   }
@@ -121,6 +115,22 @@ class EventsCubit extends Cubit<EventsStates> {
               await getAllEvents(idForClubILead: idForClubILead);    // TODO: as it updated
               emit(DeleteEventSuccessState());
             }
+    );
+  }
+
+  void joinToEvent({required String eventID,required LayoutCubit layoutCubit,required String memberID}) async {
+    emit(JoinToEventLoadingState());
+    final result = await sl<JoinToEventUseCase>().execute(eventID: eventID, memberID: memberID);
+    result.fold(
+        (serverFailure)
+        {
+          emit(FailedToJoinToEventState(message: serverFailure.errorMessage));
+        },
+        (unit) async
+        {
+          await layoutCubit.getMyData();   // TODO: لأن حصل في تعديل في الداتا بتاعته وخصوصا في idForEventsJoined
+          emit(JoinToEventSuccessState());
+        }
     );
   }
 }

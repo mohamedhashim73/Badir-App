@@ -54,25 +54,28 @@ class EventDetailsScreen extends StatelessWidget {
                 _textField(controller:_timeController,title: 'الوقت',onTap: (){}),
                 _textField(controller:_locationController,title: 'المكان'),
                 _textField(controller:_linkController,title: 'اللينك'),
-                _radioItem(title: 'خاص بالنادي', value: EventForPublicOrNot.private),
-                if( userEntity.idForClubLead == null && ( ( userEntity.idForEventsJoined != null && userEntity.idForEventsJoined!.contains(event.id) ) || event.forPublic == EventForPublicOrNot.public.name ) )
+                _radioItem(title: event.forPublic == EventForPublicOrNot.private.name ? 'خاص بالنادي' : 'للعامة', value: event.forPublic == EventForPublicOrNot.private.name ? EventForPublicOrNot.private : EventForPublicOrNot.public),
+                if( userEntity.idForClubLead == null && ( ( userEntity.idForEventsJoined != null && userEntity.idForClubsMemberIn!.contains(event.clubID) ) || event.forPublic == EventForPublicOrNot.public.name ) )
                   SizedBox(height: 10.h,),
-                if( userEntity.idForClubLead == null && ( ( userEntity.idForEventsJoined != null && userEntity.idForEventsJoined!.contains(event.id) ) || event.forPublic == EventForPublicOrNot.public.name ) )
+                if( userEntity.idForClubLead == null && ( ( userEntity.idForEventsJoined != null && userEntity.idForClubsMemberIn!.contains(event.clubID) ) || event.forPublic == EventForPublicOrNot.public.name ) )
                   DefaultButton(
                   // TODO: مش هيظهر الا اذا كنت مسجل فيها او هي كانت عامة بس لو انا ليدر مش هيظهر ...
                   width: double.infinity,
+                  backgroundColor: userEntity.idForEventsJoined!.contains(event.id) && eventDateExpired == false ? AppColors.kOrangeColor : AppColors.kMainColor,
                   onTap: ()
                   {
-                    if( eventDateExpired )
+                    if( eventDateExpired == true && userEntity.idForEventsJoined != null && userEntity.idForEventsJoined!.contains(event.id) )
                       {
-                        // TODO: Give opinion ....
+                        // Give Opinion ...
+                        debugPrint("Give an Opinion ....");
                       }
-                    else
+                    else if ( eventDateExpired == false && userEntity.idForEventsJoined != null && userEntity.idForEventsJoined!.contains(event.id) == false && userEntity.idForClubsMemberIn != null && userEntity.idForClubsMemberIn!.contains(event.clubID))
                       {
-                        // TODO: Ask to join to it ....
+                        // Join to Event ...
+                        debugPrint("Ask to Join to Event .....");
                       }
                   },
-                  title: eventDateExpired ? "شاركنا برأيك!" : "انضمام",
+                  title: eventDateExpired ? "شاركنا برأيك" : userEntity.idForEventsJoined!.contains(event.id) ? "تم التسجيل" : "انضمام",
                 )
               ],
             )

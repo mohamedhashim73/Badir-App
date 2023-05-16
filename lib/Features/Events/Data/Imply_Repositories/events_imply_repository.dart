@@ -56,4 +56,16 @@ class EventsImplyRepository implements EventsContractRepository{
     throw UnimplementedError();
   }
 
+  @override
+  Future<Either<Failure, Unit>> joinToEvent({required String eventID, required String memberID}) async {
+    try
+    {
+      await remoteEventsDataSource.joinToEvent(eventID: eventID, memberID: memberID);
+      return const Right(unit);
+    }
+    on ServerException catch(e){
+      return Left(ServerFailure(errorMessage: e.exceptionMessage));
+    }
+  }
+
 }

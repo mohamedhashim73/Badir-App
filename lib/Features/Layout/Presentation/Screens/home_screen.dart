@@ -1,3 +1,4 @@
+import 'package:bader_user_app/Core/Components/alert_dialog_for_loading_item.dart';
 import 'package:bader_user_app/Core/Components/snackBar_item.dart';
 import 'package:bader_user_app/Core/Constants/constants.dart';
 import 'package:bader_user_app/Core/Utils/app_strings.dart';
@@ -162,8 +163,20 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 12.h,),
-                    BlocBuilder<EventsCubit,EventsStates>(
+                    BlocConsumer<EventsCubit,EventsStates>(
                         buildWhen: (previousState,currentState) => currentState is GetEventsDataSuccessState && previousState != currentState,
+                        listener: (context,state)
+                        {
+                          if( state is JoinToEventLoadingState )
+                            {
+                              showLoadingDialog(context: context);
+                            }
+                          if( state is JoinToEventSuccessState || state is FailedToJoinToEventState )
+                            {
+                              Navigator.pop(context);    // TODO: Get out from Alert Dialog...
+                              showSnackBar(context: context, message: state is FailedToJoinToEventState ? state.message : 'تم التسجيل بالفعالية بنجاح',backgroundColor: state is FailedToJoinToEventState ? AppColors.kRedColor : AppColors.kGreenColor);
+                            }
+                        },
                         builder: (context,state) {
                           return eventsCubit.allEvents.isNotEmpty ?
                           SizedBox(
@@ -181,7 +194,7 @@ class HomeScreen extends StatelessWidget {
                                   {
                                     // TODO: eventDate => لان محتاج اعرف اذا كانت الفعاليه عدت ولا لا
                                     DateTime eventDate = Jiffy("${eventsCubit.allEvents[index].endDate!.trim()} ${eventsCubit.allEvents[index].time!.trim()}", "MMMM dd, yyyy h:mm a").dateTime;
-                                    return _displayEventOverView(myData: layoutCubit.userData!,context:context,eventEntity: eventsCubit.allEvents[index],eventDateExpired: DateTime.now().isAfter(eventDate) ? true : false);
+                                    return _displayEventOverView(eventsCubit: eventsCubit,myData: layoutCubit.userData!,context:context,eventEntity: eventsCubit.allEvents[index],eventDateExpired: DateTime.now().isAfter(eventDate) ? true : false, layoutCubit: layoutCubit);
                                   },
                                 );
                               },
@@ -194,7 +207,7 @@ class HomeScreen extends StatelessWidget {
                         }
                     ),
                   ],
-                ) : const Center(child: CircularProgressIndicator(),);
+                ) : const Center(child: CircularProgressIndicator());
               }
             ),
           )
@@ -250,11 +263,12 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _displayEventOverView({required UserEntity myData,required BuildContext context,required EventEntity eventEntity,required bool eventDateExpired}){
+  Widget _displayEventOverView({required EventsCubit eventsCubit,required LayoutCubit layoutCubit,required UserEntity myData,required BuildContext context,required EventEntity eventEntity,required bool eventDateExpired}){
     return GestureDetector(
       onTap: ()
       {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => EventDetailsScreen(event: eventEntity,eventDateExpired: false)));
+        bool eventFinished = DateTime.now().isAfter(Jiffy("${eventEntity.endDate!.trim()} ${eventEntity.time!.trim()}", "MMMM dd, yyyy h:mm a").dateTime);
+        Navigator.push(context, MaterialPageRoute(builder: (context) => EventDetailsScreen(event: eventEntity,eventDateExpired: eventFinished)));
       },
       child: Container(
         width: 160.w,
@@ -287,14 +301,23 @@ class HomeScreen extends StatelessWidget {
                       {
                         Navigator.push(context, MaterialPageRoute(builder: (context) => EventDetailsScreen(event: eventEntity,eventDateExpired: false)));
                       }
-                    else if( ( myData.idForClubsMemberIn != null && myData.idForClubsMemberIn!.contains(eventEntity.clubID) )|| eventEntity.forPublic == EventForPublicOrNot.public.name )
+                    else if( myData.idForEventsJoined != null && myData.idForEventsJoined!.contains(eventEntity.id) )
+                      {
+                        showSnackBar(context: context, message: 'انت بالفعل مسجل بهذه بالفعالية',backgroundColor: AppColors.kRedColor);
+                      }
+                    else if ( ( myData.idForClubsMemberIn != null && myData.idForClubsMemberIn!.contains(eventEntity.clubID) ) || eventEntity.forPublic == EventForPublicOrNot.public.name )
                       {
                         // TODO: Join to Event Function.....
+                        eventsCubit.joinToEvent(eventID: eventEntity.id!, layoutCubit: layoutCubit, memberID: myData.id ?? Constants.userID!);
+                      }
+                    else
+                      {
+                        showSnackBar(context: context, message: 'هذه الفعالية خاصة بأعضاء ${eventEntity.clubName} فقط',backgroundColor: AppColors.kRedColor);
                       }
                   },
-                  textColor: ( myData.idForClubsMemberIn != null && myData.idForClubsMemberIn!.contains(eventEntity.clubID) )|| eventEntity.forPublic == EventForPublicOrNot.public.name || myData.idForClubLead != null ? AppColors.kBlackColor : AppColors.kWhiteColor,
-                  color: myData.idForEventsJoined != null && myData.idForEventsJoined!.contains(eventEntity.id) ? AppColors.kOrangeColor : ( myData.idForClubsMemberIn != null && myData.idForClubsMemberIn!.contains(eventEntity.clubID) ) || eventEntity.forPublic == EventForPublicOrNot.public.name || myData.idForClubLead != null ? AppColors.kWhiteColor : AppColors.kRedColor,
-                  child: Text(myData.idForClubLead != null ? "متابعة" : myData.idForEventsJoined != null && myData.idForEventsJoined!.contains(eventEntity.id) ? "تم الإلتحاق" : ( myData.idForClubsMemberIn != null && myData.idForClubsMemberIn!.contains(eventEntity.clubID) )|| eventEntity.forPublic == EventForPublicOrNot.public.name ? "انضم إلينا" : "خاصة",style: const TextStyle(fontWeight: FontWeight.bold),),
+                  textColor: (myData.idForEventsJoined == null && eventEntity.forPublic == EventForPublicOrNot.public.name) || (myData.idForEventsJoined != null && myData.idForEventsJoined!.contains(eventEntity.id) == false && myData.idForClubsMemberIn != null && myData.idForClubsMemberIn!.contains(eventEntity.clubID)) || myData.idForClubLead != null ? AppColors.kBlackColor : AppColors.kWhiteColor,
+                  color: myData.idForEventsJoined != null && myData.idForEventsJoined!.contains(eventEntity.id) ? AppColors.kGreenColor : myData.idForClubLead != null ? AppColors.kWhiteColor : (myData.idForEventsJoined == null && eventEntity.forPublic == EventForPublicOrNot.public.name) || (myData.idForEventsJoined != null && myData.idForEventsJoined!.contains(eventEntity.id) == false && myData.idForClubsMemberIn != null && myData.idForClubsMemberIn!.contains(eventEntity.clubID)) ? AppColors.kWhiteColor : AppColors.kRedColor,
+                  child: Text(myData.idForClubLead != null ? "متابعة" : myData.idForEventsJoined != null && myData.idForEventsJoined!.contains(eventEntity.id) ? "تم التسجيل" : (myData.idForEventsJoined == null && eventEntity.forPublic == EventForPublicOrNot.public.name) || (myData.idForEventsJoined != null && myData.idForEventsJoined!.contains(eventEntity.id) == false && myData.idForClubsMemberIn != null && myData.idForClubsMemberIn!.contains(eventEntity.clubID)) ? "انضم إلينا" : "خاصة",style: const TextStyle(fontWeight: FontWeight.bold),),
                 ),
               )
           ],

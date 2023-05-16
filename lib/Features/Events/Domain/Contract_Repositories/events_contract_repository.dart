@@ -8,4 +8,5 @@ abstract class EventsContractRepository{
   Future<bool> editEvent({required String eventID});
   Future<Either<Failure,Unit>> deleteEvent({required String eventID});
   Future<Either<Failure,List<EventEntity>>> getAllEvents();
+  Future<Either<Failure,Unit>> joinToEvent({required String eventID,required String memberID});
 }
