@@ -42,27 +42,25 @@ class EventsCubit extends Cubit<EventsStates> {
     );
   }
 
+  // TODO: for Leader and Visitor ( make idForClubILead optional as in View Events i want only pastEvents and new but on Events Management i want my Eevnts mean that created by me ) .....
   Future<void> getPastAndNewAndMyEvents({String? idForClubILead}) async {
     ownEvents.clear();
+    newEvents.clear();
+    pastEvents.clear();
     debugPrint("All Events number is : ${allEvents.length}");
     if( idForClubILead != null ) emit(EventsClassifiedLoadingState());  // TODO: لأن هستعملها فقط في صفحه اداره الفعاليات عشان اعمل CircleProgressIndicator()
     for( int i = 0 ; i < allEvents.length ; i++ )
     {
-      // TODO: OWN EVENTS will be shown on events management Screen
+      DateTime eventDate = Jiffy("${allEvents[i].endDate!.trim()} ${allEvents[i].time!.trim()}", "MMMM dd, yyyy h:mm a").dateTime;
+      // TODO: Leader ..... OWN EVENTS will be shown on events management Screen
       if( idForClubILead != null && allEvents[i].clubID == idForClubILead )
         {
           ownEvents.add(allEvents[i]);
         }
-      // TODO: Classify Events to Old or New
-      DateTime eventDate = Jiffy("${allEvents[i].endDate!.trim()} ${allEvents[i].time!.trim()}", "MMMM dd, yyyy h:mm a").dateTime;
-      if (DateTime.now().isAfter(eventDate))
-      {
-        pastEvents.add(allEvents[i]);
-      }
       else
-      {
-        newEvents.add(allEvents[i]);
-      }
+        {
+          DateTime.now().isAfter(eventDate) && allEvents[i].forPublic == EventForPublicOrNot.public.name ? pastEvents.add(allEvents[i]) : newEvents.add(allEvents[i]);
+        }
     }
     emit(EventsClassifiedSuccessState());
   }

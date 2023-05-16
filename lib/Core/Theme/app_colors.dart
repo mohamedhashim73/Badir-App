@@ -6,6 +6,8 @@ class AppColors{
   static Color kGreyColor = const Color.fromRGBO(62, 87, 136, 0.06);
   static Color kPinkColor = const Color.fromRGBO(62, 87, 136, 0.06);
   static Color kWhiteColor = Colors.white;
+  static Color kOrangeColor = Colors.orange;
+  static Color kBlackColor = Colors.black;
   static Color kGreenColor = Colors.green;
   static Color kRedColor = Colors.red;
 }

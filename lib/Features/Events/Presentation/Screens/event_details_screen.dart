@@ -2,6 +2,8 @@ import 'package:bader_user_app/Core/Constants/constants.dart';
 import 'package:bader_user_app/Core/Constants/enumeration.dart';
 import 'package:bader_user_app/Core/Theme/app_colors.dart';
 import 'package:bader_user_app/Features/Events/Domain/Entities/event_entity.dart';
+import 'package:bader_user_app/Features/Layout/Domain/Entities/user_entity.dart';
+import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jiffy/jiffy.dart';
@@ -28,6 +30,7 @@ class EventDetailsScreen extends StatelessWidget {
     _locationController.text = event.location!;
     _linkController.text = event.link!;
     _timeController.text = event.time!;
+    final UserEntity userEntity = LayoutCubit.getInstance(context).userData!;
     return SafeArea(
       child: Directionality(
         textDirection: TextDirection.rtl,
@@ -52,18 +55,21 @@ class EventDetailsScreen extends StatelessWidget {
                 _textField(controller:_locationController,title: 'المكان'),
                 _textField(controller:_linkController,title: 'اللينك'),
                 _radioItem(title: 'خاص بالنادي', value: EventForPublicOrNot.private),
-                SizedBox(height: 10.h,),
-                DefaultButton(
+                if( ( userEntity.idForEventsJoined != null && userEntity.idForEventsJoined!.contains(event.id) ) || event.forPublic == EventForPublicOrNot.public.name )
+                  SizedBox(height: 10.h,),
+                if( ( userEntity.idForEventsJoined != null && userEntity.idForEventsJoined!.contains(event.id) ) || event.forPublic == EventForPublicOrNot.public.name )
+                  DefaultButton(
+                  // TODO: مش هيظهر الا اذا كنت مسجل فيها او هي كانت عامة
                   width: double.infinity,
                   onTap: ()
                   {
                     if( eventDateExpired )
                       {
-
+                        // TODO: Give opinion ....
                       }
                     else
                       {
-
+                        // TODO: Ask to join to it ....
                       }
                   },
                   title: eventDateExpired ? "شاركنا برأيك!" : "انضمام",

@@ -11,6 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jiffy/jiffy.dart';
 import '../../../../Core/Components/drawer_item.dart';
+import '../../../../Core/Constants/enumeration.dart';
 import '../../../../Core/Theme/app_colors.dart';
 import '../../../Events/Domain/Entities/event_entity.dart';
 import '../../../Clubs/Presentation/Controller/clubs_cubit.dart';
@@ -18,6 +19,7 @@ import '../../../Clubs/Presentation/Controller/clubs_states.dart';
 import '../../../Events/Presentation/Controller/events_states.dart';
 import '../../../Clubs/Presentation/Screens/club_details_screen.dart';
 import '../../../Events/Presentation/Screens/event_details_screen.dart';
+import '../../Domain/Entities/user_entity.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -179,7 +181,7 @@ class HomeScreen extends StatelessWidget {
                                   {
                                     // TODO: eventDate => لان محتاج اعرف اذا كانت الفعاليه عدت ولا لا
                                     DateTime eventDate = Jiffy("${eventsCubit.allEvents[index].endDate!.trim()} ${eventsCubit.allEvents[index].time!.trim()}", "MMMM dd, yyyy h:mm a").dateTime;
-                                    return _displayEventOverView(context:context,eventEntity: eventsCubit.allEvents[index],eventDateExpired: DateTime.now().isAfter(eventDate) ? true : false);
+                                    return _displayEventOverView(myData: layoutCubit.userData!,context:context,eventEntity: eventsCubit.allEvents[index],eventDateExpired: DateTime.now().isAfter(eventDate) ? true : false);
                                   },
                                 );
                               },
@@ -248,7 +250,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _displayEventOverView({required BuildContext context,required EventEntity eventEntity,required bool eventDateExpired}){
+  Widget _displayEventOverView({required UserEntity myData,required BuildContext context,required EventEntity eventEntity,required bool eventDateExpired}){
     return GestureDetector(
       onTap: ()
       {
@@ -274,20 +276,27 @@ class HomeScreen extends StatelessWidget {
             ),
             SizedBox(width: 4.w,),
             Align(
-              alignment: AlignmentDirectional.topEnd,
-              child: MaterialButton(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(4)
+                alignment: AlignmentDirectional.topEnd,
+                child: MaterialButton(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4)
+                  ),
+                  onPressed: ()
+                  {
+                    if ( myData.idForClubLead != null )
+                      {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => EventDetailsScreen(event: eventEntity,eventDateExpired: false)));
+                      }
+                    else if( ( myData.idForClubsMemberIn != null && myData.idForClubsMemberIn!.contains(eventEntity.clubID) )|| eventEntity.forPublic == EventForPublicOrNot.public.name )
+                      {
+                        // TODO: Join to Event Function.....
+                      }
+                  },
+                  textColor: ( myData.idForClubsMemberIn != null && myData.idForClubsMemberIn!.contains(eventEntity.clubID) )|| eventEntity.forPublic == EventForPublicOrNot.public.name || myData.idForClubLead != null ? AppColors.kBlackColor : AppColors.kWhiteColor,
+                  color: myData.idForEventsJoined != null && myData.idForEventsJoined!.contains(eventEntity.id) ? AppColors.kOrangeColor : ( myData.idForClubsMemberIn != null && myData.idForClubsMemberIn!.contains(eventEntity.clubID) ) || eventEntity.forPublic == EventForPublicOrNot.public.name || myData.idForClubLead != null ? AppColors.kWhiteColor : AppColors.kRedColor,
+                  child: Text(myData.idForClubLead != null ? "متابعة" : myData.idForEventsJoined != null && myData.idForEventsJoined!.contains(eventEntity.id) ? "تم الإلتحاق" : ( myData.idForClubsMemberIn != null && myData.idForClubsMemberIn!.contains(eventEntity.clubID) )|| eventEntity.forPublic == EventForPublicOrNot.public.name ? "انضم إلينا" : "خاصة",style: const TextStyle(fontWeight: FontWeight.bold),),
                 ),
-                onPressed: ()
-                {
-
-                },
-                textColor: AppColors.kMainColor,
-                color: AppColors.kWhiteColor,
-                child: const Text("انضم إلينا",style: TextStyle(fontWeight: FontWeight.bold),),
-              ),
-            )
+              )
           ],
         ),
       ),
