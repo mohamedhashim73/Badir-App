@@ -4,6 +4,7 @@ class MemberModel extends MemberEntity{
   // Todo: Extend From Achievement Entity
 
   const MemberModel({
+    required super.memberName,
     required super.memberID,
     required super.membershipDate,
   });
@@ -12,6 +13,7 @@ class MemberModel extends MemberEntity{
   factory MemberModel.fromJson({required Map<String,dynamic> json})
   {
     return MemberModel(
+        memberName: json['memberName'],
         memberID: json['memberID'],
         membershipDate:json['membershipDate'],
     );
@@ -20,6 +22,7 @@ class MemberModel extends MemberEntity{
   // Todo: Send Data to Firebase
   Map<String,dynamic> toJson(){
     return {
+      'memberName' : memberName,
       'memberID' : memberID,
       'membershipDate' : membershipDate,
     };

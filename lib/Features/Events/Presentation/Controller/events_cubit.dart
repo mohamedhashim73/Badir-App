@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'package:bader_user_app/Features/Clubs/Domain/Entities/member_entity.dart';
 import 'package:bader_user_app/Features/Events/Domain/Use_Cases/delete_event_use_case.dart';
+import 'package:bader_user_app/Features/Events/Domain/Use_Cases/get_members_on_an_event_use_case.dart';
 import 'package:bader_user_app/Features/Events/Domain/Use_Cases/join_to_event_use_case.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:bader_user_app/Core/Constants/constants.dart';
@@ -39,6 +41,23 @@ class EventsCubit extends Cubit<EventsStates> {
               debugPrint("Past Events Number is : ${pastEvents.length}");
               debugPrint("New Events Number is : ${newEvents.length}");
               emit(GetEventsDataSuccessState());
+        }
+    );
+  }
+
+  // TODO: related to Leader....
+  List<MemberEntity> membersDataForAnEvent = [];
+  Future<void> getMembersOnAnEvent({required String eventID}) async {
+    emit(GetMemberOnAnEventLoadingState());
+    final result = await sl<GetMembersOnAnEventUseCase>().execute(eventID: eventID);
+    result.fold(
+        (serverFailure){
+          emit(FailedToGetMembersOnAnEventDataState(message: serverFailure.errorMessage));
+        },
+        (members) async {
+          membersDataForAnEvent = members;
+          debugPrint("Members num on this Event is : ${members.length}");
+          emit(GetMembersOnAnEventSuccessState());
         }
     );
   }

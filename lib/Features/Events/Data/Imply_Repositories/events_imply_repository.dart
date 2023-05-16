@@ -3,6 +3,7 @@ import 'package:bader_user_app/Core/Errors/failure.dart';
 import 'package:bader_user_app/Features/Events/Domain/Entities/event_entity.dart';
 import 'package:dartz/dartz.dart';
 import '../../../../Core/Constants/enumeration.dart';
+import '../../../Clubs/Domain/Entities/member_entity.dart';
 import '../../Domain/Contract_Repositories/events_contract_repository.dart';
 import '../Data_Sources/local_events_data_source.dart';
 import '../Data_Sources/remote_events_data_source.dart';
@@ -62,6 +63,17 @@ class EventsImplyRepository implements EventsContractRepository{
     {
       await remoteEventsDataSource.joinToEvent(eventID: eventID, memberID: memberID);
       return const Right(unit);
+    }
+    on ServerException catch(e){
+      return Left(ServerFailure(errorMessage: e.exceptionMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure,List<MemberEntity>>> getMembersOnAnEvent({required String eventID}) async {
+    try
+    {
+      return Right(await remoteEventsDataSource.getMembersForAnEvent(eventID: eventID));
     }
     on ServerException catch(e){
       return Left(ServerFailure(errorMessage: e.exceptionMessage));

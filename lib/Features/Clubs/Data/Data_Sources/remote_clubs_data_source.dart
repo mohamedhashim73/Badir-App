@@ -127,7 +127,7 @@ class RemoteClubsDataSource{
           await FirebaseFirestore.instance.collection(Constants.kMembersNumberCollectionName).doc('Number').set({
             'total' : ++membersNum
           });
-          MemberModel member = MemberModel(memberID: requestSenderID, membershipDate: Constants.getTimeNow());
+          MemberModel member = MemberModel(memberName:requestSenderUserModel.name!,memberID: requestSenderID, membershipDate: Constants.getTimeNow());
           // TODO: هخزن الداتا بتاعه المستخدم ده ك عضو في الكولكشن بتاع النادي
           await FirebaseFirestore.instance.collection(Constants.kClubsCollectionName).doc(clubID).collection(Constants.kMembersDataCollectionName).doc(requestSenderID).set(member.toJson());
         }

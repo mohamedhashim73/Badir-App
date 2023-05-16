@@ -17,6 +17,14 @@ class FailedToGetEventsDataState extends EventsStates{
   FailedToGetEventsDataState({required this.message});
 }
 
+class GetMemberOnAnEventLoadingState extends EventsStates{}
+class GetMembersOnAnEventSuccessState extends EventsStates{}
+class FailedToGetMembersOnAnEventDataState extends EventsStates{
+  final String message;
+  FailedToGetMembersOnAnEventDataState({required this.message});
+}
+
+
 class CreateEventSuccessState extends EventsStates{}
 class CreateEventLoadingState extends EventsStates{}
 class FailedToCreateEventState extends EventsStates{
