@@ -63,16 +63,19 @@ class UploadReportToAdminScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 10.h,),
                     if( layoutCubit.pdfFile != null )
-                      Card(
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 10.w,vertical: 10.h),
-                          child: Row(
-                            children:
-                            [
-                              Icon(Icons.picture_as_pdf,color: AppColors.kRedColor,),
-                              SizedBox(width: 7.5.w,),
-                              Expanded(child: Text(basename(layoutCubit.pdfFile!.path),style: const TextStyle(overflow: TextOverflow.ellipsis),))
-                            ],
+                      InkWell(
+                        onTap: () => layoutCubit.getPDF(),
+                        child: Card(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 10.w,vertical: 10.h),
+                            child: Row(
+                              children:
+                              [
+                                Icon(Icons.picture_as_pdf,color: AppColors.kRedColor,),
+                                SizedBox(width: 7.5.w,),
+                                Expanded(child: Text(basename(layoutCubit.pdfFile!.path),style: const TextStyle(overflow: TextOverflow.ellipsis),))
+                              ],
+                            ),
                           ),
                         ),
                       ),

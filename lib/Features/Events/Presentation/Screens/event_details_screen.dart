@@ -55,11 +55,11 @@ class EventDetailsScreen extends StatelessWidget {
                 _textField(controller:_locationController,title: 'المكان'),
                 _textField(controller:_linkController,title: 'اللينك'),
                 _radioItem(title: 'خاص بالنادي', value: EventForPublicOrNot.private),
-                if( ( userEntity.idForEventsJoined != null && userEntity.idForEventsJoined!.contains(event.id) ) || event.forPublic == EventForPublicOrNot.public.name )
+                if( userEntity.idForClubLead == null && ( ( userEntity.idForEventsJoined != null && userEntity.idForEventsJoined!.contains(event.id) ) || event.forPublic == EventForPublicOrNot.public.name ) )
                   SizedBox(height: 10.h,),
-                if( ( userEntity.idForEventsJoined != null && userEntity.idForEventsJoined!.contains(event.id) ) || event.forPublic == EventForPublicOrNot.public.name )
+                if( userEntity.idForClubLead == null && ( ( userEntity.idForEventsJoined != null && userEntity.idForEventsJoined!.contains(event.id) ) || event.forPublic == EventForPublicOrNot.public.name ) )
                   DefaultButton(
-                  // TODO: مش هيظهر الا اذا كنت مسجل فيها او هي كانت عامة
+                  // TODO: مش هيظهر الا اذا كنت مسجل فيها او هي كانت عامة بس لو انا ليدر مش هيظهر ...
                   width: double.infinity,
                   onTap: ()
                   {
