@@ -3,7 +3,7 @@ import 'package:bader_user_app/Core/Components/click_to_choose_file.dart';
 import 'package:bader_user_app/Core/Constants/constants.dart';
 import 'package:bader_user_app/Core/Constants/enumeration.dart';
 import 'package:bader_user_app/Core/Theme/app_colors.dart';
-import 'package:bader_user_app/Core/Utils/app_strings.dart';
+import 'package:bader_user_app/Core/Constants/app_strings.dart';
 import 'package:bader_user_app/Features/Events/Domain/Entities/event_entity.dart';
 import 'package:bader_user_app/Features/Events/Presentation/Controller/events_cubit.dart';
 import 'package:bader_user_app/Features/Events/Presentation/Controller/events_states.dart';

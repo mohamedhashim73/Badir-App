@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../Core/Components/text_field_component.dart';
-import '../../../../Core/Utils/app_strings.dart';
+import '../../../../Core/Constants/app_strings.dart';
 
 class UpdateClubScreen extends StatelessWidget {
   final _twitterController = TextEditingController();

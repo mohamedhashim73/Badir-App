@@ -1,5 +1,5 @@
 import 'package:bader_user_app/Core/Components/button_item.dart';
-import 'package:bader_user_app/Core/Utils/app_strings.dart';
+import 'package:bader_user_app/Core/Constants/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

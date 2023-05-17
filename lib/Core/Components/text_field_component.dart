@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-Widget textFieldComponent({required TextEditingController controller,bool? isSecure,int? maxLines,bool enabled = true,TextInputType? textInputType}){
+Widget textFieldComponent({double verticalPaddingValue = 0,String? hintText,required TextEditingController controller,bool? isSecure,int? maxLines,bool enabled = true,TextInputType? textInputType}){
   return Container(
     height: maxLines == null ? 45.h : null ,
     width: double.infinity,
-    padding: EdgeInsets.symmetric(horizontal: 8.w,vertical: 0.h),
     margin: EdgeInsets.only(bottom: 6.h),
     decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
     child: TextFormField(
@@ -17,8 +16,9 @@ Widget textFieldComponent({required TextEditingController controller,bool? isSec
           fontSize: 13.5.sp
       ),
       obscureText: isSecure ?? false,
-      decoration: const InputDecoration(
-          contentPadding: EdgeInsets.zero,
+      decoration: InputDecoration(
+          contentPadding: EdgeInsets.symmetric(vertical: verticalPaddingValue,horizontal: 8.w),
+          hintText: hintText,
           border: InputBorder.none
       ),
     ),

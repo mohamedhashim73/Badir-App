@@ -1,10 +1,12 @@
 import 'package:bader_user_app/Core/Errors/exceptions.dart';
 import 'package:bader_user_app/Core/Errors/failure.dart';
+import 'package:bader_user_app/Features/Events/Data/Models/task_model.dart';
 import 'package:bader_user_app/Features/Events/Domain/Entities/event_entity.dart';
 import 'package:dartz/dartz.dart';
 import '../../../../Core/Constants/enumeration.dart';
 import '../../../Clubs/Domain/Entities/member_entity.dart';
 import '../../Domain/Contract_Repositories/events_contract_repository.dart';
+import '../../Domain/Entities/task_entity.dart';
 import '../Data_Sources/local_events_data_source.dart';
 import '../Data_Sources/remote_events_data_source.dart';
 import '../Models/event_model.dart';
@@ -63,6 +65,18 @@ class EventsImplyRepository implements EventsContractRepository{
     }
   }
 
+  // TODO: Leader ....
+  @override
+  Future<Either<Failure,Unit>> createTask({required String taskName,required String ownerID,required String clubID,required String description,String? eventID,String? eventName,required bool forPublicOrSpecificToAnEvent,required int hours,required int numOfPosition }) async {
+    try
+    {
+      return Right(await remoteEventsDataSource.createTask(clubID:clubID,ownerID: ownerID,eventName:eventName,eventID:eventID,taskName: taskName,description: description, forPublicOrSpecificToAnEvent: forPublicOrSpecificToAnEvent, hours: hours, numOfPosition: numOfPosition));
+    }
+    on ServerException catch(e){
+      return Left(ServerFailure(errorMessage: e.exceptionMessage));
+    }
+  }
+
   @override
   Future<Either<Failure, Unit>> joinToEvent({required String eventID, required String memberID}) async {
     try
@@ -80,6 +94,39 @@ class EventsImplyRepository implements EventsContractRepository{
     try
     {
       return Right(await remoteEventsDataSource.getMembersForAnEvent(eventID: eventID));
+    }
+    on ServerException catch(e){
+      return Left(ServerFailure(errorMessage: e.exceptionMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure,List<TaskEntity>>> getAllTasksOnApp() async {
+    try
+    {
+      return Right(await remoteEventsDataSource.getAllTasksOnApp());
+    }
+    on ServerException catch(e){
+      return Left(ServerFailure(errorMessage: e.exceptionMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure,Unit>> deleteTask({required String taskID}) async {
+    try
+    {
+      return Right(await remoteEventsDataSource.deleteTask(taskID: taskID));
+    }
+    on ServerException catch(e){
+      return Left(ServerFailure(errorMessage: e.exceptionMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure,Unit>> updateTask({required String taskID,required TaskModel taskModel}) async {
+    try
+    {
+      return Right(await remoteEventsDataSource.updateTask(taskID: taskID,taskModel: taskModel));
     }
     on ServerException catch(e){
       return Left(ServerFailure(errorMessage: e.exceptionMessage));

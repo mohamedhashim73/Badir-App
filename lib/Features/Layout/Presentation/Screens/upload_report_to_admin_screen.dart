@@ -11,7 +11,7 @@ import '../../../../Core/Components/click_to_choose_file.dart';
 import '../../../../Core/Components/drop_down_items.dart';
 import '../../../../Core/Components/snackBar_item.dart';
 import '../../../../Core/Constants/constants.dart';
-import '../../../../Core/Utils/app_strings.dart';
+import '../../../../Core/Constants/app_strings.dart';
 
 class UploadReportToAdminScreen extends StatelessWidget {
   const UploadReportToAdminScreen({Key? key}) : super(key: key);

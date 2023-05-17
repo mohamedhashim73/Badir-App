@@ -1,5 +1,5 @@
 import 'package:bader_user_app/Core/Theme/app_colors.dart';
-import 'package:bader_user_app/Core/Utils/app_strings.dart';
+import 'package:bader_user_app/Core/Constants/app_strings.dart';
 import 'package:bader_user_app/Features/Clubs/Domain/Entities/meeting_entity.dart';
 import 'package:bader_user_app/Features/Clubs/Presentation/Controller/clubs_cubit.dart';
 import 'package:bader_user_app/Features/Clubs/Presentation/Controller/clubs_states.dart';

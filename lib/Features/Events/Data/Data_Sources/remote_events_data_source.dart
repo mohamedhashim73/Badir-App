@@ -1,5 +1,5 @@
 import 'package:bader_user_app/Features/Clubs/Data/Models/member_model.dart';
-import 'package:bader_user_app/Features/Events/Domain/Entities/event_entity.dart';
+import 'package:bader_user_app/Features/Events/Data/Models/task_model.dart';
 import 'package:bader_user_app/Features/Layout/Data/Models/user_model.dart';
 import 'package:bader_user_app/Features/Layout/Domain/Entities/user_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -21,6 +21,22 @@ class RemoteEventsDataSource{
       ++newEventID;
       EventModel eventModel = EventModel(name, newEventID.toString(), description, imageUrl, startDate, endDate, time, forPublic.name, location, link, null, clubName, clubID);
       await FirebaseFirestore.instance.collection(Constants.kEventsCollectionName).doc(newEventID.toString().trim()).set(eventModel.toJson());
+      return unit;
+    }
+    on FirebaseException catch(e){
+      throw ServerException(exceptionMessage: e.code);
+    }
+  }
+
+  Future<Unit> createTask({required String taskName,required String ownerID,required String clubID,required String description,String? eventID,String? eventName,required bool forPublicOrSpecificToAnEvent,required int hours,required int numOfPosition }) async {
+    try
+    {
+      // TODO: Get Last ID For Last Task Created to increase it by one
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection(Constants.kTasksCollectionName).get();
+      int newTaskID = querySnapshot.docs.isNotEmpty ? int.parse(querySnapshot.docs.last.id) : 0;
+      ++newTaskID;
+      TaskModel taskModel = TaskModel(newTaskID,ownerID, taskName, description, hours, numOfPosition, 0, forPublicOrSpecificToAnEvent, eventName, clubID, eventID);
+      await FirebaseFirestore.instance.collection(Constants.kTasksCollectionName).doc(newTaskID.toString().trim()).set(taskModel.toJson());
       return unit;
     }
     on FirebaseException catch(e){
@@ -93,6 +109,17 @@ class RemoteEventsDataSource{
     }
   }
 
+  Future<Unit> deleteTask({required String taskID}) async {
+    try
+    {
+      await FirebaseFirestore.instance.collection(Constants.kTasksCollectionName).doc(taskID).delete();
+      return unit;
+    }
+    on FirebaseException catch(e){
+      throw ServerException(exceptionMessage: e.code);
+    }
+  }
+
   // TODO: All Events throw App not to specific Club
   Future<List<EventModel>> getAllEvents() async {
     try
@@ -105,6 +132,35 @@ class RemoteEventsDataSource{
         }
       });
       return events;
+    }
+    on FirebaseException catch(e){
+      throw ServerException(exceptionMessage: e.code);
+    }
+  }
+
+  // TODO: All Events throw App not to specific Club
+  Future<List<TaskModel>> getAllTasksOnApp() async {
+    try
+    {
+      List<TaskModel> tasks = [];
+      await FirebaseFirestore.instance.collection(Constants.kTasksCollectionName).get().then((value){
+        for( var item in value.docs )
+        {
+          tasks.add(TaskModel.fromJson(json: item.data()));
+        }
+      });
+      return tasks;
+    }
+    on FirebaseException catch(e){
+      throw ServerException(exceptionMessage: e.code);
+    }
+  }
+
+  Future<Unit> updateTask({required String taskID,required TaskModel taskModel}) async {
+    try
+    {
+      await FirebaseFirestore.instance.collection(Constants.kTasksCollectionName).doc(taskID).update(taskModel.toJson());
+      return unit;
     }
     on FirebaseException catch(e){
       throw ServerException(exceptionMessage: e.code);

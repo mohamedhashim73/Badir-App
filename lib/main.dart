@@ -1,4 +1,4 @@
-import 'package:bader_user_app/Core/Utils/app_routes.dart';
+import 'package:bader_user_app/Core/Constants/app_routes.dart';
 import 'package:bader_user_app/Features/Auth/Presentation/Screens/login_screen.dart';
 import 'package:bader_user_app/Core/Constants/constants.dart';
 import 'package:bader_user_app/Core/Network/sharedPref.dart';

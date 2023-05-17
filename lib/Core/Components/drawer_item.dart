@@ -1,5 +1,5 @@
 import 'package:bader_user_app/Core/Theme/app_colors.dart';
-import 'package:bader_user_app/Core/Utils/app_strings.dart';
+import 'package:bader_user_app/Core/Constants/app_strings.dart';
 import 'package:bader_user_app/Features/Clubs/Presentation/Controller/clubs_cubit.dart';
 import 'package:bader_user_app/Features/Events/Presentation/Controller/events_cubit.dart';
 import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_cubit.dart';
@@ -45,6 +45,11 @@ class DrawerItem extends StatelessWidget{
       'routeName' : AppStrings.kViewMembersOnMyClubScreen
     },
     {
+      'title' : 'إداره المهام',
+      'iconData' : Icons.task_alt,
+      'routeName' : AppStrings.kManagementTasksScreen
+    },
+    {
       'title' : 'إدارة الفعاليات',
       'iconData' : Icons.manage_accounts,
       'routeName' : AppStrings.kManageEventsScreen
@@ -68,7 +73,8 @@ class DrawerItem extends StatelessWidget{
     ClubsCubit clubsCubit = ClubsCubit.getInstance(context);
     EventsCubit eventsCubit  = EventsCubit.getInstance(context);
     if( layoutCubit.userData == null ) layoutCubit.getMyData();
-    if( layoutCubit.userData!.idForClubLead != null ) clubsCubit.getCLubDataThatILead(clubID: layoutCubit.userData!.idForClubLead!);
+    if( eventsCubit.ownEvents.isEmpty && layoutCubit.userData != null && layoutCubit.userData!.idForClubLead != null ) eventsCubit.getPastAndNewAndMyEvents(idForClubILead: layoutCubit.userData!.idForClubLead);
+    if( layoutCubit.userData!.idForClubLead != null && clubsCubit.dataAboutClubYouLead == null ) clubsCubit.getCLubDataThatILead(clubID: layoutCubit.userData!.idForClubLead!);
     return Drawer(
         child: BlocBuilder<LayoutCubit,LayoutStates>(
           buildWhen: (last,current) => current is GetMyDataSuccessState ,

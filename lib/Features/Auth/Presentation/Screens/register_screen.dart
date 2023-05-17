@@ -1,4 +1,5 @@
 import 'package:bader_user_app/Core/Components/button_item.dart';
+import 'package:bader_user_app/Core/Components/text_upper_textformfield.dart';
 import 'package:bader_user_app/Core/Constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,7 +8,7 @@ import '../../../../Core/Components/drop_down_items.dart';
 import '../../../../Core/Components/snackBar_item.dart';
 import '../../../../Core/Components/text_field_component.dart';
 import '../../../../Core/Theme/app_colors.dart';
-import '../../../../Core/Utils/app_strings.dart';
+import '../../../../Core/Constants/app_strings.dart';
 import '../Controller/auth_cubit.dart';
 import '../Controller/auth_states.dart';
 
@@ -51,11 +52,11 @@ class RegisterScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children:
                       [
-                        _textUpperTextField(title: "الاسم"),
+                        const TextUpperTextFormField(text: "الاسم"),
                         textFieldComponent(controller: _nameController),
-                        _textUpperTextField(title: "رقم التليفون"),
+                        const TextUpperTextFormField(text: "رقم التليفون"),
                         textFieldComponent(controller: _phoneController),
-                        _textUpperTextField(title: "الكية"),
+                        const TextUpperTextFormField(text: "الكية"),
                         dropDownComponent(
                             items: Constants.colleges,
                             onChanged: (college)
@@ -64,7 +65,7 @@ class RegisterScreen extends StatelessWidget {
                             },
                             value: cubit.selectedCollege
                         ),
-                        _textUpperTextField(title: "الجنس"),
+                        const TextUpperTextFormField(text: "الجنس"),
                         dropDownComponent(
                             items: Constants.genderStatus,
                             onChanged: (gender)
@@ -73,9 +74,9 @@ class RegisterScreen extends StatelessWidget {
                             },
                             value: cubit.selectedGender
                         ),
-                        _textUpperTextField(title: "البريد الإلكتروني"),
+                        const TextUpperTextFormField(text: "البريد الإلكتروني"),
                         textFieldComponent(controller: _emailController),
-                        _textUpperTextField(title: "كلمة المرور"),
+                        const TextUpperTextFormField(text: "كلمة المرور"),
                         textFieldComponent(controller: _passwordController, isSecure: true),
                         SizedBox(height: 20.h,),
                         DefaultButton(
@@ -123,10 +124,4 @@ class RegisterScreen extends StatelessWidget {
   }
 }
 
-Widget _textUpperTextField({required String title}){
-  return Container(
-      margin: EdgeInsets.only(bottom: 5.h),
-      child: Text(title,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 17.sp),)
-  );
-}
 

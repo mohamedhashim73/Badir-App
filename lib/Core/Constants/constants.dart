@@ -11,7 +11,7 @@ class Constants {
   static dynamic providers = [
     BlocProvider(create: (context) => AuthCubit()),
     BlocProvider(create: (context) => ClubsCubit()),
-    BlocProvider(create: (context) => EventsCubit()),
+    BlocProvider(create: (context) => EventsCubit()..getAllTasksOnApp()),
     BlocProvider(create: (context) => LayoutCubit()..getMyData()),
   ];
   static String? userID;
@@ -27,6 +27,7 @@ class Constants {
   static String kMembersDataCollectionName = "Members Data";
   static String kMembersNumberCollectionName = "Members Number";
   static String kEventsCollectionName = "Events";
+  static String kTasksCollectionName = "Tasks";
   static String kReportsCollectionName = "Reports";
   static String getTimeNow() => Jiffy(DateTime.now()).yMMMd;
   static Future<TimeOfDay?> selectTime({required BuildContext context}) async => await showTimePicker(context: context,initialTime: TimeOfDay.now());

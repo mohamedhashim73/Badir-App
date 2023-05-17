@@ -1,7 +1,11 @@
 import 'dart:io';
 import 'package:bader_user_app/Features/Clubs/Domain/Entities/member_entity.dart';
 import 'package:bader_user_app/Features/Events/Data/Models/event_model.dart';
+import 'package:bader_user_app/Features/Events/Data/Models/task_model.dart';
+import 'package:bader_user_app/Features/Events/Domain/Use_Cases/create_task_use_case.dart';
 import 'package:bader_user_app/Features/Events/Domain/Use_Cases/delete_event_use_case.dart';
+import 'package:bader_user_app/Features/Events/Domain/Use_Cases/delete_task_use_case.dart';
+import 'package:bader_user_app/Features/Events/Domain/Use_Cases/get_all_tasks_on_app_use_case.dart';
 import 'package:bader_user_app/Features/Events/Domain/Use_Cases/get_members_on_an_event_use_case.dart';
 import 'package:bader_user_app/Features/Events/Domain/Use_Cases/join_to_event_use_case.dart';
 import 'package:bader_user_app/Features/Events/Domain/Use_Cases/update_event_use_case.dart';
@@ -15,7 +19,9 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../../Core/Constants/enumeration.dart';
 import '../../Domain/Entities/event_entity.dart';
+import '../../Domain/Entities/task_entity.dart';
 import '../../Domain/Use_Cases/get_all_events_use_case.dart';
+import '../../Domain/Use_Cases/update_task_use_case.dart';
 import 'events_states.dart';
 
 class EventsCubit extends Cubit<EventsStates> {
@@ -27,6 +33,7 @@ class EventsCubit extends Cubit<EventsStates> {
   List<EventEntity> pastEvents = [];
   List<EventEntity> newEvents = [];
   List<EventEntity> ownEvents = [];      // TODO: Mean that created by me | Related Club That I lead
+  List<String> namesForEventsICreated = [];      // TODO: Mean that created by me | Related Club That I lead  هستعملها في حاله انشاء تاسك مع DropDownButton
   List<EventEntity> allEvents = [];
   // TODO: انا عامل idForClubILead مش required لأن هستعمله في حاله اذا كان المستخدم ده بالفعل ليدر ف هحتاج اباصيه عشان اسند الفعاليات اللي هو انشأها لل List بتاعته واللي هيا ownEvents
   Future<void> getAllEvents({String? idForClubILead}) async {
@@ -92,12 +99,17 @@ class EventsCubit extends Cubit<EventsStates> {
     ownEvents.clear();
     newEvents.clear();
     pastEvents.clear();
+    namesForEventsICreated.clear();
     debugPrint("All Events number is : ${allEvents.length}");
     if( idForClubILead != null ) emit(EventsClassifiedLoadingState());  // TODO: لأن هستعملها فقط في صفحه اداره الفعاليات عشان اعمل CircleProgressIndicator()
     for( int i = 0 ; i < allEvents.length ; i++ )
     {
       DateTime eventDate = Jiffy("${allEvents[i].endDate!.trim()} ${allEvents[i].time!.trim()}", "MMMM dd, yyyy h:mm a").dateTime;
-      if( idForClubILead != null && allEvents[i].clubID == idForClubILead ) ownEvents.add(allEvents[i]);
+      if( idForClubILead != null && allEvents[i].clubID == idForClubILead )
+        {
+          namesForEventsICreated.add(allEvents[i].name!);
+          ownEvents.add(allEvents[i]);
+        }
       DateTime.now().isAfter(eventDate) ? pastEvents.add(allEvents[i]) : newEvents.add(allEvents[i]);
     }
     emit(EventsClassifiedSuccessState());
@@ -162,6 +174,47 @@ class EventsCubit extends Cubit<EventsStates> {
     );
   }
 
+  List<String> taskOptionsForCreateIt = [];   // TODO: include names of eventsName that create by me + forPublic
+  Future<void> getNamesOfEventsToUseInCreatingTask({required String idForClubILead}) async {
+    taskOptionsForCreateIt.clear();
+    if( ownEvents.isEmpty ) await getPastAndNewAndMyEvents(idForClubILead: idForClubILead);  // TODO: عشان هستعمل ownEvents
+    for ( var element in ownEvents ) { taskOptionsForCreateIt.add(element.name!); }
+    taskOptionsForCreateIt.add("للعامة");
+    emit(GetNamesOfEventsToUseInOptionsForCreatingTaskState());
+  }
+
+  // TODO: ف حاله ان التاسك تبع فعاليه معينه وهو اختار فعاليه مثلا هروح اجيب الداتا بتاعتها بناء علي اسم الفعاليه اللي اختاره من ال DropdownButton
+  Future<EventEntity> getEventDataThrowItsNameToUseItForCreatingTask({required String eventName}) async {
+    return ownEvents.firstWhere((eventItem) => eventItem.name!.trim() == eventName.trim());
+  }
+
+  String? eventNameForTaskCreated;
+  void chooseEventNameForTaskCreated({required String value}) {
+    eventNameForTaskCreated = value;
+    emit(ChooseEventNameForTaskCreatedState());
+  }
+
+  void createTask({required String taskName,required int hours,required String idForClubILead,required String ownerID,required int numOfPosition,required String description,required bool taskForPublicOrSpecificEvent}) async {
+    // TODO: taskForPublicOrSpecificEvent => هجيب قيمتها م خلال ان هشك علي القيمه المختاره لو هي موجوده في id بتاع الفعاليات اللي انسأتها ولا لا
+    emit(CreateTaskLoadingState());
+    EventEntity? eventEntitySelectedForTask;
+    if( taskForPublicOrSpecificEvent == false ) eventEntitySelectedForTask = await getEventDataThrowItsNameToUseItForCreatingTask(eventName: eventNameForTaskCreated!);
+    final result = await sl<CreateTaskUseCase>().execute(ownerID:ownerID,taskName: taskName,clubID: idForClubILead,eventID: eventEntitySelectedForTask?.id,eventName: eventEntitySelectedForTask?.name,description: description, forPublicOrSpecificToAnEvent: taskForPublicOrSpecificEvent, hours: hours, numOfPosition: numOfPosition);
+    result.fold(
+            (serverFailure)
+            {
+              emit(FailedCreateTaskState(message: serverFailure.errorMessage));
+            },
+            (unit) async
+            {
+              // TODO: Get All Tasks .....
+              await getAllTasksOnApp();
+              await getTasksCreatedByMe(idForClubILead: idForClubILead);
+              emit(CreateTaskSuccessState());
+            }
+    );
+  }
+
   void joinToEvent({required String eventID,required LayoutCubit layoutCubit,required String memberID}) async {
     emit(JoinToEventLoadingState());
     final result = await sl<JoinToEventUseCase>().execute(eventID: eventID, memberID: memberID);
@@ -177,4 +230,76 @@ class EventsCubit extends Cubit<EventsStates> {
         }
     );
   }
+
+  List<TaskEntity> allTasksOnApp = [];
+  Future<void> getAllTasksOnApp() async {
+    emit(GetAllTasksOnAppLoadingState());
+    final result = await sl<GetAllTasksOnAppUseCase>().execute();
+    result.fold(
+        (serverFailure)
+        {
+          emit(FailedToGetAllTasksOnAppState(message: serverFailure.errorMessage));
+        },
+        (tasks) async
+        {
+          allTasksOnApp = tasks;
+          emit(GetAllTasksOnAppSuccessState());
+        }
+    );
+  }
+
+  // TODO: Get Tasks for Members .... ( ده ناقص اعملها )
+  List<TaskEntity> tasksCreatedByMe = [];
+  Future<void> getTasksCreatedByMe({required String idForClubILead}) async {
+    tasksCreatedByMe.clear();
+    emit(GetTasksThatCreatedByMeLoadingState());
+    for( var item in allTasksOnApp )
+    {
+      if( item.ownerID == Constants.userID || ( item.clubID.trim() == idForClubILead.trim() ) )
+      {
+        tasksCreatedByMe.add(item);
+      }
+    }
+    emit(GetTasksThatCreatedByMeSuccessState());
+  }
+
+  void deleteTask({required String taskID,required String idForClubILead}) async {
+    emit(DeleteTaskLoadingState());
+    final result = await sl<DeleteTaskUseCase>().execute(taskID: taskID);
+    result.fold(
+        (serverFailure)
+        {
+          emit(FailedToDeleteTaskState(message: serverFailure.errorMessage));
+        },
+        (unit) async
+        {
+          await getAllTasksOnApp();
+          await getTasksCreatedByMe(idForClubILead: idForClubILead);
+          emit(DeleteTaskSuccessState());
+        }
+    );
+  }
+
+  void updateTask({required int taskID,required String taskName,required String clubID,required int hours,required String idForClubILead,required String ownerID,required int numOfPosition,required int numOfRegistered,required String description,required bool taskForPublicOrSpecificEvent}) async {
+    // TODO: taskForPublicOrSpecificEvent => هجيب قيمتها م خلال ان هشك علي القيمه المختاره لو هي موجوده في id بتاع الفعاليات اللي انسأتها ولا لا
+    emit(UpdateTaskLoadingState());
+    EventEntity? eventEntitySelectedForTask;
+    if( taskForPublicOrSpecificEvent == false ) eventEntitySelectedForTask = await getEventDataThrowItsNameToUseItForCreatingTask(eventName: eventNameForTaskCreated!);
+    TaskModel taskModel = TaskModel(taskID, ownerID, taskName, description, hours, numOfPosition, numOfRegistered, taskForPublicOrSpecificEvent, eventEntitySelectedForTask?.name, clubID, eventEntitySelectedForTask?.id);
+    final result = await sl<UpdateTaskUseCase>().execute(taskID: taskID.toString(), taskModel: taskModel);
+    result.fold(
+        (serverFailure)
+        {
+          emit(FailedToUpdateTaskState(message: serverFailure.errorMessage));
+        },
+            (unit) async
+        {
+          // TODO: Get All Tasks .....
+          await getAllTasksOnApp();
+          await getTasksCreatedByMe(idForClubILead: idForClubILead);
+          emit(UpdateTaskSuccessState());
+        }
+    );
+  }
+
 }
