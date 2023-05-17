@@ -16,13 +16,18 @@ class DrawerItem extends StatelessWidget{
     },
     {
       'title' : 'الفعاليات',
-      'iconData' : Icons.event_available_sharp,
+      'iconData' : Icons.event,
       'routeName' : AppStrings.kViewEventsScreen
     },
     {
       'title' : 'الأندية',
       'iconData' : Icons.view_agenda,
       'routeName' : AppStrings.kViewClubsScreen
+    },
+    {
+      'title' : 'المهام المتاحة',
+      'iconData' : Icons.event_available_sharp,
+      'routeName' : AppStrings.kViewAvailableTasksScreen
     },
     {
       'title' : 'طلبات العضوية',
@@ -46,7 +51,7 @@ class DrawerItem extends StatelessWidget{
     },
     {
       'title' : 'إداره المهام',
-      'iconData' : Icons.task_alt,
+      'iconData' : Icons.task,
       'routeName' : AppStrings.kManagementTasksScreen
     },
     {
@@ -105,7 +110,7 @@ class DrawerItem extends StatelessWidget{
                         child: ListView.builder(
                             physics: const BouncingScrollPhysics(),
                             // TODO: make length-1 as i display last item ( log out ) on the bottom of Drawer
-                            itemCount: layoutCubit.userData!.idForClubLead != null ? drawerData.length-1 : 3,
+                            itemCount: layoutCubit.userData!.idForClubLead != null ? drawerData.length-1 : 4,
                             itemBuilder: (context,index){
                               return Card(
                                 color: Colors.grey.withOpacity(0.1),

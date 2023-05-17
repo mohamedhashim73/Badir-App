@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-Widget textFieldComponent({double verticalPaddingValue = 0,String? hintText,required TextEditingController controller,bool? isSecure,int? maxLines,bool enabled = true,TextInputType? textInputType}){
+Widget textFieldComponent({double? verticalPaddingValue,String? labelText,required TextEditingController controller,bool? isSecure,int? maxLines,bool enabled = true,TextInputType? textInputType}){
   return Container(
     height: maxLines == null ? 45.h : null ,
     width: double.infinity,
@@ -17,8 +17,8 @@ Widget textFieldComponent({double verticalPaddingValue = 0,String? hintText,requ
       ),
       obscureText: isSecure ?? false,
       decoration: InputDecoration(
-          contentPadding: EdgeInsets.symmetric(vertical: verticalPaddingValue,horizontal: 8.w),
-          hintText: hintText,
+          contentPadding: EdgeInsets.symmetric(vertical: verticalPaddingValue ?? 5.h,horizontal: 8.w),
+          labelText: labelText,
           border: InputBorder.none
       ),
     ),

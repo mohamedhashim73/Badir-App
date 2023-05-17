@@ -30,7 +30,7 @@ class UpdateTaskScreen extends StatelessWidget {
     _descriptionController.text = taskEntity.name;
     _numOfPositionsController.text = taskEntity.numOfPosition.toString();
     _numOfHoursController.text = taskEntity.hours.toString();
-    eventsCubit.eventNameForTaskCreated = taskEntity.eventName ?? "للعامة";
+    eventsCubit.eventNameForTaskCreated = taskEntity.forPublicOrSpecificToAnEvent ? 'للعامة' : taskEntity.eventName;
     return Directionality(
       textDirection: TextDirection.rtl,
       child: SafeArea(

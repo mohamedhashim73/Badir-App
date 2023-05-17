@@ -8,6 +8,7 @@ import 'package:bader_user_app/Features/Events/Domain/Use_Cases/delete_task_use_
 import 'package:bader_user_app/Features/Events/Domain/Use_Cases/get_all_tasks_on_app_use_case.dart';
 import 'package:bader_user_app/Features/Events/Domain/Use_Cases/get_members_on_an_event_use_case.dart';
 import 'package:bader_user_app/Features/Events/Domain/Use_Cases/join_to_event_use_case.dart';
+import 'package:bader_user_app/Features/Events/Domain/Use_Cases/request_authenticate_on_task_use_case.dart';
 import 'package:bader_user_app/Features/Events/Domain/Use_Cases/update_event_use_case.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:bader_user_app/Core/Constants/constants.dart';
@@ -276,6 +277,21 @@ class EventsCubit extends Cubit<EventsStates> {
           await getAllTasksOnApp();
           await getTasksCreatedByMe(idForClubILead: idForClubILead);
           emit(DeleteTaskSuccessState());
+        }
+    );
+  }
+
+  // TODO: User or Member ....
+  void requestAuthenticateOnATask({required String taskID,required String senderID,required String senderName}) async {
+    final result = await sl<RequestAuthenticationOnATaskUseCase>().execute(taskID: taskID, senderID: senderID, senderName: senderName);
+    result.fold(
+        (serverFailure)
+        {
+          emit(FailedToRequestAuthenticateOnATaskState(message: serverFailure.errorMessage));
+        },
+        (unit)
+        {
+          emit(RequestAuthenticateOnATaskSuccessState());
         }
     );
   }

@@ -19,4 +19,6 @@ abstract class EventsContractRepository{
   Future<Either<Failure,Unit>> createTask({required String taskName,required String ownerID,required String clubID,required String description,String? eventID,String? eventName,required bool forPublicOrSpecificToAnEvent,required int hours,required int numOfPosition });
   Future<Either<Failure,Unit>> deleteTask({required String taskID});
   Future<Either<Failure,Unit>> updateTask({required String taskID,required TaskModel taskModel});
+  Future<Either<Failure,Unit>> requestToAuthenticateOnATask({required String taskID,required String senderID,required String senderName});
+
 }

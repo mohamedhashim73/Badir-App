@@ -17,8 +17,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jiffy/jiffy.dart';
 import '../../../../Core/Components/alert_dialog_for_loading_item.dart';
 
-class TasksManagementScreen extends StatelessWidget {
-  const TasksManagementScreen({Key? key}) : super(key: key);
+class ViewAvailableTasksScreen extends StatelessWidget {
+  const ViewAvailableTasksScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -42,15 +42,15 @@ class TasksManagementScreen extends StatelessWidget {
             buildWhen: (pastState,currentState) => currentState is GetTasksThatCreatedByMeSuccessState,
             listener: (context,state)
             {
-              if( state is DeleteTaskLoadingState )
-                {
-                  showLoadingDialog(context:context);
-                }
-              if( state is DeleteTaskSuccessState )
-                {
-                  Navigator.pop(context);
-                  showSnackBar(context: context, message: 'تم حذف المهمة');
-                }
+              // if( state is DeleteTaskLoadingState )
+              //   {
+              //     showLoadingDialog(context:context);
+              //   }
+              // if( state is DeleteTaskSuccessState )
+              //   {
+              //     Navigator.pop(context);
+              //     showSnackBar(context: context, message: 'تم حذف المهمة');
+              //   }
             },
             builder: (context,state) {
               return Padding(

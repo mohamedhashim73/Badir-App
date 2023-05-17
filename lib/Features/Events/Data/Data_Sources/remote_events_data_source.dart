@@ -1,4 +1,5 @@
 import 'package:bader_user_app/Features/Clubs/Data/Models/member_model.dart';
+import 'package:bader_user_app/Features/Events/Data/Models/request_authentication_on_task_model.dart';
 import 'package:bader_user_app/Features/Events/Data/Models/task_model.dart';
 import 'package:bader_user_app/Features/Layout/Data/Models/user_model.dart';
 import 'package:bader_user_app/Features/Layout/Domain/Entities/user_entity.dart';
@@ -134,7 +135,7 @@ class RemoteEventsDataSource{
       return events;
     }
     on FirebaseException catch(e){
-      throw ServerException(exceptionMessage: e.code);
+      throw ServerException(exceptionMessage: e.message!);
     }
   }
 
@@ -152,7 +153,7 @@ class RemoteEventsDataSource{
       return tasks;
     }
     on FirebaseException catch(e){
-      throw ServerException(exceptionMessage: e.code);
+      throw ServerException(exceptionMessage: e.message!);
     }
   }
 
@@ -163,7 +164,21 @@ class RemoteEventsDataSource{
       return unit;
     }
     on FirebaseException catch(e){
-      throw ServerException(exceptionMessage: e.code);
+      throw ServerException(exceptionMessage: e.message!);
+    }
+  }
+
+  // TODO: ASK FOR MEMBERSHIP
+  Future<Unit> requestToAuthenticateOnATask({required String taskID,required String senderID,required String senderName}) async {
+    try
+    {
+      RequestAuthenticationOnATaskModel requestModel = RequestAuthenticationOnATaskModel(senderID,senderName);
+      await FirebaseFirestore.instance.collection(Constants.kTasksCollectionName).doc(taskID).collection(Constants.kTaskAuthenticationRequestsCollectionName).doc(senderID).set(requestModel.toJson());
+      return unit;
+    }
+    on FirebaseException catch(e)
+    {
+      throw ServerException(exceptionMessage: e.message!);
     }
   }
 

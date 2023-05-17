@@ -58,6 +58,12 @@ class FailedToDeleteTaskState extends EventsStates{
   FailedToDeleteTaskState({required this.message});
 }
 
+class RequestAuthenticateOnATaskSuccessState extends EventsStates{}
+class FailedToRequestAuthenticateOnATaskState extends EventsStates{
+  final String message;
+  FailedToRequestAuthenticateOnATaskState({required this.message});
+}
+
 class UpdateTaskSuccessState extends EventsStates{}
 class UpdateTaskLoadingState extends EventsStates{}
 class FailedToUpdateTaskState extends EventsStates{

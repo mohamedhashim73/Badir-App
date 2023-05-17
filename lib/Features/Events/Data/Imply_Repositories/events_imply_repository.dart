@@ -133,4 +133,15 @@ class EventsImplyRepository implements EventsContractRepository{
     }
   }
 
+  @override
+  Future<Either<Failure,Unit>> requestToAuthenticateOnATask({required String taskID,required String senderID,required String senderName}) async {
+    try
+    {
+      return Right(await remoteEventsDataSource.requestToAuthenticateOnATask(taskID: taskID, senderID: senderID, senderName: senderName));
+    }
+    on ServerException catch(e){
+      return Left(ServerFailure(errorMessage: e.exceptionMessage));
+    }
+  }
+
 }
