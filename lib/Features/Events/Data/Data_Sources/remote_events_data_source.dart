@@ -182,4 +182,24 @@ class RemoteEventsDataSource{
     }
   }
 
+  // TODO: هترجع id بتاع التاسكات اللي انا بعت طلب تسجيل فيها بالفعل
+  Future<Set> getIDForTasksIAskedToAuthenticate({List? idForClubsIMemberIn,required String userID}) async {
+    Set tasksID = {};
+    await FirebaseFirestore.instance.collection(Constants.kTasksCollectionName).get().then((value) async {
+      for( var item in value.docs )
+      {
+        if( item.data()['forPublicOrSpecificToAnEvent'] || ( idForClubsIMemberIn != null && idForClubsIMemberIn.contains(item.data()['clubID'].toString().trim()) ) )
+        {
+          DocumentSnapshot docSnapshot = await item.reference.collection(Constants.kTaskAuthenticationRequestsCollectionName).doc(userID).get();
+          if( docSnapshot.exists && docSnapshot.id == userID )
+            {
+              tasksID.add(item.id);
+            }
+        }
+      }
+    });
+    debugPrint("Num of Requests send to Tasks is : ${tasksID.length}");
+    return tasksID;
+  }
+
 }

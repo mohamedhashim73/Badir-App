@@ -144,4 +144,15 @@ class EventsImplyRepository implements EventsContractRepository{
     }
   }
 
+  @override
+  Future<Either<Failure,Set>> getIDForTasksIAskedToAuthenticate({List? idForClubIMemberIn,required String userID}) async {
+    try
+    {
+      return Right(await remoteEventsDataSource.getIDForTasksIAskedToAuthenticate(userID: userID,idForClubsIMemberIn: idForClubIMemberIn));
+    }
+    on ServerException catch(e) {
+      return Left(ServerFailure(errorMessage: e.exceptionMessage));
+    }
+  }
+
 }

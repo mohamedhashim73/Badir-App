@@ -59,9 +59,16 @@ class FailedToDeleteTaskState extends EventsStates{
 }
 
 class RequestAuthenticateOnATaskSuccessState extends EventsStates{}
+class RequestAuthenticateOnATaskLoadingState extends EventsStates{}
 class FailedToRequestAuthenticateOnATaskState extends EventsStates{
   final String message;
   FailedToRequestAuthenticateOnATaskState({required this.message});
+}
+
+class GetIDForTasksIAskedToAuthenticateSuccessState extends EventsStates{}
+class FailedToGetIDForTasksIAskedToAuthenticateState extends EventsStates{
+  final String message;
+  FailedToGetIDForTasksIAskedToAuthenticateState({required this.message});
 }
 
 class UpdateTaskSuccessState extends EventsStates{}
@@ -70,6 +77,9 @@ class FailedToUpdateTaskState extends EventsStates{
   final String message;
   FailedToUpdateTaskState({required this.message});
 }
+
+class GetAvailableTasksLoadingState extends EventsStates{}
+class GetAvailableTasksSuccessState extends EventsStates{}
 
 class CreateTaskSuccessState extends EventsStates{}
 class CreateTaskLoadingState extends EventsStates{}

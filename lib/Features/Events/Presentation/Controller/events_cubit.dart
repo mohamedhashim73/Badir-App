@@ -6,10 +6,12 @@ import 'package:bader_user_app/Features/Events/Domain/Use_Cases/create_task_use_
 import 'package:bader_user_app/Features/Events/Domain/Use_Cases/delete_event_use_case.dart';
 import 'package:bader_user_app/Features/Events/Domain/Use_Cases/delete_task_use_case.dart';
 import 'package:bader_user_app/Features/Events/Domain/Use_Cases/get_all_tasks_on_app_use_case.dart';
+import 'package:bader_user_app/Features/Events/Domain/Use_Cases/get_id_for_tasks_that_i_asked_for_authentication.dart';
 import 'package:bader_user_app/Features/Events/Domain/Use_Cases/get_members_on_an_event_use_case.dart';
 import 'package:bader_user_app/Features/Events/Domain/Use_Cases/join_to_event_use_case.dart';
 import 'package:bader_user_app/Features/Events/Domain/Use_Cases/request_authenticate_on_task_use_case.dart';
 import 'package:bader_user_app/Features/Events/Domain/Use_Cases/update_event_use_case.dart';
+import 'package:bader_user_app/Features/Layout/Domain/Entities/user_entity.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:bader_user_app/Core/Constants/constants.dart';
 import 'package:bader_user_app/Core/Service%20Locators/service_locators.dart';
@@ -264,6 +266,24 @@ class EventsCubit extends Cubit<EventsStates> {
     emit(GetTasksThatCreatedByMeSuccessState());
   }
 
+  // TODO: Get Tasks for Ordinary User or Member not Leader .....
+  List<TaskEntity> availableTasks = [];
+  Future<void> getAvailableTasks({required UserEntity myData}) async {
+    availableTasks.clear();
+    debugPrint("All Tasks on App length : ${allTasksOnApp.length}");
+    emit(GetAvailableTasksLoadingState());
+    if( allTasksOnApp.isEmpty ) await getAllTasksOnApp();
+    for( var item in allTasksOnApp )
+    {
+      if( item.forPublicOrSpecificToAnEvent || ( myData.idForClubsMemberIn != null && myData.idForClubsMemberIn!.contains(item.clubID)) )   // Public or related to club i'm member on it...
+      {
+        availableTasks.add(item);
+      }
+    }
+    await getIDForTasksIAskedToAuthenticate(userID: myData.id!,idForClubsIMemberIn: myData.idForClubsMemberIn);   // TODO: عشان بس لو بعت طلب اظهر للمستخد انه تم ارسال طلب عشان ميبعتش تاني
+    emit(GetAvailableTasksSuccessState());
+  }
+
   void deleteTask({required String taskID,required String idForClubILead}) async {
     emit(DeleteTaskLoadingState());
     final result = await sl<DeleteTaskUseCase>().execute(taskID: taskID);
@@ -283,6 +303,7 @@ class EventsCubit extends Cubit<EventsStates> {
 
   // TODO: User or Member ....
   void requestAuthenticateOnATask({required String taskID,required String senderID,required String senderName}) async {
+    emit(RequestAuthenticateOnATaskLoadingState());
     final result = await sl<RequestAuthenticationOnATaskUseCase>().execute(taskID: taskID, senderID: senderID, senderName: senderName);
     result.fold(
         (serverFailure)
@@ -292,6 +313,24 @@ class EventsCubit extends Cubit<EventsStates> {
         (unit)
         {
           emit(RequestAuthenticateOnATaskSuccessState());
+        }
+    );
+  }
+
+  Set? idForTasksThatIAskedToAuthenticateBefore;
+  // TODO: هترجع id بتاع التاسكات اللي انا بعت طلب تسجيل فيها بالفعل  -- Call it after call getAvailableTasks()
+  Future<void> getIDForTasksIAskedToAuthenticate({List? idForClubsIMemberIn,required String userID}) async {
+    emit(RequestAuthenticateOnATaskLoadingState());
+    final result = await sl<GetIDForTasksThatIAskedForAuthenticationBeforeUseCase>().execute(userID: userID,idForClubIMemberIn: idForClubsIMemberIn);
+    result.fold(
+        (serverFailure)
+        {
+          emit(FailedToGetIDForTasksIAskedToAuthenticateState(message: serverFailure.errorMessage));
+        },
+        (tasksID)
+        {
+          idForTasksThatIAskedToAuthenticateBefore = tasksID;
+          emit(GetIDForTasksIAskedToAuthenticateSuccessState());
         }
     );
   }

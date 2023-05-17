@@ -20,5 +20,6 @@ abstract class EventsContractRepository{
   Future<Either<Failure,Unit>> deleteTask({required String taskID});
   Future<Either<Failure,Unit>> updateTask({required String taskID,required TaskModel taskModel});
   Future<Either<Failure,Unit>> requestToAuthenticateOnATask({required String taskID,required String senderID,required String senderName});
-
+  // TODO: هترجع id بتاع التاسكات اللي انا بعت طلب تسجيل فيها بالفعل
+  Future<Either<Failure,Set>> getIDForTasksIAskedToAuthenticate({List? idForClubIMemberIn,required String userID});
 }

@@ -10,6 +10,7 @@ import 'package:bader_user_app/Features/Clubs/Domain/Use_Cases/remove_member_fro
 import 'package:bader_user_app/Features/Clubs/Domain/Use_Cases/update_club_use_case.dart';
 import 'package:bader_user_app/Features/Events/Domain/Use_Cases/delete_event_use_case.dart';
 import 'package:bader_user_app/Features/Events/Domain/Use_Cases/get_all_events_use_case.dart';
+import 'package:bader_user_app/Features/Events/Domain/Use_Cases/get_id_for_tasks_that_i_asked_for_authentication.dart';
 import 'package:bader_user_app/Features/Layout/Data/Data_Source/layout_data_source.dart';
 import 'package:bader_user_app/Features/Layout/Data/Repositories/layout_imply_repository.dart';
 import 'package:bader_user_app/Features/Layout/Domain/Use%20Cases/log_out_use_case.dart';
@@ -88,6 +89,7 @@ class ServiceLocators{
     sl.registerLazySingleton<GetAllEventsUseCase>(() => GetAllEventsUseCase(eventsContractRepository: sl<EventsImplyRepository>()));
     sl.registerLazySingleton<UpdateEventUseCase>(() => UpdateEventUseCase(eventsContractRepository: sl<EventsImplyRepository>()));
     sl.registerLazySingleton<DeleteEventUseCase>(() => DeleteEventUseCase(eventsContractRepository: sl<EventsImplyRepository>()));
+    sl.registerLazySingleton<GetIDForTasksThatIAskedForAuthenticationBeforeUseCase>(() => GetIDForTasksThatIAskedForAuthenticationBeforeUseCase(eventsContractRepository: sl<EventsImplyRepository>()));
     sl.registerLazySingleton<GetAllTasksOnAppUseCase>(() => GetAllTasksOnAppUseCase(eventsContractRepository: sl<EventsImplyRepository>()));
     sl.registerLazySingleton<CreateEventUseCase>(() => CreateEventUseCase(eventsContractRepository: sl<EventsImplyRepository>()));
     sl.registerLazySingleton<RequestAuthenticationOnATaskUseCase>(() => RequestAuthenticationOnATaskUseCase(eventsContractRepository: sl<EventsImplyRepository>()));
