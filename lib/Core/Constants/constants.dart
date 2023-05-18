@@ -1,9 +1,12 @@
+import 'package:bader_user_app/Core/Constants/enumeration.dart';
+import 'package:bader_user_app/Features/Layout/Domain/Entities/user_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jiffy/jiffy.dart';
 import '../../Features/Auth/Presentation/Controller/auth_cubit.dart';
 import '../../Features/Clubs/Presentation/Controller/clubs_cubit.dart';
+import '../../Features/Events/Domain/Entities/event_entity.dart';
 import '../../Features/Events/Presentation/Controller/events_cubit.dart';
 import '../../Features/Layout/Presentation/Controller/layout_cubit.dart';
 
@@ -40,4 +43,21 @@ class Constants {
     lastDate: DateTime.now().add(const Duration(days: 365)),
   );
   static Future<XFile?> getImageFromGallery() async => await ImagePicker().pickImage(source: ImageSource.gallery);
+
+  // TODO: هستخدمهم في عرض بيانات الفعاليه عشان بناء عليها هعمل action معين
+  static bool eventExpiredAndIHaveNotJoined({required UserEntity userEntity,required bool eventDateExpired,required String eventID}){
+    return eventDateExpired && (userEntity.idForEventsJoined == null || (userEntity.idForEventsJoined != null && userEntity.idForEventsJoined!.contains(eventID) == false));
+  }
+  static bool eventInDateAndIDoNotHavePermissionToJoin({required bool eventForOnlyMembers,required UserEntity userEntity,required bool eventDateExpired,required String eventID,required String clubID}){
+    return eventForOnlyMembers && !eventDateExpired && (userEntity.idForClubsMemberIn == null || (userEntity.idForClubsMemberIn != null && userEntity.idForClubsMemberIn!.contains(clubID) == false));
+  }
+  static bool eventExpiredAndIHaveJoined({required UserEntity userEntity,required bool eventDateExpired,required String eventID}){
+    return eventDateExpired && (userEntity.idForEventsJoined != null && userEntity.idForEventsJoined!.contains(eventID) == false);
+  }
+  static bool eventInDateAndIHaveJoined({required UserEntity userEntity,required bool eventDateExpired,required String eventID}){
+    return !eventDateExpired && (userEntity.idForEventsJoined != null && userEntity.idForEventsJoined!.contains(eventID));
+  }
+  static bool eventInDateAndIHaveNotJoinedYetAndHavePermission({required bool eventForOnlyMembers,required UserEntity userEntity,required bool eventDateExpired,required String eventID,required String clubID}){
+    return (!eventForOnlyMembers && !eventDateExpired && (userEntity.idForEventsJoined == null || (userEntity.idForEventsJoined!.contains(eventID) == false))) && (!eventDateExpired && ((userEntity.idForClubsMemberIn != null && userEntity.idForClubsMemberIn!.contains(clubID) == true)));
+  }
 }

@@ -174,7 +174,7 @@ class HomeScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children:
                         [
-                          _headingText(title: "الفعاليات القادمة"),
+                          _headingText(title: "الفعاليات"),
                           GestureDetector(
                             onTap: ()
                             {
@@ -324,23 +324,18 @@ class HomeScreen extends StatelessWidget {
                       {
                         Navigator.push(context, MaterialPageRoute(builder: (context) => EventDetailsScreen(event: eventEntity,eventDateExpired: false)));
                       }
-                    else if( myData.idForEventsJoined != null && myData.idForEventsJoined!.contains(eventEntity.id) )
+                    else if ( Constants.eventInDateAndIHaveNotJoinedYetAndHavePermission(clubID: eventEntity.clubID!,eventForOnlyMembers: eventEntity.forPublic == EventForPublicOrNot.public.name ? false : true,userEntity: myData, eventDateExpired: eventDateExpired, eventID: eventEntity.id!) )
                       {
-                        showSnackBar(context: context, message: 'انت بالفعل مسجل بهذه بالفعالية',backgroundColor: AppColors.kRedColor);
-                      }
-                    else if ( ( myData.idForClubsMemberIn != null && myData.idForClubsMemberIn!.contains(eventEntity.clubID) ) || eventEntity.forPublic == EventForPublicOrNot.public.name )
-                      {
-                        // TODO: Join to Event Function.....
                         eventsCubit.joinToEvent(eventID: eventEntity.id!, layoutCubit: layoutCubit, memberID: myData.id ?? Constants.userID!);
                       }
-                    else
+                    else if( Constants.eventInDateAndIDoNotHavePermissionToJoin(clubID: eventEntity.clubID!,eventForOnlyMembers: eventEntity.forPublic == EventForPublicOrNot.public.name ? false : true,userEntity: myData, eventDateExpired: eventDateExpired, eventID: eventEntity.id!) )
                       {
                         showSnackBar(context: context, message: 'هذه الفعالية خاصة بأعضاء ${eventEntity.clubName} فقط',backgroundColor: AppColors.kRedColor);
                       }
                   },
-                  textColor: (myData.idForEventsJoined == null && eventEntity.forPublic == EventForPublicOrNot.public.name) || (myData.idForEventsJoined != null && myData.idForEventsJoined!.contains(eventEntity.id) == false && myData.idForClubsMemberIn != null && myData.idForClubsMemberIn!.contains(eventEntity.clubID)) || myData.idForClubLead != null ? AppColors.kBlackColor : AppColors.kWhiteColor,
-                  color: myData.idForEventsJoined != null && myData.idForEventsJoined!.contains(eventEntity.id) ? AppColors.kGreenColor : myData.idForClubLead != null ? AppColors.kWhiteColor : (myData.idForEventsJoined == null && eventEntity.forPublic == EventForPublicOrNot.public.name) || (myData.idForEventsJoined != null && myData.idForEventsJoined!.contains(eventEntity.id) == false && myData.idForClubsMemberIn != null && myData.idForClubsMemberIn!.contains(eventEntity.clubID)) ? AppColors.kWhiteColor : AppColors.kRedColor,
-                  child: Text(myData.idForClubLead != null ? "متابعة" : myData.idForEventsJoined != null && myData.idForEventsJoined!.contains(eventEntity.id) ? "تم التسجيل" : (myData.idForEventsJoined == null && eventEntity.forPublic == EventForPublicOrNot.public.name) || (myData.idForEventsJoined != null && myData.idForEventsJoined!.contains(eventEntity.id) == false && myData.idForClubsMemberIn != null && myData.idForClubsMemberIn!.contains(eventEntity.clubID)) ? "انضم إلينا" : "خاصة",style: const TextStyle(fontWeight: FontWeight.bold),),
+                  color: myData.idForClubLead != null || Constants.eventInDateAndIHaveNotJoinedYetAndHavePermission(clubID: eventEntity.clubID!,eventForOnlyMembers: eventEntity.forPublic == EventForPublicOrNot.public.name ? false : true,userEntity: myData, eventDateExpired: eventDateExpired, eventID: eventEntity.id!) ? AppColors.kWhiteColor : Constants.eventInDateAndIHaveJoined(userEntity: myData, eventDateExpired: eventDateExpired, eventID: eventEntity.id!) ? AppColors.kOrangeColor : Constants.eventInDateAndIDoNotHavePermissionToJoin(clubID: eventEntity.clubID!,eventForOnlyMembers: eventEntity.forPublic == EventForPublicOrNot.public.name ? false : true,userEntity: myData, eventDateExpired: eventDateExpired, eventID: eventEntity.id!) || Constants.eventExpiredAndIHaveNotJoined(userEntity: myData, eventDateExpired: eventDateExpired, eventID: eventEntity.id!) ? AppColors.kRedColor : AppColors.kMainColor,
+                  textColor: myData.idForClubLead != null || Constants.eventInDateAndIHaveNotJoinedYetAndHavePermission(clubID: eventEntity.clubID!,eventForOnlyMembers: eventEntity.forPublic == EventForPublicOrNot.public.name ? false : true,userEntity: myData, eventDateExpired: eventDateExpired, eventID: eventEntity.id!) ? AppColors.kBlackColor : AppColors.kWhiteColor,
+                  child: Text(myData.idForClubLead != null ? "متابعة" : Constants.eventInDateAndIHaveJoined(userEntity: myData, eventDateExpired: eventDateExpired, eventID: eventEntity.id!) ? "تم التسجيل" :  Constants.eventInDateAndIHaveNotJoinedYetAndHavePermission(clubID: eventEntity.clubID!,eventForOnlyMembers: eventEntity.forPublic == EventForPublicOrNot.public.name ? false : true,userEntity: myData, eventDateExpired: eventDateExpired, eventID: eventEntity.id!) ? "سجل الآن" : Constants.eventExpiredAndIHaveNotJoined(userEntity: myData, eventDateExpired: eventDateExpired, eventID: eventEntity.id!) ? "انتهت الفعالية" : Constants.eventInDateAndIDoNotHavePermissionToJoin(clubID: eventEntity.clubID!,eventForOnlyMembers: eventEntity.forPublic == EventForPublicOrNot.public.name ? false : true,userEntity: myData, eventDateExpired: eventDateExpired, eventID: eventEntity.id!) ? "خاصة" : "",style: const TextStyle(fontWeight: FontWeight.bold),),
                 ),
               )
           ],

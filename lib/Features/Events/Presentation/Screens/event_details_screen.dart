@@ -1,7 +1,9 @@
+import 'package:bader_user_app/Core/Components/snackBar_item.dart';
 import 'package:bader_user_app/Core/Constants/constants.dart';
 import 'package:bader_user_app/Core/Constants/enumeration.dart';
 import 'package:bader_user_app/Core/Theme/app_colors.dart';
 import 'package:bader_user_app/Features/Events/Domain/Entities/event_entity.dart';
+import 'package:bader_user_app/Features/Events/Presentation/Controller/events_cubit.dart';
 import 'package:bader_user_app/Features/Layout/Domain/Entities/user_entity.dart';
 import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_cubit.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +32,14 @@ class EventDetailsScreen extends StatelessWidget {
     _locationController.text = event.location!;
     _linkController.text = event.link!;
     _timeController.text = event.time!;
-    final UserEntity userEntity = LayoutCubit.getInstance(context).userData!;
+    final LayoutCubit layoutCubit = LayoutCubit.getInstance(context);
+    final UserEntity userEntity = layoutCubit.userData!;
+    final EventsCubit eventsCubit = EventsCubit.getInstance(context);
+    bool eventExpiredAndIHaveNotJoined = Constants.eventExpiredAndIHaveNotJoined(eventID: event.id!,eventDateExpired: eventDateExpired,userEntity: userEntity);
+    bool eventExpiredAndIHaveJoined = Constants.eventExpiredAndIHaveJoined(eventID: event.id!,eventDateExpired: eventDateExpired,userEntity: userEntity);
+    bool eventInDateAndIHaveJoined = Constants.eventInDateAndIHaveJoined(eventID: event.id!,eventDateExpired: eventDateExpired,userEntity: userEntity);
+    bool eventInDateAndIHaveNotJoinedYet = Constants.eventInDateAndIHaveNotJoinedYetAndHavePermission(clubID: event.clubID!,eventForOnlyMembers: event.forPublic == EventForPublicOrNot.public.name ? false : true,userEntity: userEntity, eventDateExpired: eventDateExpired, eventID: event.id!);
+
     return SafeArea(
       child: Directionality(
         textDirection: TextDirection.rtl,
@@ -47,35 +56,49 @@ class EventDetailsScreen extends StatelessWidget {
                   backgroundImage: NetworkImage(event.image!),
                 ),
                 SizedBox(height: 12.5.h,),
-                _textField(itemsRepresentOnRowNotColumn:false,controller: _nameController,title:  'اسم الفعالية'),
-                _textField(itemsRepresentOnRowNotColumn:false,controller:_descriptionController,title: 'الوصف'),
-                _textField(controller:_startDateController,title: 'تاريخ البداية',onTap: () async => _startDateController.text = Jiffy(await Constants.selectDate(context: context)).yMMMd),
-                _textField(controller:_endDateController,title: 'تاريخ الانتهاء',onTap: () async => _endDateController.text = Jiffy(await Constants.selectDate(context: context)).yMMMd),
-                _textField(controller:_timeController,title: 'الوقت',onTap: (){}),
-                _textField(controller:_locationController,title: 'المكان'),
-                _textField(controller:_linkController,title: 'اللينك'),
-                _radioItem(title: event.forPublic == EventForPublicOrNot.private.name ? 'خاص بالنادي' : 'للعامة', value: event.forPublic == EventForPublicOrNot.private.name ? EventForPublicOrNot.private : EventForPublicOrNot.public),
+                _textFieldItem(controller: _nameController,title:  'اسم الفعالية'),
+                _textFieldItem(controller:_descriptionController,title: 'الوصف',maxLines: 3),
+                _textFieldItem(controller:_startDateController,title: 'تاريخ البدء'),
+                _textFieldItem(controller:_endDateController,title: 'تاريخ الانتهاء'),
+                _textFieldItem(controller:_timeController,title: 'الوقت'),
+                _textFieldItem(controller:_locationController,title: 'المكان'),
+                _textFieldItem(controller:_linkController,title: 'اللينك'),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children:
+                  [
+                    Text("حالة الفعالية : ",style: TextStyle(color: AppColors.kMainColor,fontWeight: FontWeight.bold,fontSize: 15.5.sp),),
+                    Text(event.forPublic == EventForPublicOrNot.private.name ? 'خاصة لأعضاء النادي فقط' : 'للمستخدمين جميعا',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 14.5.sp),),
+                  ],
+                ),
                 if( userEntity.idForClubLead == null && ( ( userEntity.idForEventsJoined != null && userEntity.idForClubsMemberIn!.contains(event.clubID) ) || event.forPublic == EventForPublicOrNot.public.name ) )
                   SizedBox(height: 10.h,),
                 if( userEntity.idForClubLead == null && ( ( userEntity.idForEventsJoined != null && userEntity.idForClubsMemberIn!.contains(event.clubID) ) || event.forPublic == EventForPublicOrNot.public.name ) )
                   DefaultButton(
                   // TODO: مش هيظهر الا اذا كنت مسجل فيها او هي كانت عامة بس لو انا ليدر مش هيظهر ...
                   width: double.infinity,
-                  backgroundColor: userEntity.idForEventsJoined!.contains(event.id) && eventDateExpired == false ? AppColors.kOrangeColor : AppColors.kMainColor,
+                  backgroundColor: eventExpiredAndIHaveNotJoined ? AppColors.kRedColor : userEntity.idForEventsJoined != null && userEntity.idForEventsJoined!.contains(event.id) && eventDateExpired == false ? AppColors.kOrangeColor : AppColors.kMainColor,
                   onTap: ()
                   {
-                    if( eventDateExpired == true && userEntity.idForEventsJoined != null && userEntity.idForEventsJoined!.contains(event.id) )
+                    if( eventExpiredAndIHaveJoined )
                       {
                         // Give Opinion ...
                         debugPrint("Give an Opinion ....");
                       }
-                    else if ( eventDateExpired == false && userEntity.idForEventsJoined != null && userEntity.idForEventsJoined!.contains(event.id) == false && userEntity.idForClubsMemberIn != null && userEntity.idForClubsMemberIn!.contains(event.clubID))
+                    else if( eventInDateAndIHaveNotJoinedYet )
                       {
-                        // Join to Event ...
-                        debugPrint("Ask to Join to Event .....");
+                        eventsCubit.joinToEvent(eventID: event.id!, layoutCubit: layoutCubit, memberID: userEntity.id ?? Constants.userID!);
                       }
+                    else if( eventInDateAndIHaveJoined )
+                      {
+                        showSnackBar(context: context, message: "لقد سبق لك التسجيل بالفعالية",backgroundColor: AppColors.kRedColor);
+                      }
+                    else if( eventExpiredAndIHaveNotJoined )
+                    {
+                      showSnackBar(context: context, message: "عذرا فالفعالية انتهت",backgroundColor: AppColors.kRedColor);
+                    }
                   },
-                  title: eventDateExpired ? "شاركنا برأيك" : userEntity.idForEventsJoined!.contains(event.id) ? "تم التسجيل" : "انضمام",
+                  title: eventExpiredAndIHaveNotJoined ? "انتهت الفعالية" : eventExpiredAndIHaveJoined ? "شاركنا برأيك" : eventInDateAndIHaveJoined ? "تم التسجيل" : "انضمام",
                 )
               ],
             )
@@ -85,43 +108,25 @@ class EventDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _textField({bool itemsRepresentOnRowNotColumn = true ,Function()? onTap,required TextEditingController controller, required String title, TextInputType? textInputType}){
+  Widget _textFieldItem({required TextEditingController controller,int? maxLines,required String title}){
     return Container(
-        margin: EdgeInsets.only(bottom: 12.h),
-        padding: EdgeInsets.symmetric(vertical: 10.h,horizontal: 10.w),
-        decoration: BoxDecoration(
-            color: AppColors.kYellowColor,
-            borderRadius: BorderRadius.circular(4),
-            border: Border.all(color: AppColors.kMainColor),
+      margin: EdgeInsets.symmetric(vertical: 10.h),
+      child: TextFormField(
+        enabled: false,
+        controller: controller,
+        maxLines: maxLines ?? 1,
+        style: TextStyle(
+            fontSize: 14.sp
         ),
-        child: itemsRepresentOnRowNotColumn == false ? Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children:
-          [
-            Text(title,style: TextStyle(color:AppColors.kRedColor,fontWeight: FontWeight.bold,fontSize: 16.sp),),
-            Text(controller.text)
-          ],
-        ) : Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children:
-          [
-            Text(title,style: TextStyle(color:AppColors.kRedColor,fontWeight: FontWeight.bold,fontSize: 16.sp),),
-            Expanded(child: Text(controller.text,textAlign: TextAlign.left,style: const TextStyle(overflow: TextOverflow.ellipsis),))
-          ],
-        )
-    );
-  }
-
-  Widget _radioItem({required String title,required EventForPublicOrNot value,}){
-    return RadioListTile(
-      contentPadding: EdgeInsets.zero,
-      title: Text(title),
-      value: value,
-      toggleable: true,
-      selected: true,
-      activeColor: AppColors.kRedColor,
-      groupValue: "",
-      onChanged: (Object? value) {  },
+        decoration: InputDecoration(
+            filled: true,
+            fillColor: AppColors.kGreyColor,
+            contentPadding: EdgeInsets.symmetric(vertical: 10.h,horizontal: 10.w),
+            labelText: title,
+            labelStyle: TextStyle(color: AppColors.kMainColor,fontSize: 16.sp,fontWeight: FontWeight.bold),
+            border: const OutlineInputBorder()
+        ),
+      ),
     );
   }
 
