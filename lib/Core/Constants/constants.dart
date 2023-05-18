@@ -18,9 +18,9 @@ class Constants {
     BlocProvider(create: (context) => LayoutCubit()..getMyData()),
   ];
   static String? userID;
-  static List<String> colleges = ["كليه حاسبات ومعلومات","كليه هندسه","كليه صيدله","كليه تمريض","كليه طب","كليه تربيه رياضيه"];
+  static List<String> colleges = ["كلية علوم وهندسة الحاسب الآلي","كلية الآداب والعلوم الإنسانية","كلية إدارة الأعمال","كلية التربية","كلية التمريض","الكلية التطبيقية","كلية الحقوق","كلية الصيدلة","كلية الطب","كلية طب الأسنان","كلية العلوم","كلية علوم الأسرة","كلية علوم التأهيل الطبي","كلية العلوم الطبية التطبيقية","كلية الهندسة"];
   static List<String> reportTypes = ["خطة سنوية","فعالية","ساعات تطوعية"];
-  static List<String> committees = ["العلمية","الرياضية","الفنية"];
+  static List<String> committees = ["التنظيمية" , "الإعلامية" , "التصميم"];
   static List<String> genderStatus = ["ذكر","أنثي"];
   static String kNotificationsCollectionName = "Notifications";
   static String kUsersCollectionName = "Users";
