@@ -197,6 +197,24 @@ class RemoteEventsDataSource{
     }
   }
 
+  Future<List<OpinionAboutEventModel>> getOpinionsAboutEvent({required String eventID}) async {
+    try
+    {
+      List<OpinionAboutEventModel> opinions = [];
+      await FirebaseFirestore.instance.collection(Constants.kEventsCollectionName).doc(eventID).collection(Constants.kOpinionsAboutTaskCollectionName).get().then((value) async {
+        for( var item in value.docs )
+          {
+            opinions.add(OpinionAboutEventModel.fromJson(json: item.data()));
+          }
+      });
+      return opinions;
+    }
+    on FirebaseException catch(e)
+    {
+      throw ServerException(exceptionMessage: e.message!);
+    }
+  }
+
   // TODO: Leader ....
   Future<List<RequestAuthenticationOnATaskModel>> gedRequestForAuthenticateOnATask({required String taskID}) async {
     try

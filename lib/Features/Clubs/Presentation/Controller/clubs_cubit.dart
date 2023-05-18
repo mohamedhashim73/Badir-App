@@ -134,7 +134,7 @@ class ClubsCubit extends Cubit<ClubsStates> {
     XFile? pickedFile = await Constants.getImageFromGallery();
     if( pickedFile != null )
       {
-        clubImage = File(pickedFile!.path);
+        clubImage = File(pickedFile.path);
         emit(ChooseClubImageSuccess());
       }
     else

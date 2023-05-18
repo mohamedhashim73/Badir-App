@@ -28,4 +28,5 @@ abstract class EventsContractRepository{
   Future<Either<Failure,List<RequestAuthenticationOnATaskModel>>> gedRequestForAuthenticateOnATask({required String taskID});
   Future<Either<Failure,Unit>> acceptOrRejectAuthenticateRequestOnATask({required String myID,required LayoutCubit layoutCubit,required String requestSenderName,required TaskEntity taskEntity,required String requestSenderID,required bool respondStatus});
   Future<Either<Failure,Unit>> sendOpinionAboutEvent({required String eventID,required OpinionAboutEventModel opinionModel,required String senderID});
+  Future<Either<Failure,List<OpinionAboutEventModel>>> getOpinionsAboutEvent({required String eventID});
 }

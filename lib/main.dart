@@ -54,8 +54,7 @@ class MyApp extends StatelessWidget {
                   )
                 ),
                 debugShowCheckedModeBanner: false,
-                home: const SendOpinionAboutEventScreen()
-                // Constants.userID != null ? const LayoutScreen() : LoginScreen()
+                home: Constants.userID != null ? const LayoutScreen() : LoginScreen()
               );
             }
           ),

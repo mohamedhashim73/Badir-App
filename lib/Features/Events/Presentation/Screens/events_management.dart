@@ -6,6 +6,7 @@ import 'package:bader_user_app/Features/Events/Presentation/Controller/events_st
 import 'package:bader_user_app/Features/Events/Presentation/Screens/event_details_screen.dart';
 import 'package:bader_user_app/Features/Events/Presentation/Screens/update_event_screen.dart';
 import 'package:bader_user_app/Features/Events/Presentation/Screens/view_memebrs_on_an_event_screen.dart';
+import 'package:bader_user_app/Features/Events/Presentation/Screens/view_opinions_about_event.dart';
 import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -77,34 +78,49 @@ class EventsManagementScreen extends StatelessWidget {
         Navigator.push(context, MaterialPageRoute(builder: (context) => EventDetailsScreen(event: eventData, eventExpired: DateTime.now().isAfter(eventDate))));
       },
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 18.h,horizontal: 12.w),
+        padding: EdgeInsets.symmetric(vertical: 10.h,horizontal: 12.w),
         color: AppColors.kYellowColor,
-        child: Row(
-          children:
-          [
-            Expanded(child: Text(eventData.name!,style: const TextStyle(fontWeight:FontWeight.bold,overflow: TextOverflow.ellipsis),)),
-            _buttonItem(
-              title: 'تحديث',
-              onTap: ()
-              {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => UpdateEventScreen(eventEntity: eventData)));
-              },
-            ),
-            SizedBox(width: 5.w,),
-            _buttonItem(
-                title: 'المسجلين',
-                onTap: ()
-                {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => ViewMembersOnAnEventScreen(eventID: eventData.id!.trim())));
-                }
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("فعالية ${eventData.name!}",style: TextStyle(fontWeight:FontWeight.bold,overflow: TextOverflow.ellipsis,fontSize: 15.sp),),
+            SizedBox(height: 10.h,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children:
+              [
+                _buttonItem(
+                  title: 'تحديث',
+                  onTap: ()
+                  {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => UpdateEventScreen(eventEntity: eventData)));
+                  },
                 ),
-            SizedBox(width: 5.w,),
-            _buttonItem(
-                title: 'حذف',
-                onTap: ()
-                {
-                  cubit.deleteEvent(eventID: eventData.id!,idForClubILead: idForClubILead);
-                }
+                SizedBox(width: 5.w,),
+                _buttonItem(
+                  title: 'الأراء',
+                  onTap: ()
+                  {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => ViewOpinionsAboutEventScreen(eventID: eventData.id!)));
+                  },
+                ),
+                SizedBox(width: 5.w,),
+                _buttonItem(
+                    title: 'المسجلين',
+                    onTap: ()
+                    {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => ViewMembersOnAnEventScreen(eventID: eventData.id!.trim())));
+                    }
+                    ),
+                SizedBox(width: 5.w,),
+                _buttonItem(
+                    title: 'حذف',
+                    onTap: ()
+                    {
+                      cubit.deleteEvent(eventID: eventData.id!,idForClubILead: idForClubILead);
+                    }
+                ),
+              ],
             ),
           ],
         ),

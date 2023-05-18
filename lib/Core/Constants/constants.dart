@@ -77,6 +77,6 @@ class Constants {
     String clubID = event.clubID!;
     List? idForEventsJoined = userEntity.idForEventsJoined;
     List? idForClubsMemberIn = userEntity.idForClubsMemberIn;
-    return (!eventForOnlyMembers && !eventExpired && idForEventsJoined == null || (idForEventsJoined!.contains(eventID) == false)) && (!eventExpired && ((idForClubsMemberIn != null && idForClubsMemberIn.contains(clubID) == true)));
+    return (!eventForOnlyMembers && !eventExpired && idForEventsJoined == null || (idForEventsJoined != null && idForEventsJoined.contains(eventID) == false)) && (!eventExpired && ((idForClubsMemberIn != null && idForClubsMemberIn.contains(clubID) == true)));
   }
 }

@@ -27,6 +27,7 @@ import '../../Domain/Entities/event_entity.dart';
 import '../../Domain/Entities/task_entity.dart';
 import '../../Domain/Use_Cases/accept_or_reject_user_request_to_authenticate_on_task_use_case.dart';
 import '../../Domain/Use_Cases/get_all_events_use_case.dart';
+import '../../Domain/Use_Cases/get_opinions_about_event_use_case.dart';
 import '../../Domain/Use_Cases/get_requests_for_authentication_on_task_use_case.dart';
 import '../../Domain/Use_Cases/update_task_use_case.dart';
 import 'events_states.dart';
@@ -349,6 +350,21 @@ class EventsCubit extends Cubit<EventsStates> {
         (unit) async
         {
           emit(SendOpinionAboutEventSuccessState());
+        }
+    );
+  }
+
+  Future<void> getOpinionsAboutEvent({required String eventID}) async {
+    emit(GetOpinionsAboutEventLoadingState());
+    final result = await sl<GetOpinionsAboutEventUseCase>().execute(eventID:eventID);
+    result.fold(
+        (serverFailure)
+        {
+          emit(FailedToGetOpinionsAboutEventState(message: serverFailure.errorMessage));
+        },
+        (opinionsData) async
+        {
+          emit(GetOpinionsAboutEventSuccessState(opinions: opinionsData));
         }
     );
   }

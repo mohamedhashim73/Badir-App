@@ -181,6 +181,17 @@ class EventsImplyRepository implements EventsContractRepository{
   }
 
   @override
+  Future<Either<Failure,List<OpinionAboutEventModel>>> getOpinionsAboutEvent({required String eventID}) async{
+    try
+    {
+      return Right(await remoteEventsDataSource.getOpinionsAboutEvent(eventID: eventID));
+    }
+    on ServerException catch(e) {
+      return Left(ServerFailure(errorMessage: e.exceptionMessage));
+    }
+  }
+
+  @override
   Future<Either<Failure,Unit>> acceptOrRejectAuthenticateRequestOnATask({required String myID,required LayoutCubit layoutCubit,required String requestSenderName,required TaskEntity taskEntity,required String requestSenderID,required bool respondStatus}) async {
     try
     {

@@ -20,6 +20,7 @@ import '../../../Clubs/Presentation/Controller/clubs_states.dart';
 import '../../../Events/Presentation/Controller/events_states.dart';
 import '../../../Clubs/Presentation/Screens/club_details_screen.dart';
 import '../../../Events/Presentation/Screens/event_details_screen.dart';
+import '../../../Events/Presentation/Screens/send_opinion_about_event_screen.dart';
 import '../../Domain/Entities/user_entity.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -331,7 +332,7 @@ class HomeScreen extends StatelessWidget {
                     }
                     else if( eventExpiredAndIHaveJoined )
                     {
-                      debugPrint("Give an Opinion ....");
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => SendOpinionAboutEventScreen(eventName:eventEntity.name!,eventID:eventEntity.id!)));
                     }
                     else if( eventInDateAndIHaveNotJoinedYetAndHavePermission )
                     {

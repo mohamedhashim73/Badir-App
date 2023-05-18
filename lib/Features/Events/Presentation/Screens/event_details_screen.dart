@@ -4,6 +4,7 @@ import 'package:bader_user_app/Core/Constants/enumeration.dart';
 import 'package:bader_user_app/Core/Theme/app_colors.dart';
 import 'package:bader_user_app/Features/Events/Domain/Entities/event_entity.dart';
 import 'package:bader_user_app/Features/Events/Presentation/Controller/events_cubit.dart';
+import 'package:bader_user_app/Features/Events/Presentation/Screens/send_opinion_about_event_screen.dart';
 import 'package:bader_user_app/Features/Layout/Domain/Entities/user_entity.dart';
 import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_cubit.dart';
 import 'package:flutter/material.dart';
@@ -84,7 +85,7 @@ class EventDetailsScreen extends StatelessWidget {
                   {
                     if( eventExpiredAndIHaveJoined )
                       {
-                        debugPrint("Give an Opinion ....");
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => SendOpinionAboutEventScreen(eventName:event.name!,eventID:event.id!)));
                       }
                     else if( eventInDateAndIHaveNotJoinedYetAndHavePermission )
                       {

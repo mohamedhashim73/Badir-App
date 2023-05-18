@@ -1,5 +1,7 @@
 import 'package:bader_user_app/Features/Events/Data/Models/request_authentication_on_task_model.dart';
 
+import '../../Data/Models/opinion_about_event_model.dart';
+
 abstract class EventsStates{}
 
 class EventsInitialState extends EventsStates{}
@@ -90,6 +92,16 @@ class SendOpinionAboutEventSuccessState extends EventsStates{}
 class FailedToSendOpinionAboutEventState extends EventsStates{
   final String message;
   FailedToSendOpinionAboutEventState({required this.message});
+}
+
+class GetOpinionsAboutEventLoadingState extends EventsStates{}
+class GetOpinionsAboutEventSuccessState extends EventsStates{
+  final List<OpinionAboutEventModel> opinions;
+  GetOpinionsAboutEventSuccessState({required this.opinions});
+}
+class FailedToGetOpinionsAboutEventState extends EventsStates{
+  final String message;
+  FailedToGetOpinionsAboutEventState({required this.message});
 }
 
 class GetIDForTasksIAskedToAuthenticateSuccessState extends EventsStates{}
