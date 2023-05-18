@@ -2,11 +2,11 @@ import 'package:bader_user_app/Features/Clubs/Domain/Entities/club_entity.dart';
 
 class ClubModel extends ClubEntity{
 
-  const ClubModel(super.name, super.id, super.description, super.image, super.leaderEmail, super.leaderID, super.leaderName, super.college, super.committees, super.memberNum,super.volunteerHours, super.contactAccounts);
+  const ClubModel(super.name, super.id, super.description, super.image, super.leaderEmail, super.leaderID, super.leaderName, super.college, super.committees, super.memberNum,super.volunteerHours, super.contactAccounts, super.isAvailable, super.availableOnlyForThisCollege);
 
   factory ClubModel.fromJson({required json})
   {
-    return ClubModel(json['name'], json['id'], json['description'], json['image'], json['leaderEmail'], json['leaderID'], json['leaderName'], json['college'], json['committees'], json['memberNum'],json['volunteerHours'], json['ContactMeansForClubModel'] != null ? ContactMeansForClubModel.fromJson(json: json['contactAccounts']) : null);
+    return ClubModel(json['name'], json['id'], json['description'], json['image'], json['leaderEmail'], json['leaderID'], json['leaderName'], json['college'], json['committees'], json['memberNum'],json['volunteerHours'], json['ContactMeansForClubModel'] != null ? ContactMeansForClubModel.fromJson(json: json['contactAccounts']) : null,json['isAvailable'],json['availableOnlyForThisCollege']);
   }
 
   Map<String,dynamic> toJson(){
@@ -19,6 +19,8 @@ class ClubModel extends ClubEntity{
       'leaderID' : super.leaderID,
       'college' : super.college,
       'leaderName' : super.leaderName,
+      'availableOnlyForThisCollege' : super.availableOnlyForThisCollege,
+      'isAvailable' : super.isAvailable,
       'committees' : super.committees,
       'memberNum' : super.memberNum,
       'volunteerHours' : super.volunteerHours,

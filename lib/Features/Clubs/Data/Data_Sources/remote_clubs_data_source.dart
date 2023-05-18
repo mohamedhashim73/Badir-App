@@ -90,6 +90,21 @@ class RemoteClubsDataSource{
     }
   }
 
+  // TODO: ده عشان الاسكرينه بتاع تحديد الكليات اللي مسموح لها بالانضمام للنادي
+  Future<Unit> updateClubAvailability({required String clubID,required bool isAvailable,required List availableOnlyForThisCollege}) async {
+    try
+    {
+      await FirebaseFirestore.instance.collection(Constants.kClubsCollectionName).doc(clubID).update({
+        'availableOnlyForThisCollege' : availableOnlyForThisCollege,
+        'isAvailable' : isAvailable,
+      });
+      return Future.value(unit);
+    }
+    on FirebaseException catch(e){
+      throw ServerException(exceptionMessage: e.code);
+    }
+  }
+
   // TODO: This method will get the number of members | use it when add new member to change its value on Members Number Collection
   Future<int> getMembersNum() async {
     int membersNum = 0;

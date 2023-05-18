@@ -17,6 +17,7 @@ import '../../Domain/Use_Cases/create_meeting_use_case.dart';
 import '../../Domain/Use_Cases/get_all_membership_requests_use_case.dart';
 import '../../Domain/Use_Cases/remove_member_from_club_use_case.dart';
 import '../../Domain/Use_Cases/request_membership_use_case.dart';
+import '../../Domain/Use_Cases/update_availability_for_club_use_case.dart';
 import '../../Domain/Use_Cases/update_club_use_case.dart';
 import 'clubs_states.dart';
 import 'dart:io';
@@ -25,6 +26,20 @@ class ClubsCubit extends Cubit<ClubsStates> {
   ClubsCubit() : super(ClubsInitialState());
 
   static ClubsCubit getInstance(BuildContext context) => BlocProvider.of(context);
+
+  // TODO: ده عشان الاسكرينه بتاع تحديد الكليات اللي مسموح لها بالانضمام للنادي
+  List<String> selectedColleges = [];
+  void addOrRemoveOptionToSelectedColleges({required bool status,required String college}){
+    status ? selectedColleges.add(college) : selectedColleges.remove(college);
+    emit(AddOrRemoveOptionToSelectedCollegesState());
+  }
+
+  // TODO: ده عشان الاسكرينه بتاع تحديد الكليات اللي مسموح لها بالانضمام للنادي
+  bool clubAvailabilityStatus = true;
+  void changeClubAvailabilityStatus({required bool status}){
+    clubAvailabilityStatus = status;
+    emit(ChangeClubAvailabilityStatusState());
+  }
 
   // TODO: Get Notifications
   List<ClubEntity> clubs = [];
@@ -55,6 +70,23 @@ class ClubsCubit extends Cubit<ClubsStates> {
         (unit){
           // TODO: GET MEETINGS
           emit(CreateMeetingSuccessState());
+        }
+    );
+  }
+
+  // TODO: CREATE MEETING
+  Future<void> updateClubAvailability({required String clubID,required bool isAvailable,required List availableOnlyForThisCollege}) async {
+    emit(UpdateClubAvailabilityLoadingState());
+    final result = await sl<UpdateClubAvailabilityUseCase>().execute(clubID: clubID, isAvailable: isAvailable, availableOnlyForThisCollege: availableOnlyForThisCollege);
+    result.fold(
+        (serverFailure){
+          emit(UpdateClubAvailabilityWithFailureState(message: serverFailure.errorMessage));
+        },
+        (unit) async
+        {
+          await getClubsData();
+          await getCLubDataThatILead(clubID: clubID);
+          emit(UpdateClubAvailabilitySuccessState());
         }
     );
   }
@@ -124,7 +156,7 @@ class ClubsCubit extends Cubit<ClubsStates> {
   }
 
   ClubEntity? dataAboutClubYouLead;
-  void getCLubDataThatILead({required String clubID}){
+  Future<void> getCLubDataThatILead({required String clubID}) async {
     dataAboutClubYouLead = clubs.firstWhere((element) => element.id == int.parse(clubID.trim()));
     if( dataAboutClubYouLead != null ) emit(GetInfoForClubThatILeadSuccess());
   }

@@ -20,8 +20,9 @@ abstract class ClubsContractRepository{
   // Unit replace void role
   Future<Either<Failure,Unit>> updateClubData({required String clubID,required String image,required String name,required int memberNum,required String aboutClub,required ContactMeansForClubModel contactInfo});
   Future<bool> deleteClub({required String clubID});
+  Future<Either<Failure,Unit>> updateClubAvailability({required String clubID,required bool isAvailable,required List availableOnlyForThisCollege});
 
-  // TODO: ACCEPT OR REFUSE MEMBERSHIP REQUEST -- LEADER ROLE
+    // TODO: ACCEPT OR REFUSE MEMBERSHIP REQUEST -- LEADER ROLE
   Future<Either<Failure,Unit>> acceptOrRejectMembershipRequest({required String committeeNameForRequestSender,required String requestSenderID,required String clubID,required bool respondStatus});
   Future<bool> deleteMemberFromClub({required String memberID});
   Future<Either<Failure,Set<String>>> getMembersOnMyClub({required String idForClubILead});

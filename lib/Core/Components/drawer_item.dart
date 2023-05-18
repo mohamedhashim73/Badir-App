@@ -40,6 +40,11 @@ class DrawerItem extends StatelessWidget {
       'routeName' : AppStrings.kUpdateClubScreen
     },
     {
+      'title' : 'التسجيل في النادي',
+      'iconData' : Icons.ac_unit,
+      'routeName' : AppStrings.kClubAvailabilityScreen
+    },
+    {
       'title' : 'رفع التقارير',
       'iconData' : Icons.report,
       'routeName' : AppStrings.kUploadReportScreen

@@ -21,6 +21,7 @@ import 'package:get_it/get_it.dart';
 import '../../Features/Clubs/Domain/Use_Cases/get_all_membership_requests_use_case.dart';
 import '../../Features/Clubs/Domain/Use_Cases/get_members_on_my_club_use_case.dart';
 import '../../Features/Clubs/Domain/Use_Cases/request_membership_use_case.dart';
+import '../../Features/Clubs/Domain/Use_Cases/update_availability_for_club_use_case.dart';
 import '../../Features/Clubs/Domain/Use_Cases/upload_image_to_storage_use_case.dart';
 import '../../Features/Events/Data/Data_Sources/local_events_data_source.dart';
 import '../../Features/Events/Data/Data_Sources/remote_events_data_source.dart';
@@ -81,6 +82,7 @@ class ServiceLocators{
     // CLUBS USE CASES
     sl.registerLazySingleton<RequestAMembershipUseCase>(() => RequestAMembershipUseCase(clubsContractRepository: sl<ClubsImplyRepository>()));
     sl.registerLazySingleton<GetMembersDataOnMyClubUseCase>(() => GetMembersDataOnMyClubUseCase(clubsContractRepository: sl<ClubsImplyRepository>()));
+    sl.registerLazySingleton<UpdateClubAvailabilityUseCase>(() => UpdateClubAvailabilityUseCase(clubsContractRepository: sl<ClubsImplyRepository>()));
     sl.registerLazySingleton<GetAllClubsUseCase>(() => GetAllClubsUseCase(clubsContractRepository: sl<ClubsImplyRepository>()));
     sl.registerLazySingleton<UploadClubImageToStorageUseCase>(() => UploadClubImageToStorageUseCase(clubsContractRepository: sl<ClubsImplyRepository>()));
     sl.registerLazySingleton<UpdateClubUseCase>(() => UpdateClubUseCase(clubsContractRepository: sl<ClubsImplyRepository>()));

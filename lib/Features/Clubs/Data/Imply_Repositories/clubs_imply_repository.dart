@@ -118,6 +118,18 @@ class ClubsImplyRepository implements ClubsContractRepository{
   }
 
   @override
+  Future<Either<Failure,Unit>> updateClubAvailability({required String clubID,required bool isAvailable,required List availableOnlyForThisCollege}) async {
+    try
+    {
+      return Right(await remoteClubsDataSource.updateClubAvailability(clubID: clubID, isAvailable: isAvailable, availableOnlyForThisCollege: availableOnlyForThisCollege));
+    }
+    on ServerException catch(exception)
+    {
+      return Left(ServerFailure(errorMessage: exception.exceptionMessage));
+    }
+  }
+
+  @override
   Future<Either<Failure, Unit>> removeMemberFromClubILead({required String memberID, required String clubID}) async {
     try
     {

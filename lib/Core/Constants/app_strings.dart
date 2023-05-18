@@ -8,6 +8,7 @@ class AppStrings{
   static const kLayoutScreen = "layout_screen";
   static const kProfileScreen = "profile_screen";
   static const kUpdateClubScreen = "update_club_screen";
+  static const kClubAvailabilityScreen = "club_availability_screen";
   static const kUploadReportScreen = "upload_report_screen";
   static const kCreateEventScreen = "create_event_screen";
   static const kCreateTaskScreen = "create_task_screen";

@@ -1,4 +1,5 @@
 import 'package:bader_user_app/Features/Clubs/Presentation/Screens/meetings_management.dart';
+import 'package:bader_user_app/Features/Clubs/Presentation/Screens/update_club_availablility_screen.dart';
 import 'package:bader_user_app/Features/Clubs/Presentation/Screens/update_club_screen.dart';
 import 'package:bader_user_app/Features/Events/Presentation/Screens/create_event_screen.dart';
 import 'package:bader_user_app/Features/Events/Presentation/Screens/tasks_management.dart';
@@ -24,6 +25,7 @@ class AppRoutes{
   static Map<String, Widget Function(BuildContext)> routes = {
     AppStrings.kLoginScreen : (context) => LoginScreen(),
     AppStrings.kViewClubsScreen : (context) => ViewClubsScreen(),
+    AppStrings.kClubAvailabilityScreen : (context) => const UpdateClubAvailabilityScreen(),
     AppStrings.kViewAvailableTasksScreen : (context) => const ViewAvailableTasksScreen(),
     AppStrings.kCreateMeetingScreen : (context) => CreateMeetingScreen(),
     AppStrings.kManageMeetingsScreen : (context) => const MeetingsManagementScreen(),

@@ -1,6 +1,9 @@
 abstract class ClubsStates{}
 
 class ClubsInitialState extends ClubsStates{}
+class AddOrRemoveOptionToSelectedCollegesState extends ClubsStates{}
+class ChangeClubAvailabilityStatusState extends ClubsStates{}
+
 class RemoveMemberFromClubSuccessState extends ClubsStates{}
 class RemoveMemberFromClubLoadingState extends ClubsStates{}
 class RemoveMemberFromClubWithFailureState extends ClubsStates{
@@ -47,6 +50,13 @@ class GetClubsDataSuccessState extends ClubsStates{}
 class FailedToGetClubsDataState extends ClubsStates{
   final String message;
   FailedToGetClubsDataState({required this.message});
+}
+
+class UpdateClubAvailabilityLoadingState extends ClubsStates{}
+class UpdateClubAvailabilitySuccessState extends ClubsStates{}
+class UpdateClubAvailabilityWithFailureState extends ClubsStates{
+  final String message;
+  UpdateClubAvailabilityWithFailureState({required this.message});
 }
 
 class CreateMeetingLoadingState extends ClubsStates{}
