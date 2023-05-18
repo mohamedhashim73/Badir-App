@@ -28,6 +28,7 @@ class Constants {
   static String kMeetingsCollectionName = "Meetings";
   static String kMembershipRequestsCollectionName = "Membership Requests";
   static String kTaskAuthenticationRequestsCollectionName = "Tasks Authentication Requests";
+  static String kOpinionsAboutTaskCollectionName = "Opinions";
   static String kMembersDataCollectionName = "Members Data";
   static String kMembersNumberCollectionName = "Members Number";
   static String kTotalVolunteerHoursThrowAppCollectionName = "Volunteer Hours";
@@ -45,19 +46,37 @@ class Constants {
   static Future<XFile?> getImageFromGallery() async => await ImagePicker().pickImage(source: ImageSource.gallery);
 
   // TODO: هستخدمهم في عرض بيانات الفعاليه عشان بناء عليها هعمل action معين
-  static bool eventExpiredAndIHaveNotJoined({required UserEntity userEntity,required bool eventDateExpired,required String eventID}){
-    return eventDateExpired && (userEntity.idForEventsJoined == null || (userEntity.idForEventsJoined != null && userEntity.idForEventsJoined!.contains(eventID) == false));
+  static bool eventExpiredAndIHaveNotJoined({required UserEntity userEntity,required bool eventExpired,required EventEntity event}){
+    String eventID = event.id!;
+    List? idForEventsJoined = userEntity.idForEventsJoined;
+    return eventExpired && (idForEventsJoined == null || (idForEventsJoined.contains(eventID) == false));
   }
-  static bool eventInDateAndIDoNotHavePermissionToJoin({required bool eventForOnlyMembers,required UserEntity userEntity,required bool eventDateExpired,required String eventID,required String clubID}){
-    return eventForOnlyMembers && !eventDateExpired && (userEntity.idForClubsMemberIn == null || (userEntity.idForClubsMemberIn != null && userEntity.idForClubsMemberIn!.contains(clubID) == false));
+
+  static bool eventInDateAndIDoNotHavePermissionToJoin({required UserEntity userEntity,required bool eventExpired,required EventEntity event}){
+    List? idForClubsMemberIn = userEntity.idForClubsMemberIn;
+    bool eventNotPublic = event.forPublic == EventForPublicOrNot.public.name ? false : true;
+    String clubID = event.clubID!;
+    return eventNotPublic && !eventExpired && (idForClubsMemberIn == null || ( idForClubsMemberIn.contains(clubID) == false) );
   }
-  static bool eventExpiredAndIHaveJoined({required UserEntity userEntity,required bool eventDateExpired,required String eventID}){
-    return eventDateExpired && (userEntity.idForEventsJoined != null && userEntity.idForEventsJoined!.contains(eventID) == false);
+
+  static bool eventExpiredAndIHaveJoined({required UserEntity userEntity,required bool eventExpired,required EventEntity event}){
+    String eventID = event.id!;
+    List? idForEventsJoined = userEntity.idForEventsJoined;
+    return eventExpired && (idForEventsJoined != null && idForEventsJoined.contains(eventID) == true);
   }
-  static bool eventInDateAndIHaveJoined({required UserEntity userEntity,required bool eventDateExpired,required String eventID}){
-    return !eventDateExpired && (userEntity.idForEventsJoined != null && userEntity.idForEventsJoined!.contains(eventID));
+
+  static bool eventInDateAndIHaveJoined({required UserEntity userEntity,required bool eventExpired,required EventEntity event}){
+    String eventID = event.id!;
+    List? idForEventsJoined = userEntity.idForEventsJoined;
+    return !eventExpired && (idForEventsJoined != null && idForEventsJoined.contains(eventID));
   }
-  static bool eventInDateAndIHaveNotJoinedYetAndHavePermission({required bool eventForOnlyMembers,required UserEntity userEntity,required bool eventDateExpired,required String eventID,required String clubID}){
-    return (!eventForOnlyMembers && !eventDateExpired && (userEntity.idForEventsJoined == null || (userEntity.idForEventsJoined!.contains(eventID) == false))) && (!eventDateExpired && ((userEntity.idForClubsMemberIn != null && userEntity.idForClubsMemberIn!.contains(clubID) == true)));
+
+  static bool eventInDateAndIHaveNotJoinedYetAndHavePermission({required UserEntity userEntity,required bool eventExpired,required EventEntity event}){
+    bool eventForOnlyMembers = event.forPublic == EventForPublicOrNot.public.name ? false : true;
+    String eventID = event.id!;
+    String clubID = event.clubID!;
+    List? idForEventsJoined = userEntity.idForEventsJoined;
+    List? idForClubsMemberIn = userEntity.idForClubsMemberIn;
+    return (!eventForOnlyMembers && !eventExpired && idForEventsJoined == null || (idForEventsJoined!.contains(eventID) == false)) && (!eventExpired && ((idForClubsMemberIn != null && idForClubsMemberIn.contains(clubID) == true)));
   }
 }

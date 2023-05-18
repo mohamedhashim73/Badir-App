@@ -85,6 +85,13 @@ class FailedToAcceptOrRejectAuthenticateRequestOnATaskState extends EventsStates
   FailedToAcceptOrRejectAuthenticateRequestOnATaskState({required this.message});
 }
 
+class SendOpinionAboutEventLoadingState extends EventsStates{}
+class SendOpinionAboutEventSuccessState extends EventsStates{}
+class FailedToSendOpinionAboutEventState extends EventsStates{
+  final String message;
+  FailedToSendOpinionAboutEventState({required this.message});
+}
+
 class GetIDForTasksIAskedToAuthenticateSuccessState extends EventsStates{}
 class FailedToGetIDForTasksIAskedToAuthenticateState extends EventsStates{
   final String message;

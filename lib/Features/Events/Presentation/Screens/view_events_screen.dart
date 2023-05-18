@@ -74,7 +74,7 @@ class ViewAllEventsThrowAppScreen extends StatelessWidget {
           return GestureDetector(
             onTap: ()
             {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => EventDetailsScreen(event: events[index],eventDateExpired: !newEventsOrNot)));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => EventDetailsScreen(event: events[index],eventExpired: !newEventsOrNot)));
             },
             child: Card(
               child: Padding(
@@ -105,7 +105,7 @@ class ViewAllEventsThrowAppScreen extends StatelessWidget {
                             if( userEntity.idForClubLead != null )
                               {
                                 // TODO: Open Details ....
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => EventDetailsScreen(event: events[index],eventDateExpired: !newEventsOrNot)));
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => EventDetailsScreen(event: events[index],eventExpired: !newEventsOrNot)));
                               }
                             else if ( ( ( userEntity.idForClubsMemberIn != null && userEntity.idForClubsMemberIn!.contains(events[index].clubID) ) || ( events[index].forPublic == EventForPublicOrNot.public.name ) ) && (eventFinished == false) )
                               {

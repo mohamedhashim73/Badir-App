@@ -20,8 +20,8 @@ class EventDetailsScreen extends StatelessWidget {
   final _locationController = TextEditingController();
   final _linkController = TextEditingController();
   final EventEntity event;
-  final bool eventDateExpired;
-  EventDetailsScreen({Key? key,required this.event,required this.eventDateExpired}) : super(key: key);
+  final bool eventExpired;
+  EventDetailsScreen({Key? key,required this.event,required this.eventExpired}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -35,10 +35,11 @@ class EventDetailsScreen extends StatelessWidget {
     final LayoutCubit layoutCubit = LayoutCubit.getInstance(context);
     final UserEntity userEntity = layoutCubit.userData!;
     final EventsCubit eventsCubit = EventsCubit.getInstance(context);
-    bool eventExpiredAndIHaveNotJoined = Constants.eventExpiredAndIHaveNotJoined(eventID: event.id!,eventDateExpired: eventDateExpired,userEntity: userEntity);
-    bool eventExpiredAndIHaveJoined = Constants.eventExpiredAndIHaveJoined(eventID: event.id!,eventDateExpired: eventDateExpired,userEntity: userEntity);
-    bool eventInDateAndIHaveJoined = Constants.eventInDateAndIHaveJoined(eventID: event.id!,eventDateExpired: eventDateExpired,userEntity: userEntity);
-    bool eventInDateAndIHaveNotJoinedYet = Constants.eventInDateAndIHaveNotJoinedYetAndHavePermission(clubID: event.clubID!,eventForOnlyMembers: event.forPublic == EventForPublicOrNot.public.name ? false : true,userEntity: userEntity, eventDateExpired: eventDateExpired, eventID: event.id!);
+    bool eventExpiredAndIHaveNotJoined = Constants.eventExpiredAndIHaveNotJoined(event: event,eventExpired: eventExpired,userEntity: userEntity);
+    bool eventExpiredAndIHaveJoined = Constants.eventExpiredAndIHaveJoined(event: event,eventExpired: eventExpired,userEntity: userEntity);
+    bool eventInDateAndIHaveJoined = Constants.eventInDateAndIHaveJoined(event: event,eventExpired: eventExpired,userEntity: userEntity);
+    bool eventInDateAndIHaveNotJoinedYetAndHavePermission = Constants.eventInDateAndIHaveNotJoinedYetAndHavePermission(userEntity: userEntity, eventExpired: eventExpired, event: event);
+    bool eventInDateAndIDoNotHavePermissionToJoin = Constants.eventInDateAndIDoNotHavePermissionToJoin(userEntity: userEntity, eventExpired: eventExpired, event: event);
 
     return SafeArea(
       child: Directionality(
@@ -63,29 +64,29 @@ class EventDetailsScreen extends StatelessWidget {
                 _textFieldItem(controller:_timeController,title: 'الوقت'),
                 _textFieldItem(controller:_locationController,title: 'المكان'),
                 _textFieldItem(controller:_linkController,title: 'اللينك'),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children:
                   [
                     Text("حالة الفعالية : ",style: TextStyle(color: AppColors.kMainColor,fontWeight: FontWeight.bold,fontSize: 15.5.sp),),
-                    Text(event.forPublic == EventForPublicOrNot.private.name ? 'خاصة لأعضاء النادي فقط' : 'للمستخدمين جميعا',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 14.5.sp),),
+                    SizedBox(height: 3.h,),
+                    Text(event.forPublic == EventForPublicOrNot.private.name ? 'خاصة بأعضاء ${event.clubName} فقط' : 'للمستخدمين جميعا',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 14.5.sp),),
                   ],
                 ),
-                if( userEntity.idForClubLead == null && ( ( userEntity.idForEventsJoined != null && userEntity.idForClubsMemberIn!.contains(event.clubID) ) || event.forPublic == EventForPublicOrNot.public.name ) )
+                if( userEntity.idForClubLead == null && ( eventInDateAndIHaveJoined || eventInDateAndIHaveNotJoinedYetAndHavePermission || eventExpiredAndIHaveJoined ) )
                   SizedBox(height: 10.h,),
-                if( userEntity.idForClubLead == null && ( ( userEntity.idForEventsJoined != null && userEntity.idForClubsMemberIn!.contains(event.clubID) ) || event.forPublic == EventForPublicOrNot.public.name ) )
+                if( userEntity.idForClubLead == null && ( eventInDateAndIHaveJoined || eventInDateAndIHaveNotJoinedYetAndHavePermission || eventExpiredAndIHaveJoined ) )
                   DefaultButton(
                   // TODO: مش هيظهر الا اذا كنت مسجل فيها او هي كانت عامة بس لو انا ليدر مش هيظهر ...
                   width: double.infinity,
-                  backgroundColor: eventExpiredAndIHaveNotJoined ? AppColors.kRedColor : userEntity.idForEventsJoined != null && userEntity.idForEventsJoined!.contains(event.id) && eventDateExpired == false ? AppColors.kOrangeColor : AppColors.kMainColor,
+                  backgroundColor: eventExpiredAndIHaveJoined ? AppColors.kOrangeColor : eventInDateAndIHaveJoined ? AppColors.kGreenColor : AppColors.kMainColor,
                   onTap: ()
                   {
                     if( eventExpiredAndIHaveJoined )
                       {
-                        // Give Opinion ...
                         debugPrint("Give an Opinion ....");
                       }
-                    else if( eventInDateAndIHaveNotJoinedYet )
+                    else if( eventInDateAndIHaveNotJoinedYetAndHavePermission )
                       {
                         eventsCubit.joinToEvent(eventID: event.id!, layoutCubit: layoutCubit, memberID: userEntity.id ?? Constants.userID!);
                       }
@@ -93,12 +94,8 @@ class EventDetailsScreen extends StatelessWidget {
                       {
                         showSnackBar(context: context, message: "لقد سبق لك التسجيل بالفعالية",backgroundColor: AppColors.kRedColor);
                       }
-                    else if( eventExpiredAndIHaveNotJoined )
-                    {
-                      showSnackBar(context: context, message: "عذرا فالفعالية انتهت",backgroundColor: AppColors.kRedColor);
-                    }
                   },
-                  title: eventExpiredAndIHaveNotJoined ? "انتهت الفعالية" : eventExpiredAndIHaveJoined ? "شاركنا برأيك" : eventInDateAndIHaveJoined ? "تم التسجيل" : "انضمام",
+                  title: eventExpiredAndIHaveJoined ? "شاركنا برأيك" : eventInDateAndIHaveJoined ? "تم التسجيل" : "سجل الآن",
                 )
               ],
             )

@@ -10,6 +10,7 @@ import 'package:bader_user_app/Features/Events/Domain/Use_Cases/get_id_for_tasks
 import 'package:bader_user_app/Features/Events/Domain/Use_Cases/get_members_on_an_event_use_case.dart';
 import 'package:bader_user_app/Features/Events/Domain/Use_Cases/join_to_event_use_case.dart';
 import 'package:bader_user_app/Features/Events/Domain/Use_Cases/request_authenticate_on_task_use_case.dart';
+import 'package:bader_user_app/Features/Events/Domain/Use_Cases/send_opinion_about_event_use_case.dart';
 import 'package:bader_user_app/Features/Events/Domain/Use_Cases/update_event_use_case.dart';
 import 'package:bader_user_app/Features/Layout/Domain/Entities/user_entity.dart';
 import 'package:jiffy/jiffy.dart';
@@ -21,6 +22,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../../Core/Constants/enumeration.dart';
+import '../../Data/Models/opinion_about_event_model.dart';
 import '../../Domain/Entities/event_entity.dart';
 import '../../Domain/Entities/task_entity.dart';
 import '../../Domain/Use_Cases/accept_or_reject_user_request_to_authenticate_on_task_use_case.dart';
@@ -332,6 +334,21 @@ class EventsCubit extends Cubit<EventsStates> {
         {
           await getRequestForAuthenticateOnATask(taskID: taskEntity.id.toString());
           emit(AcceptOrRejectAuthenticateRequestOnATaskSuccessState());
+        }
+    );
+  }
+
+  Future<void> sendOpinionAboutEvent({required String eventID,required OpinionAboutEventModel opinionModel,required String senderID}) async {
+    emit(SendOpinionAboutEventLoadingState());
+    final result = await sl<SendOpinionAboutEventUseCase>().execute(eventID: eventID, opinionModel: opinionModel, senderID: senderID);
+    result.fold(
+        (serverFailure)
+        {
+          emit(FailedToSendOpinionAboutEventState(message: serverFailure.errorMessage));
+        },
+        (unit) async
+        {
+          emit(SendOpinionAboutEventSuccessState());
         }
     );
   }

@@ -34,6 +34,7 @@ import '../../Features/Events/Domain/Use_Cases/get_members_on_an_event_use_case.
 import '../../Features/Events/Domain/Use_Cases/get_requests_for_authentication_on_task_use_case.dart';
 import '../../Features/Events/Domain/Use_Cases/join_to_event_use_case.dart';
 import '../../Features/Events/Domain/Use_Cases/request_authenticate_on_task_use_case.dart';
+import '../../Features/Events/Domain/Use_Cases/send_opinion_about_event_use_case.dart';
 import '../../Features/Events/Domain/Use_Cases/update_event_use_case.dart';
 import '../../Features/Events/Domain/Use_Cases/update_task_use_case.dart';
 import '../../Features/Layout/Domain/Use Cases/get_all_users_on_app_use_case.dart';
@@ -101,6 +102,7 @@ class ServiceLocators{
     sl.registerLazySingleton<JoinToEventUseCase>(() => JoinToEventUseCase(eventsContractRepository: sl<EventsImplyRepository>()));
     sl.registerLazySingleton<DeleteTaskUseCase>(() => DeleteTaskUseCase(eventsContractRepository: sl<EventsImplyRepository>()));
     sl.registerLazySingleton<CreateTaskUseCase>(() => CreateTaskUseCase(eventsContractRepository: sl<EventsImplyRepository>()));
+    sl.registerLazySingleton<SendOpinionAboutEventUseCase>(() => SendOpinionAboutEventUseCase(eventsContractRepository: sl<EventsImplyRepository>()));
     sl.registerLazySingleton<GetMembersOnAnEventUseCase>(() => GetMembersOnAnEventUseCase(eventsContractRepository: sl<EventsImplyRepository>()));
 
     // LAYOUT USE CASES

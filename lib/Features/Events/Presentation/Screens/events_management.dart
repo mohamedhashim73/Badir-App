@@ -74,7 +74,7 @@ class EventsManagementScreen extends StatelessWidget {
       {
         // TODO: USE Event Date to Compare it with Date now to see if it expired or not
         DateTime eventDate = Jiffy("${eventData.endDate!.trim()} ${eventData.time!.trim()}", "MMMM dd, yyyy h:mm a").dateTime;
-        Navigator.push(context, MaterialPageRoute(builder: (context) => EventDetailsScreen(event: eventData, eventDateExpired: DateTime.now().isAfter(eventDate))));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => EventDetailsScreen(event: eventData, eventExpired: DateTime.now().isAfter(eventDate))));
       },
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 18.h,horizontal: 12.w),

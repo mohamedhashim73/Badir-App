@@ -6,6 +6,7 @@ import '../../../../Core/Constants/enumeration.dart';
 import '../../../../Core/Errors/failure.dart';
 import '../../../Layout/Presentation/Controller/layout_cubit.dart';
 import '../../Data/Models/event_model.dart';
+import '../../Data/Models/opinion_about_event_model.dart';
 import '../../Data/Models/request_authentication_on_task_model.dart';
 import '../Entities/event_entity.dart';
 
@@ -26,5 +27,5 @@ abstract class EventsContractRepository{
   Future<Either<Failure,Set>> getIDForTasksIAskedToAuthenticate({List? idForClubIMemberIn,required String userID});
   Future<Either<Failure,List<RequestAuthenticationOnATaskModel>>> gedRequestForAuthenticateOnATask({required String taskID});
   Future<Either<Failure,Unit>> acceptOrRejectAuthenticateRequestOnATask({required String myID,required LayoutCubit layoutCubit,required String requestSenderName,required TaskEntity taskEntity,required String requestSenderID,required bool respondStatus});
-
+  Future<Either<Failure,Unit>> sendOpinionAboutEvent({required String eventID,required OpinionAboutEventModel opinionModel,required String senderID});
 }

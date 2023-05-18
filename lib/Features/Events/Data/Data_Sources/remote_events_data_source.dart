@@ -12,6 +12,7 @@ import '../../../../Core/Constants/constants.dart';
 import '../../../../Core/Constants/enumeration.dart';
 import '../../../../Core/Errors/exceptions.dart';
 import '../Models/event_model.dart';
+import '../Models/opinion_about_event_model.dart';
 
 class RemoteEventsDataSource{
 
@@ -176,6 +177,18 @@ class RemoteEventsDataSource{
     {
       RequestAuthenticationOnATaskModel requestModel = RequestAuthenticationOnATaskModel(senderID,senderName);
       await FirebaseFirestore.instance.collection(Constants.kTasksCollectionName).doc(taskID).collection(Constants.kTaskAuthenticationRequestsCollectionName).doc(senderID).set(requestModel.toJson());
+      return unit;
+    }
+    on FirebaseException catch(e)
+    {
+      throw ServerException(exceptionMessage: e.message!);
+    }
+  }
+
+  Future<Unit> sendOpinionAboutEvent({required String eventID,required OpinionAboutEventModel opinionModel,required String senderID}) async {
+    try
+    {
+      await FirebaseFirestore.instance.collection(Constants.kEventsCollectionName).doc(eventID).collection(Constants.kOpinionsAboutTaskCollectionName).doc(senderID).set(opinionModel.toJson());
       return unit;
     }
     on FirebaseException catch(e)

@@ -3,6 +3,7 @@ import 'package:bader_user_app/Features/Auth/Presentation/Screens/login_screen.d
 import 'package:bader_user_app/Core/Constants/constants.dart';
 import 'package:bader_user_app/Core/Network/sharedPref.dart';
 import 'package:bader_user_app/Core/Service%20Locators/service_locators.dart';
+import 'package:bader_user_app/Features/Events/Presentation/Screens/send_opinion_about_event_screen.dart';
 import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_cubit.dart';
 import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_states.dart';
 import 'package:bader_user_app/Features/Layout/Presentation/Screens/layout_screen.dart';
@@ -53,7 +54,8 @@ class MyApp extends StatelessWidget {
                   )
                 ),
                 debugShowCheckedModeBanner: false,
-                home: Constants.userID != null ? const LayoutScreen() : LoginScreen()
+                home: const SendOpinionAboutEventScreen()
+                // Constants.userID != null ? const LayoutScreen() : LoginScreen()
               );
             }
           ),

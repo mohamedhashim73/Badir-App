@@ -11,6 +11,7 @@ import '../../Domain/Entities/task_entity.dart';
 import '../Data_Sources/local_events_data_source.dart';
 import '../Data_Sources/remote_events_data_source.dart';
 import '../Models/event_model.dart';
+import '../Models/opinion_about_event_model.dart';
 import '../Models/request_authentication_on_task_model.dart';
 
 class EventsImplyRepository implements EventsContractRepository{
@@ -162,6 +163,17 @@ class EventsImplyRepository implements EventsContractRepository{
     try
     {
       return Right(await remoteEventsDataSource.gedRequestForAuthenticateOnATask(taskID: taskID));
+    }
+    on ServerException catch(e) {
+      return Left(ServerFailure(errorMessage: e.exceptionMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure,Unit>> sendOpinionAboutEvent({required String eventID,required OpinionAboutEventModel opinionModel,required String senderID}) async {
+    try
+    {
+      return Right(await remoteEventsDataSource.sendOpinionAboutEvent(eventID: eventID, opinionModel: opinionModel, senderID: senderID));
     }
     on ServerException catch(e) {
       return Left(ServerFailure(errorMessage: e.exceptionMessage));
