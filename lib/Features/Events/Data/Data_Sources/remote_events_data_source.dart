@@ -1,8 +1,10 @@
 import 'package:bader_user_app/Features/Clubs/Data/Models/member_model.dart';
 import 'package:bader_user_app/Features/Events/Data/Models/request_authentication_on_task_model.dart';
 import 'package:bader_user_app/Features/Events/Data/Models/task_model.dart';
+import 'package:bader_user_app/Features/Events/Domain/Entities/task_entity.dart';
 import 'package:bader_user_app/Features/Layout/Data/Models/user_model.dart';
 import 'package:bader_user_app/Features/Layout/Domain/Entities/user_entity.dart';
+import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_cubit.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
@@ -168,13 +170,29 @@ class RemoteEventsDataSource{
     }
   }
 
-  // TODO: ASK FOR MEMBERSHIP
+  // TODO: ASK FOR Authentication on A Task
   Future<Unit> requestToAuthenticateOnATask({required String taskID,required String senderID,required String senderName}) async {
     try
     {
       RequestAuthenticationOnATaskModel requestModel = RequestAuthenticationOnATaskModel(senderID,senderName);
       await FirebaseFirestore.instance.collection(Constants.kTasksCollectionName).doc(taskID).collection(Constants.kTaskAuthenticationRequestsCollectionName).doc(senderID).set(requestModel.toJson());
       return unit;
+    }
+    on FirebaseException catch(e)
+    {
+      throw ServerException(exceptionMessage: e.message!);
+    }
+  }
+
+  // TODO: Leader ....
+  Future<List<RequestAuthenticationOnATaskModel>> gedRequestForAuthenticateOnATask({required String taskID}) async {
+    try
+    {
+      List<RequestAuthenticationOnATaskModel> requests = [];
+      await FirebaseFirestore.instance.collection(Constants.kTasksCollectionName).doc(taskID).collection(Constants.kTaskAuthenticationRequestsCollectionName).get().then((value){
+        requests = List<RequestAuthenticationOnATaskModel>.of(value.docs.map((e) => RequestAuthenticationOnATaskModel.fromJson(json: e)));
+      });
+      return requests;
     }
     on FirebaseException catch(e)
     {
@@ -201,5 +219,70 @@ class RemoteEventsDataSource{
     debugPrint("Num of Requests send to Tasks is : ${tasksID.length}");
     return tasksID;
   }
+
+  // TODO: This method will get the number of members | use it when add new member to change its value on Members Number Collection
+  Future<int> getTotalVolunteerHoursOnApp() async {
+    int hours = 0;
+    await FirebaseFirestore.instance.collection(Constants.kTotalVolunteerHoursThrowAppCollectionName).doc('Number').get().then((value){
+      hours = value.data() != null  ? value.data()!['total'] : 0;
+    });
+    return hours;
+  }
+
+  // TODO: use it after leader accept user request to authenticate on a task
+  Future<int> getTotalVolunteerHoursForSpecificClub({required String clubID}) async {
+    int hours = 0;
+    await FirebaseFirestore.instance.collection(Constants.kClubsCollectionName).doc(clubID).get().then((value){
+      hours = value.data() != null  ? value.data()!['volunteerHours'] ?? 0 : 0 ;
+    });
+    return hours;
+  }
+
+  Future<Unit> acceptOrRejectAuthenticateRequestOnATask({required String myID,required LayoutCubit layoutCubit,required String requestSenderName,required TaskEntity taskEntity,required String requestSenderID,required bool respondStatus}) async {
+    try
+    {
+      // TODO: ف كلا الحالتين هحذف م الطلبات
+      await FirebaseFirestore.instance.collection(Constants.kTasksCollectionName).doc(taskEntity.id.toString()).collection(Constants.kTaskAuthenticationRequestsCollectionName).doc(requestSenderID).delete();
+      await layoutCubit.sendNotification(
+          senderID: myID,          // TODO: ID بتاعي
+          receiverID: requestSenderID,
+          clubID: taskEntity.clubID,
+          notifyContent: respondStatus ? "لقد تم قبول طلبك للمصادقة في مهمه ${taskEntity.name}" : "لقد تم رفض طلبك للمصادقة في مهمه ${taskEntity.name}",
+          notifyType: respondStatus ? NotificationType.acceptYourRequestToAuthenticateOnATask : NotificationType.rejectYourRequestToAuthenticateOnATask
+      );
+      if( respondStatus )     // TODO: Request Accepted
+      {
+        // TODO: Get Data about RequestSender....
+        DocumentSnapshot requestSenderDocumentSnapshot = await FirebaseFirestore.instance.collection(Constants.kUsersCollectionName).doc(requestSenderID).get();
+        UserModel requestSenderUserModel = UserModel.fromJson(json: requestSenderDocumentSnapshot.data());
+        List? idForTasksAuthenticate = requestSenderUserModel.idForTasksAuthenticate ?? [];
+        int? volunteerHoursForUser = requestSenderUserModel.volunteerHoursNumber ?? 0;
+        // TODO: Update volunteer num for User that he asked for authenticate .....
+        volunteerHoursForUser += taskEntity.hours;    // TODO: هتضيف عدد ساعات التاسك للشخص ده
+        idForTasksAuthenticate.add(taskEntity.id.toString().trim());
+        await FirebaseFirestore.instance.collection(Constants.kUsersCollectionName).doc(requestSenderID).update({
+          'idForTasksAuthenticate' : idForTasksAuthenticate,
+          'volunteerHoursNumber' : volunteerHoursForUser,
+        });
+        // TODO: Update total volunteer num on The App
+        int totalVolunteerHours = await getTotalVolunteerHoursOnApp();
+        totalVolunteerHours += taskEntity.hours;
+        await FirebaseFirestore.instance.collection(Constants.kTotalVolunteerHoursThrowAppCollectionName).doc('Number').set({
+          'total' : totalVolunteerHours
+        });
+        // TODO: Update volunteer num on The Club that have this Task .....
+        int volunteerHoursForClub = await getTotalVolunteerHoursForSpecificClub(clubID: taskEntity.clubID);
+        volunteerHoursForClub += taskEntity.hours;
+        await FirebaseFirestore.instance.collection(Constants.kClubsCollectionName).doc(taskEntity.clubID).update({
+          'volunteerHours' : volunteerHoursForClub
+        });
+      }
+      return unit;
+    }
+    on FirebaseException catch(e){
+      throw ServerException(exceptionMessage: e.code);
+    }
+  }
+
 
 }

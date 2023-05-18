@@ -25,11 +25,13 @@ import '../../Features/Clubs/Domain/Use_Cases/upload_image_to_storage_use_case.d
 import '../../Features/Events/Data/Data_Sources/local_events_data_source.dart';
 import '../../Features/Events/Data/Data_Sources/remote_events_data_source.dart';
 import '../../Features/Events/Data/Imply_Repositories/events_imply_repository.dart';
+import '../../Features/Events/Domain/Use_Cases/accept_or_reject_user_request_to_authenticate_on_task_use_case.dart';
 import '../../Features/Events/Domain/Use_Cases/add_event_use_case.dart';
 import '../../Features/Events/Domain/Use_Cases/create_task_use_case.dart';
 import '../../Features/Events/Domain/Use_Cases/delete_task_use_case.dart';
 import '../../Features/Events/Domain/Use_Cases/get_all_tasks_on_app_use_case.dart';
 import '../../Features/Events/Domain/Use_Cases/get_members_on_an_event_use_case.dart';
+import '../../Features/Events/Domain/Use_Cases/get_requests_for_authentication_on_task_use_case.dart';
 import '../../Features/Events/Domain/Use_Cases/join_to_event_use_case.dart';
 import '../../Features/Events/Domain/Use_Cases/request_authenticate_on_task_use_case.dart';
 import '../../Features/Events/Domain/Use_Cases/update_event_use_case.dart';
@@ -89,10 +91,12 @@ class ServiceLocators{
     sl.registerLazySingleton<GetAllEventsUseCase>(() => GetAllEventsUseCase(eventsContractRepository: sl<EventsImplyRepository>()));
     sl.registerLazySingleton<UpdateEventUseCase>(() => UpdateEventUseCase(eventsContractRepository: sl<EventsImplyRepository>()));
     sl.registerLazySingleton<DeleteEventUseCase>(() => DeleteEventUseCase(eventsContractRepository: sl<EventsImplyRepository>()));
+    sl.registerLazySingleton<GedRequestForAuthenticateOnATaskUseCase>(() => GedRequestForAuthenticateOnATaskUseCase(eventsContractRepository: sl<EventsImplyRepository>()));
     sl.registerLazySingleton<GetIDForTasksThatIAskedForAuthenticationBeforeUseCase>(() => GetIDForTasksThatIAskedForAuthenticationBeforeUseCase(eventsContractRepository: sl<EventsImplyRepository>()));
     sl.registerLazySingleton<GetAllTasksOnAppUseCase>(() => GetAllTasksOnAppUseCase(eventsContractRepository: sl<EventsImplyRepository>()));
     sl.registerLazySingleton<CreateEventUseCase>(() => CreateEventUseCase(eventsContractRepository: sl<EventsImplyRepository>()));
     sl.registerLazySingleton<RequestAuthenticationOnATaskUseCase>(() => RequestAuthenticationOnATaskUseCase(eventsContractRepository: sl<EventsImplyRepository>()));
+    sl.registerLazySingleton<AcceptOrRejectAuthenticateRequestOnATaskUseCase>(() => AcceptOrRejectAuthenticateRequestOnATaskUseCase(eventsContractRepository: sl<EventsImplyRepository>()));
     sl.registerLazySingleton<UpdateTaskUseCase>(() => UpdateTaskUseCase(eventsContractRepository: sl<EventsImplyRepository>()));
     sl.registerLazySingleton<JoinToEventUseCase>(() => JoinToEventUseCase(eventsContractRepository: sl<EventsImplyRepository>()));
     sl.registerLazySingleton<DeleteTaskUseCase>(() => DeleteTaskUseCase(eventsContractRepository: sl<EventsImplyRepository>()));

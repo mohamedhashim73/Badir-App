@@ -5,11 +5,13 @@ import 'package:bader_user_app/Features/Events/Domain/Entities/event_entity.dart
 import 'package:dartz/dartz.dart';
 import '../../../../Core/Constants/enumeration.dart';
 import '../../../Clubs/Domain/Entities/member_entity.dart';
+import '../../../Layout/Presentation/Controller/layout_cubit.dart';
 import '../../Domain/Contract_Repositories/events_contract_repository.dart';
 import '../../Domain/Entities/task_entity.dart';
 import '../Data_Sources/local_events_data_source.dart';
 import '../Data_Sources/remote_events_data_source.dart';
 import '../Models/event_model.dart';
+import '../Models/request_authentication_on_task_model.dart';
 
 class EventsImplyRepository implements EventsContractRepository{
   final RemoteEventsDataSource remoteEventsDataSource;
@@ -149,6 +151,28 @@ class EventsImplyRepository implements EventsContractRepository{
     try
     {
       return Right(await remoteEventsDataSource.getIDForTasksIAskedToAuthenticate(userID: userID,idForClubsIMemberIn: idForClubIMemberIn));
+    }
+    on ServerException catch(e) {
+      return Left(ServerFailure(errorMessage: e.exceptionMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure,List<RequestAuthenticationOnATaskModel>>> gedRequestForAuthenticateOnATask({required String taskID}) async {
+    try
+    {
+      return Right(await remoteEventsDataSource.gedRequestForAuthenticateOnATask(taskID: taskID));
+    }
+    on ServerException catch(e) {
+      return Left(ServerFailure(errorMessage: e.exceptionMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure,Unit>> acceptOrRejectAuthenticateRequestOnATask({required String myID,required LayoutCubit layoutCubit,required String requestSenderName,required TaskEntity taskEntity,required String requestSenderID,required bool respondStatus}) async {
+    try
+    {
+      return Right(await remoteEventsDataSource.acceptOrRejectAuthenticateRequestOnATask(myID: myID, layoutCubit: layoutCubit, requestSenderName: requestSenderName, taskEntity: taskEntity, requestSenderID: requestSenderID,respondStatus: respondStatus));
     }
     on ServerException catch(e) {
       return Left(ServerFailure(errorMessage: e.exceptionMessage));

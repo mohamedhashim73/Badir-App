@@ -7,7 +7,7 @@ import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_st
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class DrawerItem extends StatelessWidget{
+class DrawerItem extends StatelessWidget {
   final List<Map<String,dynamic>> drawerData = [
     {
       'title' : 'الملف الشخصي',
@@ -75,9 +75,10 @@ class DrawerItem extends StatelessWidget{
   @override
   Widget build(BuildContext context){
     LayoutCubit layoutCubit = LayoutCubit.getInstance(context);
+    if( layoutCubit.userData == null ) layoutCubit.getMyData();
+    if( layoutCubit.userData != null && layoutCubit.userData!.idForClubLead != null && drawerData.length == 12 ) drawerData.removeAt(3);      // TODO: عشان المهام المتاحة مش هتنعرض لليدر فقط هتكون للمستخد العادي والعضو
     ClubsCubit clubsCubit = ClubsCubit.getInstance(context);
     EventsCubit eventsCubit  = EventsCubit.getInstance(context);
-    if( layoutCubit.userData == null ) layoutCubit.getMyData();
     if( eventsCubit.ownEvents.isEmpty && layoutCubit.userData != null && layoutCubit.userData!.idForClubLead != null ) eventsCubit.getPastAndNewAndMyEvents(idForClubILead: layoutCubit.userData!.idForClubLead);
     if( layoutCubit.userData!.idForClubLead != null && clubsCubit.dataAboutClubYouLead == null ) clubsCubit.getCLubDataThatILead(clubID: layoutCubit.userData!.idForClubLead!);
     return Drawer(

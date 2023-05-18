@@ -12,6 +12,7 @@ class ClubEntity extends Equatable{
   final String? college;
   final List? committees;
   final int? memberNum;
+  final int? volunteerHours;
   final ContactMeansForClubModel? contactAccounts;
 
   const ClubEntity(
@@ -25,11 +26,13 @@ class ClubEntity extends Equatable{
       this.college,
       this.committees,
       this.memberNum,
-      this.contactAccounts); // Todo: Mean Leader Gmail
+      this.volunteerHours,
+      this.contactAccounts
+      ); // Todo: Mean Leader Gmail
 
   @override
   // TODO: implement props
-  List<Object?> get props => [name,id,description,image,leaderName,leaderID,leaderEmail,college,committees,memberNum,contactAccounts];
+  List<Object?> get props => [name,id,description,image,leaderName,leaderID,leaderEmail,college,committees,memberNum,volunteerHours,contactAccounts];
 
 }
 

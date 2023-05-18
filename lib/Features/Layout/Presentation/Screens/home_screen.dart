@@ -69,7 +69,30 @@ class HomeScreen extends StatelessWidget {
                             builder: (context,state) =>  _staticsDataItem(imagePath: "assets/images/clubs_num_icon.png", title: clubsCubit.clubs.length <= 10 ? "${clubsCubit.clubs.length} أندية" : "${clubsCubit.clubs.length} نادي"),
                           ),
                         ),
-                        Expanded(child: _staticsDataItem(imagePath: "assets/images/clock_icon.png", title: "0 ساعة")),
+                        Expanded(
+                          child: Column(
+                            children:
+                            [
+                              Image.asset("assets/images/clock_icon.png",height: 70.h,width: 70.w,),
+                              SizedBox(height: 2.5.h,),
+                              StreamBuilder(
+                                stream: FirebaseFirestore.instance.collection(Constants.kTotalVolunteerHoursThrowAppCollectionName).doc('Number').snapshots(),
+                                builder: (context,event)
+                                {
+                                  if( event.hasData )
+                                  {
+                                    int volunteerHours = event.data!.data() != null ? event.data!.data()!['total'] : 0;
+                                    return FittedBox(fit:BoxFit.scaleDown,child: Text(volunteerHours > 10 ? "$volunteerHours ساعة" : "$volunteerHours ساعات",style: TextStyle(fontWeight: FontWeight.w500,fontSize: 15.5.sp),));
+                                  }
+                                  else
+                                  {
+                                    return FittedBox(fit:BoxFit.scaleDown,child: Text("0 ساعة",style: TextStyle(fontWeight: FontWeight.w500,fontSize: 15.5.sp),));
+                                  }
+                                },
+                              )
+                            ],
+                          ),
+                        ),
                         Expanded(
                           child: Column(
                             children:

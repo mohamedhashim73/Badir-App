@@ -23,7 +23,9 @@ import 'package:image_picker/image_picker.dart';
 import '../../../../Core/Constants/enumeration.dart';
 import '../../Domain/Entities/event_entity.dart';
 import '../../Domain/Entities/task_entity.dart';
+import '../../Domain/Use_Cases/accept_or_reject_user_request_to_authenticate_on_task_use_case.dart';
 import '../../Domain/Use_Cases/get_all_events_use_case.dart';
+import '../../Domain/Use_Cases/get_requests_for_authentication_on_task_use_case.dart';
 import '../../Domain/Use_Cases/update_task_use_case.dart';
 import 'events_states.dart';
 
@@ -297,6 +299,39 @@ class EventsCubit extends Cubit<EventsStates> {
           await getAllTasksOnApp();
           await getTasksCreatedByMe(idForClubILead: idForClubILead);
           emit(DeleteTaskSuccessState());
+        }
+    );
+  }
+
+  // TODO: Will pass RequestsData to GedRequestForAuthenticateOnATaskSuccessState and display it on screen using state.....
+  void gedRequestForAuthenticateOnATask({required String taskID}) async {
+    emit(GetRequestForAuthenticateOnATaskLoadingState());
+    final result = await sl<GedRequestForAuthenticateOnATaskUseCase>().execute(taskID: taskID);
+    result.fold(
+        (serverFailure)
+        {
+          emit(FailedToGetRequestForAuthenticateOnATaskState(message: serverFailure.errorMessage));
+        },
+        (requestsData) async
+        {
+          emit(GetRequestForAuthenticateOnATaskSuccessState(requests: requestsData));
+        }
+    );
+  }
+
+  // TODO: Will pass RequestsData to GedRequestForAuthenticateOnATaskSuccessState and display it on screen using state.....
+  Future<void> acceptOrRejectAuthenticateRequestOnATask({required String myID,required LayoutCubit layoutCubit,required String requestSenderName,required TaskEntity taskEntity,required String requestSenderID,required bool respondStatus}) async {
+    emit(AcceptOrRejectAuthenticateRequestOnATaskLoadingState());
+    final result = await sl<AcceptOrRejectAuthenticateRequestOnATaskUseCase>().execute(myID: myID, layoutCubit: layoutCubit, requestSenderName: requestSenderName, taskEntity: taskEntity, requestSenderID: requestSenderID, respondStatus: respondStatus);
+    result.fold(
+        (serverFailure)
+        {
+          emit(FailedToAcceptOrRejectAuthenticateRequestOnATaskState(message: serverFailure.errorMessage));
+        },
+        (unit)
+        {
+          gedRequestForAuthenticateOnATask(taskID: taskEntity.id.toString());
+          emit(AcceptOrRejectAuthenticateRequestOnATaskSuccessState());
         }
     );
   }

@@ -27,6 +27,7 @@ class Constants {
   static String kTaskAuthenticationRequestsCollectionName = "Tasks Authentication Requests";
   static String kMembersDataCollectionName = "Members Data";
   static String kMembersNumberCollectionName = "Members Number";
+  static String kTotalVolunteerHoursThrowAppCollectionName = "Volunteer Hours";
   static String kEventsCollectionName = "Events";
   static String kTasksCollectionName = "Tasks";
   static String kReportsCollectionName = "Reports";

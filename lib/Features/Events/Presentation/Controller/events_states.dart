@@ -1,3 +1,5 @@
+import 'package:bader_user_app/Features/Events/Data/Models/request_authentication_on_task_model.dart';
+
 abstract class EventsStates{}
 
 class EventsInitialState extends EventsStates{}
@@ -58,11 +60,29 @@ class FailedToDeleteTaskState extends EventsStates{
   FailedToDeleteTaskState({required this.message});
 }
 
+class GetRequestForAuthenticateOnATaskSuccessState extends EventsStates{
+  final List<RequestAuthenticationOnATaskModel> requests;
+  GetRequestForAuthenticateOnATaskSuccessState({required this.requests});
+}
+
+class GetRequestForAuthenticateOnATaskLoadingState extends EventsStates{}
+class FailedToGetRequestForAuthenticateOnATaskState extends EventsStates{
+  final String message;
+  FailedToGetRequestForAuthenticateOnATaskState({required this.message});
+}
+
 class RequestAuthenticateOnATaskSuccessState extends EventsStates{}
 class RequestAuthenticateOnATaskLoadingState extends EventsStates{}
 class FailedToRequestAuthenticateOnATaskState extends EventsStates{
   final String message;
   FailedToRequestAuthenticateOnATaskState({required this.message});
+}
+
+class AcceptOrRejectAuthenticateRequestOnATaskLoadingState extends EventsStates{}
+class AcceptOrRejectAuthenticateRequestOnATaskSuccessState extends EventsStates{}
+class FailedToAcceptOrRejectAuthenticateRequestOnATaskState extends EventsStates{
+  final String message;
+  FailedToAcceptOrRejectAuthenticateRequestOnATaskState({required this.message});
 }
 
 class GetIDForTasksIAskedToAuthenticateSuccessState extends EventsStates{}

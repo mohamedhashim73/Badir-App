@@ -4,7 +4,9 @@ import 'package:bader_user_app/Features/Events/Domain/Entities/task_entity.dart'
 import 'package:dartz/dartz.dart';
 import '../../../../Core/Constants/enumeration.dart';
 import '../../../../Core/Errors/failure.dart';
+import '../../../Layout/Presentation/Controller/layout_cubit.dart';
 import '../../Data/Models/event_model.dart';
+import '../../Data/Models/request_authentication_on_task_model.dart';
 import '../Entities/event_entity.dart';
 
 abstract class EventsContractRepository{
@@ -22,4 +24,7 @@ abstract class EventsContractRepository{
   Future<Either<Failure,Unit>> requestToAuthenticateOnATask({required String taskID,required String senderID,required String senderName});
   // TODO: هترجع id بتاع التاسكات اللي انا بعت طلب تسجيل فيها بالفعل
   Future<Either<Failure,Set>> getIDForTasksIAskedToAuthenticate({List? idForClubIMemberIn,required String userID});
+  Future<Either<Failure,List<RequestAuthenticationOnATaskModel>>> gedRequestForAuthenticateOnATask({required String taskID});
+  Future<Either<Failure,Unit>> acceptOrRejectAuthenticateRequestOnATask({required String myID,required LayoutCubit layoutCubit,required String requestSenderName,required TaskEntity taskEntity,required String requestSenderID,required bool respondStatus});
+
 }

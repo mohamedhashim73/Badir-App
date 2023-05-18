@@ -9,6 +9,7 @@ import 'package:bader_user_app/Features/Events/Presentation/Screens/event_detail
 import 'package:bader_user_app/Features/Events/Presentation/Screens/update_event_screen.dart';
 import 'package:bader_user_app/Features/Events/Presentation/Screens/update_task_screen.dart';
 import 'package:bader_user_app/Features/Events/Presentation/Screens/view_memebrs_on_an_event_screen.dart';
+import 'package:bader_user_app/Features/Events/Presentation/Screens/view_requests_for_authentication_on_task_screen.dart';
 import 'package:bader_user_app/Features/Events/Presentation/Screens/view_task_details_screen.dart';
 import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_cubit.dart';
 import 'package:flutter/material.dart';
@@ -78,34 +79,41 @@ class TasksManagementScreen extends StatelessWidget {
         Navigator.push(context, MaterialPageRoute(builder: (context) => ViewTaskDetailsScreen(taskEntity: taskEntity)));
       },
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 18.h,horizontal: 12.w),
+        padding: EdgeInsets.symmetric(vertical: 10.h,horizontal: 10.w),
         color: AppColors.kYellowColor,
-        child: Row(
-          children:
-          [
-            Expanded(child: Text(taskEntity.name,style: TextStyle(fontWeight:FontWeight.bold,overflow: TextOverflow.ellipsis,fontSize: 15.sp),)),
-            _buttonItem(
-              title: 'تحديث',
-              onTap: ()
-              {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => UpdateTaskScreen(taskEntity: taskEntity)));
-              },
-            ),
-            SizedBox(width: 5.w,),
-            _buttonItem(
-                title: 'المسجلين',
-                onTap: ()
-                {
-                  // Navigator.push(context, MaterialPageRoute(builder: (context) => ViewMembersOnAnEventScreen(eventID: eventData.id!.trim())));
-                }
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(taskEntity.name,style: TextStyle(fontWeight:FontWeight.bold,overflow: TextOverflow.ellipsis,fontSize: 15.sp),),
+            SizedBox(height: 5.h,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children:
+              [
+                _buttonItem(
+                  title: 'تحديث',
+                  onTap: ()
+                  {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => UpdateTaskScreen(taskEntity: taskEntity)));
+                  },
                 ),
-            SizedBox(width: 5.w,),
-            _buttonItem(
-                title: 'حذف',
-                onTap: ()
-                {
-                  cubit.deleteTask(taskID: taskEntity.id.toString(), idForClubILead: idForClubILead);
-                }
+                SizedBox(width: 5.w,),
+                _buttonItem(
+                    title: 'الطلبات',
+                    onTap: ()
+                    {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => ViewRequestsForAuthenticateOnTaskScreen(task: taskEntity)));
+                    }
+                    ),
+                SizedBox(width: 5.w,),
+                _buttonItem(
+                    title: 'حذف',
+                    onTap: ()
+                    {
+                      cubit.deleteTask(taskID: taskEntity.id.toString(), idForClubILead: idForClubILead);
+                    }
+                ),
+              ],
             ),
           ],
         ),
