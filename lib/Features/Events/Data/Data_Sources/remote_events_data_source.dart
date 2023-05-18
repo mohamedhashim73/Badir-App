@@ -206,13 +206,15 @@ class RemoteEventsDataSource{
     await FirebaseFirestore.instance.collection(Constants.kTasksCollectionName).get().then((value) async {
       for( var item in value.docs )
       {
-        if( item.data()['forPublicOrSpecificToAnEvent'] || ( idForClubsIMemberIn != null && idForClubsIMemberIn.contains(item.data()['clubID'].toString().trim()) ) )
+        if( item.data()['forPublicOrSpecificToAnEvent'] || ( idForClubsIMemberIn != null && idForClubsIMemberIn.contains(item.data()['clubID'].toString()) ) )
         {
-          DocumentSnapshot docSnapshot = await item.reference.collection(Constants.kTaskAuthenticationRequestsCollectionName).doc(userID).get();
-          if( docSnapshot.exists && docSnapshot.id == userID )
-            {
-              tasksID.add(item.id);
-            }
+          await item.reference.collection(Constants.kTaskAuthenticationRequestsCollectionName).get().then((value) async {
+            for( var itemDoc in value.docs )
+              {
+                if( itemDoc.id.trim() == userID.trim() ) tasksID.add(item.id);
+                debugPrint("tasksID totally is : $tasksID, first is : ${tasksID.first}, last is : ${tasksID.last}");
+              }
+          });
         }
       }
     });
@@ -252,17 +254,22 @@ class RemoteEventsDataSource{
       );
       if( respondStatus )     // TODO: Request Accepted
       {
+        // TODO: Update num of registered to Task
+        int numOFRegisteredOnTask = taskEntity.numOfRegistered;
+        await FirebaseFirestore.instance.collection(Constants.kTasksCollectionName).doc(taskEntity.id.toString()).update({
+          'numOfRegistered' : ++numOFRegisteredOnTask,
+        });
         // TODO: Get Data about RequestSender....
         DocumentSnapshot requestSenderDocumentSnapshot = await FirebaseFirestore.instance.collection(Constants.kUsersCollectionName).doc(requestSenderID).get();
         UserModel requestSenderUserModel = UserModel.fromJson(json: requestSenderDocumentSnapshot.data());
         List? idForTasksAuthenticate = requestSenderUserModel.idForTasksAuthenticate ?? [];
-        int? volunteerHoursForUser = requestSenderUserModel.volunteerHoursNumber ?? 0;
+        int? volunteerHoursForUser = requestSenderUserModel.volunteerHours ?? 0;
         // TODO: Update volunteer num for User that he asked for authenticate .....
         volunteerHoursForUser += taskEntity.hours;    // TODO: هتضيف عدد ساعات التاسك للشخص ده
         idForTasksAuthenticate.add(taskEntity.id.toString().trim());
         await FirebaseFirestore.instance.collection(Constants.kUsersCollectionName).doc(requestSenderID).update({
           'idForTasksAuthenticate' : idForTasksAuthenticate,
-          'volunteerHoursNumber' : volunteerHoursForUser,
+          'volunteerHours' : volunteerHoursForUser,
         });
         // TODO: Update total volunteer num on The App
         int totalVolunteerHours = await getTotalVolunteerHoursOnApp();
@@ -274,7 +281,8 @@ class RemoteEventsDataSource{
         int volunteerHoursForClub = await getTotalVolunteerHoursForSpecificClub(clubID: taskEntity.clubID);
         volunteerHoursForClub += taskEntity.hours;
         await FirebaseFirestore.instance.collection(Constants.kClubsCollectionName).doc(taskEntity.clubID).update({
-          'volunteerHours' : volunteerHoursForClub
+          'volunteerHours' : volunteerHoursForClub,
+
         });
       }
       return unit;

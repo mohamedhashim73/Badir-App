@@ -27,7 +27,7 @@ class ViewRequestsForAuthenticateOnTaskScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final LayoutCubit layoutCubit = LayoutCubit.getInstance(context);
-    final EventsCubit eventCubit = EventsCubit.getInstance(context)..gedRequestForAuthenticateOnATask(taskID: task.id.toString().trim());
+    final EventsCubit eventCubit = EventsCubit.getInstance(context)..getRequestForAuthenticateOnATask(taskID: task.id.toString().trim());
     return Directionality(
       textDirection: TextDirection.rtl,
       child: SafeArea(

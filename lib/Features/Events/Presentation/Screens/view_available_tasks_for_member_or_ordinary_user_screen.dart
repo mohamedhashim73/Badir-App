@@ -32,30 +32,33 @@ class ViewAvailableTasksScreen extends StatelessWidget {
         child: Scaffold(
           appBar: AppBar(title: const Text("المهام المتاحة"),),
           body: BlocConsumer<EventsCubit,EventsStates>(
-            buildWhen: (pastState,currentState) => currentState is GetAvailableTasksSuccessState,
+            buildWhen: (pastState,currentState) => currentState is GetAvailableTasksSuccessState || currentState is GetIDForTasksIAskedToAuthenticateSuccessState ,
             listener: (context,state)
             {
-              if( state is RequestAuthenticateOnATaskLoadingState )
-                {
-                  showLoadingDialog(context:context);
-                }
+              // if( state is RequestAuthenticateOnATaskLoadingState )
+              //   {
+              //     showLoadingDialog(context:context);
+              //   }
               if( state is RequestAuthenticateOnATaskSuccessState )
                 {
-                  Navigator.pop(context);
+                  // Navigator.pop(context);
                   showSnackBar(context: context, message: "تم إرسال الطلب لليدر");
                 }
+              if( state is FailedToRequestAuthenticateOnATaskState ) showSnackBar(context: context, message: state.message,backgroundColor: AppColors.kRedColor);
             },
             builder: (context,state) {
               return Padding(
                 padding: EdgeInsets.symmetric(vertical: 10.h,horizontal: 10.w),
-                child: state is GetAvailableTasksLoadingState ? const Center(child: CircularProgressIndicator()) : eventCubit.availableTasks.isNotEmpty && state is GetAvailableTasksSuccessState ? ListView.separated(
+                child: eventCubit.availableTasks.isNotEmpty && (state is GetAvailableTasksSuccessState || state is GetIDForTasksIAskedToAuthenticateSuccessState) ? ListView.separated(
                     physics: const BouncingScrollPhysics(),
                     itemCount: eventCubit.availableTasks.length,   // TODO: Events Related to Club I lead
                     separatorBuilder: (context,index) => SizedBox(height: 15.h,),
                     itemBuilder: (context,index) => _taskItem(myData: userEntity,cubit:eventCubit,context: context,taskEntity: eventCubit.availableTasks[index])
-                ) : state is GetAvailableTasksSuccessState && eventCubit.availableTasks.isEmpty ? Center(
-                  child: Text("لا توجد مهام متاحة",style: TextStyle(fontSize: 15.sp,color: Colors.black.withOpacity(0.4),fontWeight: FontWeight.bold),),
-                ) : const Center(child: CircularProgressIndicator(),),
+                    ) : state is GetAvailableTasksLoadingState ? const Center(
+                      child: CircularProgressIndicator(),
+                  ) : Center(
+                      child: Text("لا توجد مهام متاحة",style: TextStyle(fontSize: 15.sp,color: Colors.black.withOpacity(0.4),fontWeight: FontWeight.bold),),
+                )
               );
             }
           ),
@@ -93,8 +96,8 @@ class ViewAvailableTasksScreen extends StatelessWidget {
                       ),
                   SizedBox(width: 10.w,),
                   _buttonItem(
-                      color: cubit.idForTasksThatIAskedToAuthenticateBefore != null && cubit.idForTasksThatIAskedToAuthenticateBefore!.contains(taskEntity.id.toString().trim())? AppColors.kOrangeColor : myData.idForTasksAuthenticate != null && myData.idForTasksAuthenticate!.contains(taskEntity.id.toString().trim()) ? AppColors.kGreenColor : AppColors.kMainColor,
-                      title: cubit.idForTasksThatIAskedToAuthenticateBefore != null && cubit.idForTasksThatIAskedToAuthenticateBefore!.contains(taskEntity.id.toString().trim()) ? "تم الطلب" : myData.idForTasksAuthenticate != null && myData.idForTasksAuthenticate!.contains(taskEntity.id.toString().trim()) ? "تم التسجيل" : "تسجيل",
+                      color: cubit.idForTasksThatIAskedToAuthenticateBefore != null && cubit.idForTasksThatIAskedToAuthenticateBefore!.contains(taskEntity.id.toString())? AppColors.kOrangeColor : myData.idForTasksAuthenticate != null && myData.idForTasksAuthenticate!.contains(taskEntity.id.toString().trim()) ? AppColors.kGreenColor : AppColors.kMainColor,
+                      title: cubit.idForTasksThatIAskedToAuthenticateBefore != null && cubit.idForTasksThatIAskedToAuthenticateBefore!.contains(taskEntity.id.toString()) ? "تم الطلب" : myData.idForTasksAuthenticate != null && myData.idForTasksAuthenticate!.contains(taskEntity.id.toString().trim()) ? "تم التسجيل" : "تسجيل",
                       onTap: ()
                       {
                         if( cubit.idForTasksThatIAskedToAuthenticateBefore != null && cubit.idForTasksThatIAskedToAuthenticateBefore!.contains(taskEntity.id.toString().trim()) )
@@ -107,7 +110,7 @@ class ViewAvailableTasksScreen extends StatelessWidget {
                         }
                         else
                         {
-                          cubit.requestAuthenticateOnATask(taskID: taskEntity.id.toString(), senderID: myData.id ?? Constants.userID!, senderName: myData.name!);
+                          cubit.requestToAuthenticateOnATask(myData: myData,taskID: taskEntity.id.toString(), senderID: myData.id ?? Constants.userID!, senderName: myData.name!);
                         }
                       }
                   ),

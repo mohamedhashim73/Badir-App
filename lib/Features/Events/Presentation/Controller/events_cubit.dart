@@ -272,7 +272,7 @@ class EventsCubit extends Cubit<EventsStates> {
   List<TaskEntity> availableTasks = [];
   Future<void> getAvailableTasks({required UserEntity myData}) async {
     availableTasks.clear();
-    debugPrint("All Tasks on App length : ${allTasksOnApp.length}");
+    idForTasksThatIAskedToAuthenticateBefore = {};
     emit(GetAvailableTasksLoadingState());
     if( allTasksOnApp.isEmpty ) await getAllTasksOnApp();
     for( var item in allTasksOnApp )
@@ -304,7 +304,7 @@ class EventsCubit extends Cubit<EventsStates> {
   }
 
   // TODO: Will pass RequestsData to GedRequestForAuthenticateOnATaskSuccessState and display it on screen using state.....
-  void gedRequestForAuthenticateOnATask({required String taskID}) async {
+  Future<void> getRequestForAuthenticateOnATask({required String taskID}) async {
     emit(GetRequestForAuthenticateOnATaskLoadingState());
     final result = await sl<GedRequestForAuthenticateOnATaskUseCase>().execute(taskID: taskID);
     result.fold(
@@ -328,17 +328,17 @@ class EventsCubit extends Cubit<EventsStates> {
         {
           emit(FailedToAcceptOrRejectAuthenticateRequestOnATaskState(message: serverFailure.errorMessage));
         },
-        (unit)
+        (unit) async
         {
-          gedRequestForAuthenticateOnATask(taskID: taskEntity.id.toString());
+          await getRequestForAuthenticateOnATask(taskID: taskEntity.id.toString());
           emit(AcceptOrRejectAuthenticateRequestOnATaskSuccessState());
         }
     );
   }
 
   // TODO: User or Member ....
-  void requestAuthenticateOnATask({required String taskID,required String senderID,required String senderName}) async {
-    emit(RequestAuthenticateOnATaskLoadingState());
+  void requestToAuthenticateOnATask({required UserEntity myData,required String taskID,required String senderID,required String senderName}) async {
+    // emit(RequestAuthenticateOnATaskLoadingState());
     final result = await sl<RequestAuthenticationOnATaskUseCase>().execute(taskID: taskID, senderID: senderID, senderName: senderName);
     result.fold(
         (serverFailure)
@@ -346,7 +346,8 @@ class EventsCubit extends Cubit<EventsStates> {
           emit(FailedToRequestAuthenticateOnATaskState(message: serverFailure.errorMessage));
         },
         (unit)
-        {
+        async {
+          await getAvailableTasks(myData: myData);
           emit(RequestAuthenticateOnATaskSuccessState());
         }
     );
@@ -355,7 +356,6 @@ class EventsCubit extends Cubit<EventsStates> {
   Set? idForTasksThatIAskedToAuthenticateBefore;
   // TODO: هترجع id بتاع التاسكات اللي انا بعت طلب تسجيل فيها بالفعل  -- Call it after call getAvailableTasks()
   Future<void> getIDForTasksIAskedToAuthenticate({List? idForClubsIMemberIn,required String userID}) async {
-    emit(RequestAuthenticateOnATaskLoadingState());
     final result = await sl<GetIDForTasksThatIAskedForAuthenticationBeforeUseCase>().execute(userID: userID,idForClubIMemberIn: idForClubsIMemberIn);
     result.fold(
         (serverFailure)
@@ -365,6 +365,7 @@ class EventsCubit extends Cubit<EventsStates> {
         (tasksID)
         {
           idForTasksThatIAskedToAuthenticateBefore = tasksID;
+          debugPrint("tasksID length is : ${tasksID.length}, idForTasksThatIAskedToAuthenticateBefore is $idForTasksThatIAskedToAuthenticateBefore");
           emit(GetIDForTasksIAskedToAuthenticateSuccessState());
         }
     );
@@ -382,7 +383,7 @@ class EventsCubit extends Cubit<EventsStates> {
         {
           emit(FailedToUpdateTaskState(message: serverFailure.errorMessage));
         },
-            (unit) async
+        (unit) async
         {
           // TODO: Get All Tasks .....
           await getAllTasksOnApp();
