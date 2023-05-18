@@ -79,7 +79,8 @@ class ClubsCubit extends Cubit<ClubsStates> {
     emit(UpdateClubAvailabilityLoadingState());
     final result = await sl<UpdateClubAvailabilityUseCase>().execute(clubID: clubID, isAvailable: isAvailable, availableOnlyForThisCollege: availableOnlyForThisCollege);
     result.fold(
-        (serverFailure){
+        (serverFailure)
+        {
           emit(UpdateClubAvailabilityWithFailureState(message: serverFailure.errorMessage));
         },
         (unit) async
