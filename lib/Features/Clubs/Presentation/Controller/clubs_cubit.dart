@@ -40,7 +40,7 @@ class ClubsCubit extends Cubit<ClubsStates> {
             },
             (clubsData) async {
               clubs = clubsData;
-              if( userEntity != null ) await getIDForClubsIAskedForMembership(userID: userEntity.id ?? Constants.userID!, idForClubsMemberID: userEntity.idForClubsMemberIn);
+              if( userEntity != null && userEntity.idForClubLead == null ) await getIDForClubsIAskedForMembership(userID: userEntity.id ?? Constants.userID!, idForClubsMemberID: userEntity.idForClubsMemberIn);
               emit(GetClubsDataSuccessState());
             }
     );

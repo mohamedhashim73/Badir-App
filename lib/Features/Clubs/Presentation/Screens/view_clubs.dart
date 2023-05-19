@@ -4,6 +4,7 @@ import 'package:bader_user_app/Core/Theme/app_colors.dart';
 import 'package:bader_user_app/Features/Clubs/Domain/Entities/club_entity.dart';
 import 'package:bader_user_app/Features/Clubs/Presentation/Components/alert_dialog_for_ask_membership.dart';
 import 'package:bader_user_app/Features/Clubs/Presentation/Controller/clubs_cubit.dart';
+import 'package:bader_user_app/Features/Events/Presentation/Controller/events_cubit.dart';
 import 'package:bader_user_app/Features/Layout/Domain/Entities/user_entity.dart';
 import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_cubit.dart';
 import 'package:bader_user_app/Features/Clubs/Presentation/Screens/club_details_screen.dart';
@@ -62,16 +63,12 @@ class ViewClubsScreen extends StatelessWidget {
                 ],
               ),
               body: BlocConsumer<ClubsCubit,ClubsStates>(
-                    buildWhen: (lastState,currentState)
-                    {
-                      return currentState is GetClubsDataSuccessState || currentState is GetFilteredClubsSuccessStatus || currentState is GetIDForClubsIAskedForMembershipSuccessState ;
-                    },
                     listener: (context,state)
                     {
                       if( state is SendRequestForMembershipSuccessState )
                       {
                         clubsCubit.selectedCommittee = null;
-                        infoAboutUserController.text = '';
+                        infoAboutUserController.clear();
                         Navigator.pop(context);
                         showSnackBar(context: context, message: "تم إرسال الطلب بنجاح في انتظار موافقة الأدمن",backgroundColor: AppColors.kGreenColor,seconds: 3);
                       }
@@ -82,21 +79,23 @@ class ViewClubsScreen extends StatelessWidget {
                       }
                     },
                     builder: (context,state) {
-                      return Padding(
-                        padding: EdgeInsets.symmetric(vertical: 10.h,horizontal: 12.w),
-                        child: state is GetClubsDataSuccessState && clubsCubit.clubs.isNotEmpty ?
-                            ListView.separated(
-                              itemCount: clubsCubit.filteredClubsData.isEmpty ? clubsCubit.clubs.length : clubsCubit.filteredClubsData.length,
-                              separatorBuilder: (context,index) => SizedBox(height: 8.h,),
-                              itemBuilder: (context,index)
-                              {
-                                return _clubItem(myData:myData,club: clubsCubit.filteredClubsData.isEmpty ? clubsCubit.clubs[index] : clubsCubit.filteredClubsData[index],context: context,cubit: clubsCubit,requestMembershipController: infoAboutUserController);
-                              },
-                            ) :
-                            Center(
-                              child: CircularProgressIndicator(color:AppColors.kMainColor),
-                            )
-                      );
+                      if( state is GetClubsDataSuccessState || state is SendRequestForMembershipSuccessState )
+                        {
+                          return ListView.separated(
+                            itemCount: clubsCubit.filteredClubsData.isEmpty ? clubsCubit.clubs.length : clubsCubit.filteredClubsData.length,
+                            separatorBuilder: (context,index) => SizedBox(height: 8.h,),
+                            itemBuilder: (context,index)
+                            {
+                              return _clubItem(myData:myData,club: clubsCubit.filteredClubsData.isEmpty ? clubsCubit.clubs[index] : clubsCubit.filteredClubsData[index],context: context,cubit: clubsCubit,requestMembershipController: infoAboutUserController);
+                            },
+                          );
+                        }
+                      else
+                        {
+                          return Center(
+                            child: CircularProgressIndicator(color:AppColors.kMainColor),
+                          );
+                        }
                     }
                   )
             );
@@ -181,7 +180,7 @@ Widget _clubItem({required UserEntity myData,required ClubEntity club,required B
                                 showSnackBar(context: context, message: "تم طلب العضوية بالفعل وف انتظار موافقه الليدر");
                               }
                             }
-                        ),
+                        )
                     ],
                   )
                 ],
