@@ -31,9 +31,9 @@ class HomeScreen extends StatelessWidget {
     final layoutCubit = LayoutCubit.getInstance(context);
     if( layoutCubit.userData == null ) layoutCubit.getMyData();
     final clubsCubit = ClubsCubit.getInstance(context);
-    if( clubsCubit.clubs.isEmpty ) clubsCubit.getClubsData();
     final eventsCubit = EventsCubit.getInstance(context);
     if( eventsCubit.allEvents.isEmpty ) eventsCubit.getAllEvents();
+    if( clubsCubit.clubs.isEmpty ) clubsCubit.getClubsData(userEntity: layoutCubit.userData);
     return SafeArea(
       child: Directionality(
         textDirection: TextDirection.rtl,
@@ -347,8 +347,8 @@ class HomeScreen extends StatelessWidget {
                       showSnackBar(context: context, message: 'هذه الفعالية خاصة بأعضاء ${eventEntity.clubName} فقط',backgroundColor: AppColors.kRedColor);
                     }
                   },
-                  color: myData.idForClubLead != null || eventInDateAndIHaveNotJoinedYetAndHavePermission ? AppColors.kWhiteColor : eventInDateAndIHaveJoined || eventExpiredAndIHaveJoined ? AppColors.kOrangeColor : eventInDateAndIDoNotHavePermissionToJoin || eventExpiredAndIHaveNotJoined ? AppColors.kRedColor : AppColors.kOrangeColor,
-                  textColor: myData.idForClubLead != null || Constants.eventInDateAndIHaveNotJoinedYetAndHavePermission(userEntity: myData, eventExpired: eventExpired, event: eventEntity) ? AppColors.kBlackColor : AppColors.kWhiteColor,
+                  color: myData.idForClubLead != null || eventInDateAndIHaveNotJoinedYetAndHavePermission ? AppColors.kWhiteColor : eventExpiredAndIHaveJoined ? AppColors.kOrangeColor : eventInDateAndIDoNotHavePermissionToJoin || eventExpiredAndIHaveNotJoined ? AppColors.kRedColor : AppColors.kGreenColor,
+                  textColor: myData.idForClubLead != null || eventInDateAndIHaveNotJoinedYetAndHavePermission ? AppColors.kBlackColor : AppColors.kWhiteColor,
                   child: Text(myData.idForClubLead != null ? "متابعة" : eventInDateAndIHaveJoined ? "تم التسجيل" :  eventInDateAndIHaveNotJoinedYetAndHavePermission ? "سجل الآن" : eventExpiredAndIHaveNotJoined ? "انتهت الفعالية" : eventInDateAndIDoNotHavePermissionToJoin ? "خاصة" : "شاركنا برأيك",style: const TextStyle(fontWeight: FontWeight.bold),),
                 ),
               )

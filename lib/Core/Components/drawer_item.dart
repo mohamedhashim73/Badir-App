@@ -10,9 +10,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class DrawerItem extends StatelessWidget {
   final List<Map<String,dynamic>> drawerData = [
     {
-      'title' : 'الملف الشخصي',
-      'iconData' : Icons.person,
-      'routeName' : AppStrings.kProfileScreen
+      'title' : 'الرئيسية',
+      'iconData' : Icons.home,
+      'routeName' : AppStrings.kLayoutScreen
     },
     {
       'title' : 'الفعاليات',

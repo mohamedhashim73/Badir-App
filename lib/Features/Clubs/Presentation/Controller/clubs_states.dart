@@ -29,6 +29,12 @@ class FailedToUpdateClubState extends ClubsStates{
   final String message;
   FailedToUpdateClubState({required this.message});
 }
+class GetIDForClubsIAskedForMembershipSuccessState extends ClubsStates{}
+class FailedToGetIDForClubsIAskedForMembershipState extends ClubsStates{
+  final String message;
+  FailedToGetIDForClubsIAskedForMembershipState({required this.message});
+}
+
 class GetInfoForClubThatILeadSuccess extends ClubsStates{}
 class ClubImageUploadedSuccess extends ClubsStates{}
 class FailedToClubImage extends ClubsStates{}

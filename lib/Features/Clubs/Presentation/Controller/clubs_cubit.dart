@@ -7,6 +7,7 @@ import 'package:bader_user_app/Features/Clubs/Domain/Use_Cases/get_members_on_my
 import 'package:bader_user_app/Features/Clubs/Domain/Use_Cases/upload_image_to_storage_use_case.dart';
 import 'package:bader_user_app/Features/Layout/Domain/Entities/user_entity.dart';
 import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_cubit.dart';
+import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -15,6 +16,7 @@ import '../../Domain/Entities/request_membership_entity.dart';
 import '../../Domain/Use_Cases/accept_or_reject_membership_request_use_case.dart';
 import '../../Domain/Use_Cases/create_meeting_use_case.dart';
 import '../../Domain/Use_Cases/get_all_membership_requests_use_case.dart';
+import '../../Domain/Use_Cases/get_id_for_clubs_that_i_ask_for_membershi_waiting_result_use_case.dart';
 import '../../Domain/Use_Cases/remove_member_from_club_use_case.dart';
 import '../../Domain/Use_Cases/request_membership_use_case.dart';
 import '../../Domain/Use_Cases/update_availability_for_club_use_case.dart';
@@ -29,17 +31,16 @@ class ClubsCubit extends Cubit<ClubsStates> {
 
   // TODO: Get Notifications
   List<ClubEntity> clubs = [];
-  Future<void> getClubsData() async {
+  Future<void> getClubsData({UserEntity? userEntity}) async {
     emit(GetClubsLoadingState());
     final result = await sl<GetAllClubsUseCase>().execute();
     result.fold(
-            (serverFailure){
-              clubs.clear();
+            (serverFailure) {
               emit(FailedToGetClubsDataState(message: serverFailure.errorMessage));
             },
-            (clubsData){
+            (clubsData) async {
               clubs = clubsData;
-              debugPrint("Clubs Number is : ${clubsData.length}");
+              if( userEntity != null ) await getIDForClubsIAskedForMembership(userID: userEntity.id ?? Constants.userID!, idForClubsMemberID: userEntity.idForClubsMemberIn);
               emit(GetClubsDataSuccessState());
             }
     );
@@ -61,7 +62,7 @@ class ClubsCubit extends Cubit<ClubsStates> {
   }
 
   // TODO: CREATE MEETING
-  Future<void> updateClubAvailability({required String clubID,required bool isAvailable,required List availableOnlyForThisCollege}) async {
+  Future<void> updateClubAvailability({required UserEntity userEntity,required String clubID,required bool isAvailable,required List availableOnlyForThisCollege}) async {
     emit(UpdateClubAvailabilityLoadingState());
     final result = await sl<UpdateClubAvailabilityUseCase>().execute(clubID: clubID, isAvailable: isAvailable, availableOnlyForThisCollege: availableOnlyForThisCollege);
     result.fold(
@@ -71,7 +72,7 @@ class ClubsCubit extends Cubit<ClubsStates> {
         },
         (unit) async
         {
-          await getClubsData();
+          await getClubsData(userEntity: userEntity);
           await getCLubDataThatILead(clubID: clubID);
           emit(UpdateClubAvailabilitySuccessState());
         }
@@ -115,16 +116,24 @@ class ClubsCubit extends Cubit<ClubsStates> {
   }
 
   // TODO: Ask for membership
-  void askForMembership({required String clubID,required String infoAboutAsker,required String userName}) async {
+  void askForMembership({required UserEntity userEntity,required String clubID,required String infoAboutAsker,required String userName,required String committeeName}) async {
     emit(SendRequestForMembershipLoadingState());
     bool requestSent = await sl<RequestAMembershipUseCase>().execute(
         clubID: clubID,
         userAskForMembershipID: Constants.userID!,
         infoAboutAsker: infoAboutAsker,
-        committeeName: selectedCommittee!,
+        committeeName: committeeName,
         requestUserName: userName
     );
-    requestSent ? emit(SendRequestForMembershipSuccessState()) : emit(FailedToSendRequestForMembershipState());
+    if( requestSent )
+      {
+        await getIDForClubsIAskedForMembership(userID: userEntity.id!,idForClubsMemberID: userEntity.idForClubsMemberIn);
+        emit(SendRequestForMembershipSuccessState());
+      }
+    else
+      {
+        emit(FailedToSendRequestForMembershipState());
+      }
   }
 
   bool searchEnabled = false;
@@ -195,7 +204,7 @@ class ClubsCubit extends Cubit<ClubsStates> {
     return url;
   }
 
-  void updateClubData({required String clubID,required File image,required String name,required int memberNum,required String aboutClub,required String phone,required String twitter}) async {
+  void updateClubData({required UserEntity userEntity,required String clubID,required File image,required String name,required int memberNum,required String aboutClub,required String phone,required String twitter}) async {
     emit(UpdateClubLoadingState());
     ContactMeansForClubModel contactMeansModel = ContactMeansForClubModel(phone: phone, twitter: twitter);
     String? imageURL = await uploadClubImageToStorage();
@@ -207,13 +216,13 @@ class ClubsCubit extends Cubit<ClubsStates> {
                    emit(FailedToUpdateClubState(message: serverFailure.errorMessage));
                 },
                 (unit) async {
-                   await getClubsData();
+                   await getClubsData(userEntity: userEntity);
                    emit(ClubUpdatedSuccessState());
                 }
         ));
   }
 
-  void updateClubWithoutImage({required String clubID,required String imgUrl,required String name,required int memberNum,required String aboutClub,required String phone,required String twitter}) async {
+  void updateClubWithoutImage({required UserEntity userEntity,required String clubID,required String imgUrl,required String name,required int memberNum,required String aboutClub,required String phone,required String twitter}) async {
     ContactMeansForClubModel contactMeansModel = ContactMeansForClubModel(phone: phone, twitter: twitter);
     final clubUpdateResult = await sl<UpdateClubUseCase>().execute(clubID: clubID, image: imgUrl, name: name, memberNum: memberNum, aboutClub: aboutClub, contactInfo: contactMeansModel);
     await Future.value(
@@ -221,11 +230,28 @@ class ClubsCubit extends Cubit<ClubsStates> {
             (serverFailure){
               emit(FailedToUpdateClubState(message: serverFailure.errorMessage));
               },
-                (unit) async {
-              await getClubsData();
+            (unit) async {
+              await getClubsData(userEntity: userEntity);
               emit(ClubUpdatedSuccessState());
             }
-        ));
+        )
+    );
+  }
+
+  Set idForClubsIAskedToJoinAndWaitingResponse = {};
+  Future<void> getIDForClubsIAskedForMembership({List? idForClubsMemberID,required String userID}) async {
+    final clubUpdateResult = await sl<GetIDForClubsIAskedForMembershipUseCase>().execute(userID: userID,idForClubsMemberID: idForClubsMemberID);
+    clubUpdateResult.fold(
+        (serverFailure)
+        {
+          emit(FailedToGetIDForClubsIAskedForMembershipState(message: serverFailure.errorMessage));
+        },
+        (clubsID)
+        {
+          idForClubsIAskedToJoinAndWaitingResponse = clubsID;
+          emit(GetIDForClubsIAskedForMembershipSuccessState());
+        }
+    );
   }
 
   void acceptOrRejectMembershipRequest({required LayoutCubit layoutCubit,required String committeeNameForRequestSender,required String idForClubILead,required String requestSenderID,required String clubID,required bool respondStatus,required String clubName}) async {

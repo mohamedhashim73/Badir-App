@@ -12,7 +12,7 @@ class ViewClubDetailsScreen extends StatelessWidget {
       child: Directionality(
         textDirection: TextDirection.rtl,
         child: Scaffold(
-          appBar: AppBar(title: const Text("تفاصيل النادي"),automaticallyImplyLeading: false),
+          appBar: AppBar(title: const Text("تفاصيل النادي")),
           body: Padding(
             padding: EdgeInsets.symmetric(horizontal: 12.w,vertical:12.h),
             child: Column(

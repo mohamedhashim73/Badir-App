@@ -10,6 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../Core/Components/text_field_component.dart';
 import '../../../../Core/Constants/app_strings.dart';
+import '../../../Layout/Domain/Entities/user_entity.dart';
 
 class UpdateClubScreen extends StatelessWidget {
   final _twitterController = TextEditingController();
@@ -22,7 +23,9 @@ class UpdateClubScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String clubID = LayoutCubit.getInstance(context).userData!.idForClubLead!;
+    final layoutCubit = LayoutCubit.getInstance(context);
+    final UserEntity userEntity = layoutCubit.userData!;
+    String clubID = userEntity.idForClubLead!;
     final cubit = ClubsCubit.getInstance(context)..getCLubDataThatILead(clubID: clubID);
     _nameController.text = cubit.dataAboutClubYouLead!.name!;
     _collegeController.text = cubit.dataAboutClubYouLead!.college!;
@@ -132,11 +135,11 @@ class UpdateClubScreen extends StatelessWidget {
                             }
                           else if( cubit.clubImage != null && _nameController.text.isNotEmpty &&_aboutClubController.text.isNotEmpty &&_twitterController.text.isNotEmpty &&_membersNumController.text.isNotEmpty &&_phoneController.text.isNotEmpty)
                           {
-                            cubit.updateClubData(clubID: clubID, image: cubit.clubImage!, name: _nameController.text, memberNum: int.parse(_membersNumController.text), aboutClub: _aboutClubController.text ,phone: _phoneController.text, twitter: _twitterController.text);
+                            cubit.updateClubData(userEntity:userEntity,clubID: clubID, image: cubit.clubImage!, name: _nameController.text, memberNum: int.parse(_membersNumController.text), aboutClub: _aboutClubController.text ,phone: _phoneController.text, twitter: _twitterController.text);
                           }
                           else
                           {
-                            cubit.updateClubWithoutImage(clubID: clubID, imgUrl: cubit.dataAboutClubYouLead!.image!, name: _nameController.text, memberNum: int.parse(_membersNumController.text), aboutClub: _aboutClubController.text ,phone: _phoneController.text, twitter: _twitterController.text);
+                            cubit.updateClubWithoutImage(userEntity:userEntity,clubID: clubID, imgUrl: cubit.dataAboutClubYouLead!.image!, name: _nameController.text, memberNum: int.parse(_membersNumController.text), aboutClub: _aboutClubController.text ,phone: _phoneController.text, twitter: _twitterController.text);
                           }
                         },
                         title: state is UpdateClubLoadingState ? "جاري التعديل" : "حفظ التعديلات",

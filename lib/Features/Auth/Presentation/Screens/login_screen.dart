@@ -34,51 +34,56 @@ class LoginScreen extends StatelessWidget {
               }
             },
             builder: (context,state) {
-              return Padding(
-                padding: EdgeInsets.symmetric(vertical: 12.h,horizontal: 12.w),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children:
-                  [
-                    Center(
-                      child: Text("تسجيل الدخول",style: TextStyle(fontWeight: FontWeight.bold,color:AppColors.kMainColor,fontSize: 20.sp),),
-                    ),
-                    SizedBox(height: 35.h,),
-                    Text("البريد الإلكتروني",style: TextStyle(fontSize: 15.sp,fontWeight: FontWeight.bold),),
-                    SizedBox(height: 8.h,),
-                    _textField(controller: _emailController,cubit: cubit,isSecure: false),
-                    SizedBox(height: 13.h,),
-                    Text("كلمة المرور",style: TextStyle(fontSize: 15.sp,fontWeight: FontWeight.bold),),
-                    SizedBox(height: 8.h,),
-                    _textField(controller: _passwordController,isSecure: true,cubit: cubit),
-                    SizedBox(height: 20.h,),
-                    DefaultButton(
-                      width: double.infinity,
-                      onTap: ()
-                      {
-                        if( _emailController.text.isEmpty && _passwordController.text.isEmpty )
+              return Center(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 12.h,horizontal: 12.w),
+                  child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children:
+                      [
+                        Center(
+                          child: Text("تسجيل الدخول",style: TextStyle(fontWeight: FontWeight.bold,color:AppColors.kMainColor,fontSize: 20.sp),),
+                        ),
+                        SizedBox(height: 35.h,),
+                        Text("البريد الإلكتروني",style: TextStyle(fontSize: 15.sp,fontWeight: FontWeight.bold),),
+                        SizedBox(height: 8.h,),
+                        _textField(controller: _emailController,cubit: cubit,isSecure: false),
+                        SizedBox(height: 13.h,),
+                        Text("كلمة المرور",style: TextStyle(fontSize: 15.sp,fontWeight: FontWeight.bold),),
+                        SizedBox(height: 8.h,),
+                        _textField(controller: _passwordController,isSecure: true,cubit: cubit),
+                        SizedBox(height: 20.h,),
+                        DefaultButton(
+                          width: double.infinity,
+                          onTap: ()
                           {
-                            showSnackBar(context: context, message: "برجاء إدخال البيانات كامله",backgroundColor: Colors.red,seconds: 2);
-                          }
-                        else
-                          {
-                            cubit.login(email: _emailController.text, password: _passwordController.text);
-                          }
-                      },
-                      title: "تسجيل",
+                            if( _emailController.text.isEmpty && _passwordController.text.isEmpty )
+                              {
+                                showSnackBar(context: context, message: "برجاء إدخال البيانات كامله",backgroundColor: Colors.red,seconds: 2);
+                              }
+                            else
+                              {
+                                cubit.login(email: _emailController.text, password: _passwordController.text);
+                              }
+                          },
+                          title: "تسجيل",
+                        ),
+                        SizedBox(height: 7.5.h,),
+                        Center(
+                          child: GestureDetector(
+                            child: Text("انشاء حساب",style: TextStyle(color: AppColors.kMainColor),),
+                            onTap: ()
+                            {
+                              Navigator.pushNamed(context, AppStrings.kRegisterScreen);
+                            },
+                          ),
+                        )
+                      ],
                     ),
-                    SizedBox(height: 7.5.h,),
-                    Center(
-                      child: GestureDetector(
-                        child: Text("انشاء حساب",style: TextStyle(color: AppColors.kMainColor),),
-                        onTap: ()
-                        {
-                          Navigator.pushNamed(context, AppStrings.kRegisterScreen);
-                        },
-                      ),
-                    )
-                  ],
+                  ),
                 ),
               );
             },

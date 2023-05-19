@@ -6,6 +6,8 @@ import 'package:bader_user_app/Core/Theme/app_colors.dart';
 import 'package:bader_user_app/Features/Clubs/Domain/Entities/club_entity.dart';
 import 'package:bader_user_app/Features/Clubs/Presentation/Controller/clubs_cubit.dart';
 import 'package:bader_user_app/Features/Clubs/Presentation/Controller/clubs_states.dart';
+import 'package:bader_user_app/Features/Layout/Domain/Entities/user_entity.dart';
+import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -17,6 +19,7 @@ class UpdateClubAvailabilityScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final ClubsCubit clubsCubit = ClubsCubit.getInstance(context);
     final ClubEntity clubEntity = clubsCubit.dataAboutClubYouLead!;
+    final UserEntity userEntity = LayoutCubit.getInstance(context).userData!;
     clubsCubit.clubAvailabilityStatus = clubEntity.isAvailable;
     clubsCubit.selectedColleges = List<dynamic>.of(clubEntity.availableOnlyForThisCollege);
     return Directionality(
@@ -77,7 +80,7 @@ class UpdateClubAvailabilityScreen extends StatelessWidget {
                                 {
                                   if( clubsCubit.selectedColleges.isNotEmpty && ((clubEntity.isAvailable != clubsCubit.clubAvailabilityStatus) || (clubEntity.availableOnlyForThisCollege.length != clubsCubit.selectedColleges.length) || (clubEntity.availableOnlyForThisCollege.last != clubsCubit.selectedColleges.last) ) )
                                     {
-                                      clubsCubit.updateClubAvailability(clubID: clubEntity.id.toString(), isAvailable: clubsCubit.clubAvailabilityStatus, availableOnlyForThisCollege: clubsCubit.selectedColleges);
+                                      clubsCubit.updateClubAvailability(userEntity: userEntity,clubID: clubEntity.id.toString(), isAvailable: clubsCubit.clubAvailabilityStatus, availableOnlyForThisCollege: clubsCubit.selectedColleges);
                                     }
                                   else if ( clubEntity.isAvailable == clubsCubit.clubAvailabilityStatus && clubEntity.availableOnlyForThisCollege.length == clubsCubit.selectedColleges.length && clubEntity.availableOnlyForThisCollege.first == clubsCubit.selectedColleges.first && clubEntity.availableOnlyForThisCollege.last == clubsCubit.selectedColleges.last )
                                     {

@@ -52,7 +52,7 @@ class ViewAvailableTasksScreen extends StatelessWidget {
                 child: eventCubit.availableTasks.isNotEmpty && (state is GetAvailableTasksSuccessState || state is GetIDForTasksIAskedToAuthenticateSuccessState) ? ListView.separated(
                     physics: const BouncingScrollPhysics(),
                     itemCount: eventCubit.availableTasks.length,   // TODO: Events Related to Club I lead
-                    separatorBuilder: (context,index) => SizedBox(height: 15.h,),
+                    separatorBuilder: (context,index) => SizedBox(height: 8.h,),
                     itemBuilder: (context,index) => _taskItem(myData: userEntity,cubit:eventCubit,context: context,taskEntity: eventCubit.availableTasks[index])
                     ) : state is GetAvailableTasksLoadingState ? const Center(
                       child: CircularProgressIndicator(),
@@ -69,6 +69,10 @@ class ViewAvailableTasksScreen extends StatelessWidget {
 
   // TODO: Three cases .. login - have logined - there is no place
   Widget _taskItem({required UserEntity myData,required TaskEntity taskEntity,required BuildContext context,required EventsCubit cubit}){
+    bool taskAvailableAndHaveNotJoinedYet = ( (myData.idForTasksAuthenticate != null && myData.idForTasksAuthenticate!.contains(taskEntity.id.toString().trim()) == false) || myData.idForTasksAuthenticate == null ) && taskEntity.numOfPosition - taskEntity.numOfRegistered != 0;
+    bool taskNotAvailableAndHaveNotJoined = ( (myData.idForTasksAuthenticate != null && myData.idForTasksAuthenticate!.contains(taskEntity.id.toString().trim()) == false) || myData.idForTasksAuthenticate == null ) && taskEntity.numOfPosition - taskEntity.numOfRegistered == 0;
+    bool alreadyJoinedToTask = myData.idForTasksAuthenticate != null && myData.idForTasksAuthenticate!.contains(taskEntity.id.toString().trim()) == true;
+    bool requestSendAlreadyToAuthenticateToTaskAndWaitingIt = cubit.idForTasksThatIAskedToAuthenticateBefore != null && cubit.idForTasksThatIAskedToAuthenticateBefore!.contains(taskEntity.id.toString());
     return GestureDetector(
       onTap: ()
       {
@@ -76,13 +80,13 @@ class ViewAvailableTasksScreen extends StatelessWidget {
       },
       child: Card(
         child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 12.h,horizontal: 10.w),
+          padding: EdgeInsets.symmetric(vertical: 15.h,horizontal: 10.w),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children:
             [
               Text("${taskEntity.name} - ${taskEntity.forPublicOrSpecificToAnEvent ? "غير خاصة بفعالية معينه" : "فعالية ${taskEntity.eventName}"}",style: TextStyle(fontWeight:FontWeight.bold,overflow: TextOverflow.ellipsis,fontSize: 15.sp),),
-              SizedBox(height: 8.h,),
+              SizedBox(height: 15.h,),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children:
@@ -96,8 +100,8 @@ class ViewAvailableTasksScreen extends StatelessWidget {
                       ),
                   SizedBox(width: 10.w,),
                   _buttonItem(
-                      color: cubit.idForTasksThatIAskedToAuthenticateBefore != null && cubit.idForTasksThatIAskedToAuthenticateBefore!.contains(taskEntity.id.toString())? AppColors.kOrangeColor : myData.idForTasksAuthenticate != null && myData.idForTasksAuthenticate!.contains(taskEntity.id.toString().trim()) ? AppColors.kGreenColor : AppColors.kMainColor,
-                      title: cubit.idForTasksThatIAskedToAuthenticateBefore != null && cubit.idForTasksThatIAskedToAuthenticateBefore!.contains(taskEntity.id.toString()) ? "تم الطلب" : myData.idForTasksAuthenticate != null && myData.idForTasksAuthenticate!.contains(taskEntity.id.toString().trim()) ? "تم التسجيل" : "تسجيل",
+                      color: requestSendAlreadyToAuthenticateToTaskAndWaitingIt ? AppColors.kOrangeColor : alreadyJoinedToTask ? AppColors.kGreenColor : taskAvailableAndHaveNotJoinedYet ? AppColors.kMainColor : AppColors.kRedColor,
+                      title: requestSendAlreadyToAuthenticateToTaskAndWaitingIt ? "تم الطلب" : alreadyJoinedToTask ? "تم التسجيل" : taskAvailableAndHaveNotJoinedYet ? "سجل الآن" : "تم الإكتفاء",
                       onTap: ()
                       {
                         if( cubit.idForTasksThatIAskedToAuthenticateBefore != null && cubit.idForTasksThatIAskedToAuthenticateBefore!.contains(taskEntity.id.toString().trim()) )

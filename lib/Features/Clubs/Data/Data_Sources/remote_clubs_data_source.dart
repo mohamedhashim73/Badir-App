@@ -90,6 +90,28 @@ class RemoteClubsDataSource{
     }
   }
 
+  // TODO: هترجع id بتاع الأندية اللي انا بعت طلب تسجيل فيها بالفعل -- عشان اظهر ان تم ارسال طلب بالفعل
+  Future<Set> getIDForClubsIAskedForMembership({List? idForClubsMemberID,required String userID}) async {
+    Set clubsID = {};
+    await FirebaseFirestore.instance.collection(Constants.kClubsCollectionName).get().then((value) async {
+      for( var item in value.docs )
+      {
+        if( (idForClubsMemberID != null && idForClubsMemberID.contains(item.id) == false ) || idForClubsMemberID == null )
+        {
+          await item.reference.collection(Constants.kMembershipRequestsCollectionName).get().then((value) async {
+            for( var itemDoc in value.docs )
+            {
+              if( itemDoc.id.trim() == userID.trim() ) clubsID.add(item.id);
+              debugPrint("tasksID totally is : $clubsID, first is : ${clubsID.first}, last is : ${clubsID.last}");
+            }
+          });
+        }
+      }
+    });
+    debugPrint("Num of Requests send to Clubs is : ${clubsID.length}");
+    return clubsID;
+  }
+
   // TODO: ده عشان الاسكرينه بتاع تحديد الكليات اللي مسموح لها بالانضمام للنادي
   Future<Unit> updateClubAvailability({required String clubID,required bool isAvailable,required List availableOnlyForThisCollege}) async {
     try

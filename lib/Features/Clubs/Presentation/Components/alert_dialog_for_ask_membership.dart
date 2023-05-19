@@ -1,6 +1,8 @@
 import 'package:bader_user_app/Core/Components/snackBar_item.dart';
 import 'package:bader_user_app/Core/Components/text_field_component.dart';
+import 'package:bader_user_app/Features/Clubs/Domain/Entities/club_entity.dart';
 import 'package:bader_user_app/Features/Clubs/Presentation/Controller/clubs_cubit.dart';
+import 'package:bader_user_app/Features/Layout/Domain/Entities/user_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,7 +11,7 @@ import '../../../../Core/Components/drop_down_items.dart';
 import '../../../../Core/Constants/constants.dart';
 import '../Controller/clubs_states.dart';
 
-void askMembershipDialog({required BuildContext context,required ClubsCubit cubit,required TextEditingController controller,required String clubID,required String requestUserName,required String? committeeName}){
+void askMembershipDialog({required ClubEntity club,required BuildContext context,required ClubsCubit cubit,required TextEditingController controller,required UserEntity userEntity}){
   showDialog(context: context, builder: (context){
     return Directionality(
       textDirection: TextDirection.rtl,
@@ -19,9 +21,8 @@ void askMembershipDialog({required BuildContext context,required ClubsCubit cubi
           buildWhen: (previousState,currentState) => currentState is CommitteeChosenSuccessState,
           builder:(context,state)
           {
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
+            return ListView(
+              shrinkWrap: true,
               children:
               [
                 const Text("اللجنة"),
@@ -46,14 +47,18 @@ void askMembershipDialog({required BuildContext context,required ClubsCubit cubi
                     ),
                     onTap: ()
                     {
-                      debugPrint("Committee is : ${cubit.selectedCommittee}");
-                      if( cubit.selectedCommittee == null || controller.text.isEmpty )
+                      if( cubit.selectedCommittee != null && controller.text.isNotEmpty && ( club.availableOnlyForThisCollege.isEmpty || ( club.availableOnlyForThisCollege.isNotEmpty && club.availableOnlyForThisCollege.contains(userEntity.college!) == true ) ) )
+                      {
+                        cubit.askForMembership(userEntity:userEntity,committeeName: cubit.selectedCommittee!,clubID: club.id.toString(), infoAboutAsker: controller.text, userName: userEntity.name!);
+                      }
+                      else if( cubit.selectedCommittee == null || controller.text.isEmpty )
                       {
                         showSnackBar(context: context, message: "برجاء ادخال المعلومات كاملة",backgroundColor: Colors.red);
                       }
-                      else
+                      else if( club.availableOnlyForThisCollege.isNotEmpty && club.availableOnlyForThisCollege.contains(userEntity.college!) == false )
                       {
-                        cubit.askForMembership(clubID: clubID, infoAboutAsker: controller.text,userName: requestUserName);
+                        Navigator.pop(context);  // TODO: Get out from alert dialog
+                        showSnackBar(context: context, message: "غير مصرح لك بالإنضمام نظرا لعدم توفر الشروط !!",backgroundColor: Colors.red);
                       }
                     },
                   ),

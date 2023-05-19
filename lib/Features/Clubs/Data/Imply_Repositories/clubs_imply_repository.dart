@@ -130,6 +130,18 @@ class ClubsImplyRepository implements ClubsContractRepository{
   }
 
   @override
+  Future<Either<Failure,Set>> getIDForClubsIAskedForMembership({List? idForClubsMemberID,required String userID}) async {
+    try
+    {
+      return Right(await remoteClubsDataSource.getIDForClubsIAskedForMembership(userID: userID,idForClubsMemberID: idForClubsMemberID));
+    }
+    on ServerException catch(exception)
+    {
+      return Left(ServerFailure(errorMessage: exception.exceptionMessage));
+    }
+  }
+
+  @override
   Future<Either<Failure, Unit>> removeMemberFromClubILead({required String memberID, required String clubID}) async {
     try
     {
