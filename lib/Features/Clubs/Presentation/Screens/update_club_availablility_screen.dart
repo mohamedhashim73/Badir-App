@@ -1,5 +1,4 @@
 import 'package:bader_user_app/Core/Components/alert_dialog_for_loading_item.dart';
-import 'package:bader_user_app/Core/Components/button_item.dart';
 import 'package:bader_user_app/Core/Components/snackBar_item.dart';
 import 'package:bader_user_app/Core/Constants/app_strings.dart';
 import 'package:bader_user_app/Core/Constants/constants.dart';
@@ -19,7 +18,7 @@ class UpdateClubAvailabilityScreen extends StatelessWidget {
     final ClubsCubit clubsCubit = ClubsCubit.getInstance(context);
     final ClubEntity clubEntity = clubsCubit.dataAboutClubYouLead!;
     clubsCubit.clubAvailabilityStatus = clubEntity.isAvailable;
-    clubsCubit.selectedColleges = (clubEntity.availableOnlyForThisCollege).cast<String>();
+    clubsCubit.selectedColleges = List<dynamic>.of(clubEntity.availableOnlyForThisCollege);
     return Directionality(
       textDirection: TextDirection.rtl,
       child: SafeArea(
@@ -28,7 +27,7 @@ class UpdateClubAvailabilityScreen extends StatelessWidget {
             body: Padding(
                 padding: EdgeInsets.fromLTRB(12.w, 10.h, 12.w, 60.h),
                 child: BlocConsumer<ClubsCubit,ClubsStates>(
-                    buildWhen: (pastState,currentState) => currentState is AddOrRemoveOptionToSelectedCollegesState || currentState is ChangeClubAvailabilityStatusState,
+                    // buildWhen: (pastState,currentState) => currentState is AddOrRemoveOptionToSelectedCollegesState || currentState is ChangeClubAvailabilityStatusState,
                     listener: (context,state)
                     {
                       if( state is UpdateClubAvailabilityLoadingState ) showLoadingDialog(context: context);
@@ -58,12 +57,12 @@ class UpdateClubAvailabilityScreen extends StatelessWidget {
                           Expanded(
                               child: ListView(
                                 physics: const BouncingScrollPhysics(),
-                                children: Constants.colleges.map((chosenCollege) => CheckboxListTile(
-                                  title: Text(chosenCollege),
-                                  value: clubsCubit.selectedColleges.contains(chosenCollege),
-                                  onChanged: (value)
+                                children: Constants.colleges.map((option) => CheckboxListTile(
+                                  title: Text(option),
+                                  value: clubsCubit.selectedColleges.contains(option),
+                                  onChanged: (status)
                                   {
-                                    clubsCubit.addOrRemoveOptionToSelectedColleges(status: value!, college: chosenCollege);
+                                    clubsCubit.addOrRemoveOptionToSelectedColleges(status: status!, college: option);
                                   },
                                 )).toList(),
                               )
@@ -76,14 +75,18 @@ class UpdateClubAvailabilityScreen extends StatelessWidget {
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                                 onPressed: ()
                                 {
-                                  if( clubsCubit.selectedColleges.isNotEmpty )
-                                  {
-                                    clubsCubit.updateClubAvailability(clubID: clubEntity.id.toString(), isAvailable: clubsCubit.clubAvailabilityStatus, availableOnlyForThisCollege: clubsCubit.selectedColleges);
-                                  }
-                                  else if( clubsCubit.selectedColleges.isEmpty )
-                                  {
-                                    showSnackBar(context: context, message: 'برجاء إدخال البيانات كاملة، ثم أعد مرة ثانيه',backgroundColor: AppColors.kRedColor);
-                                  }
+                                  if( clubsCubit.selectedColleges.isNotEmpty && ((clubEntity.isAvailable != clubsCubit.clubAvailabilityStatus) || (clubEntity.availableOnlyForThisCollege.length != clubsCubit.selectedColleges.length) || (clubEntity.availableOnlyForThisCollege.last != clubsCubit.selectedColleges.last) ) )
+                                    {
+                                      clubsCubit.updateClubAvailability(clubID: clubEntity.id.toString(), isAvailable: clubsCubit.clubAvailabilityStatus, availableOnlyForThisCollege: clubsCubit.selectedColleges);
+                                    }
+                                  else if ( clubEntity.isAvailable == clubsCubit.clubAvailabilityStatus && clubEntity.availableOnlyForThisCollege.length == clubsCubit.selectedColleges.length && clubEntity.availableOnlyForThisCollege.first == clubsCubit.selectedColleges.first && clubEntity.availableOnlyForThisCollege.last == clubsCubit.selectedColleges.last )
+                                    {
+                                      showSnackBar(context: context, message: 'لم يحدث أي تعديل علي البيانات القديمة !!',backgroundColor: AppColors.kRedColor);
+                                    }
+                                  else
+                                    {
+                                      showSnackBar(context: context, message: 'برجاء إدخال البيانات كاملة !!',backgroundColor: AppColors.kRedColor);
+                                    }
                                 },
                                 color: AppColors.kMainColor,
                                 textColor: AppColors.kWhiteColor,

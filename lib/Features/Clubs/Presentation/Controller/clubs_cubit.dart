@@ -27,20 +27,6 @@ class ClubsCubit extends Cubit<ClubsStates> {
 
   static ClubsCubit getInstance(BuildContext context) => BlocProvider.of(context);
 
-  // TODO: ده عشان الاسكرينه بتاع تحديد الكليات اللي مسموح لها بالانضمام للنادي
-  List<String> selectedColleges = [];
-  void addOrRemoveOptionToSelectedColleges({required bool status,required String college}){
-    status ? selectedColleges.add(college) : selectedColleges.remove(college);
-    emit(AddOrRemoveOptionToSelectedCollegesState());
-  }
-
-  // TODO: ده عشان الاسكرينه بتاع تحديد الكليات اللي مسموح لها بالانضمام للنادي
-  bool clubAvailabilityStatus = true;
-  void changeClubAvailabilityStatus({required bool status}){
-    clubAvailabilityStatus = status;
-    emit(ChangeClubAvailabilityStatusState());
-  }
-
   // TODO: Get Notifications
   List<ClubEntity> clubs = [];
   Future<void> getClubsData() async {
@@ -156,10 +142,27 @@ class ClubsCubit extends Cubit<ClubsStates> {
       }
   }
 
+  // TODO: ده عشان الاسكرينه بتاع تحديد الكليات اللي مسموح لها بالانضمام للنادي
+  List selectedColleges = [];
+  void addOrRemoveOptionToSelectedColleges({required bool status,required String college}){
+    status ? selectedColleges.add(college) : selectedColleges.remove(college);
+    emit(AddOrRemoveOptionToSelectedCollegesState());
+  }
+
+  // TODO: ده عشان الاسكرينه بتاع تحديد الكليات اللي مسموح لها بالانضمام للنادي
+  bool clubAvailabilityStatus = true;
+  void changeClubAvailabilityStatus({required bool status}){
+    clubAvailabilityStatus = status;
+    emit(ChangeClubAvailabilityStatusState());
+  }
+
   ClubEntity? dataAboutClubYouLead;
   Future<void> getCLubDataThatILead({required String clubID}) async {
     dataAboutClubYouLead = clubs.firstWhere((element) => element.id == int.parse(clubID.trim()));
-    if( dataAboutClubYouLead != null ) emit(GetInfoForClubThatILeadSuccess());
+    if( dataAboutClubYouLead != null )
+      {
+        emit(GetInfoForClubThatILeadSuccess());
+      }
   }
 
   File? clubImage;
