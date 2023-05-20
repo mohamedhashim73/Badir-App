@@ -217,12 +217,10 @@ class RemoteClubsDataSource{
         {
           if( idForClubsMemberIn.contains(item.id.trim()) )
             {
-              debugPrint("Yes this meeting related to you .........");
               await item.reference.collection(Constants.kMeetingsCollectionName).get().then((val) async {
                 for( var meetingDoc in val.docs )
                   {
                     meetings.add(MeetingModel.fromJson(json: meetingDoc.data()));
-                    debugPrint("During process, Meetings num is : ${meetings.length}");
                   }
               });
             }
