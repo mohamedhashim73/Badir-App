@@ -2,7 +2,10 @@ import 'package:bader_user_app/Core/Constants/enumeration.dart';
 import 'package:bader_user_app/Core/Service%20Locators/service_locators.dart';
 import 'package:bader_user_app/Features/Clubs/Data/Models/club_model.dart';
 import 'package:bader_user_app/Features/Clubs/Domain/Entities/club_entity.dart';
+import 'package:bader_user_app/Features/Clubs/Domain/Entities/meeting_entity.dart';
+import 'package:bader_user_app/Features/Clubs/Domain/Use_Cases/delete_meeting_use_case.dart';
 import 'package:bader_user_app/Features/Clubs/Domain/Use_Cases/get_all_clubs_use_case.dart';
+import 'package:bader_user_app/Features/Clubs/Domain/Use_Cases/get_member_data_use_case.dart';
 import 'package:bader_user_app/Features/Clubs/Domain/Use_Cases/get_members_on_my_club_use_case.dart';
 import 'package:bader_user_app/Features/Clubs/Domain/Use_Cases/upload_image_to_storage_use_case.dart';
 import 'package:bader_user_app/Features/Layout/Domain/Entities/user_entity.dart';
@@ -16,6 +19,8 @@ import '../../Domain/Use_Cases/accept_or_reject_membership_request_use_case.dart
 import '../../Domain/Use_Cases/create_meeting_use_case.dart';
 import '../../Domain/Use_Cases/get_all_membership_requests_use_case.dart';
 import '../../Domain/Use_Cases/get_id_for_clubs_that_i_ask_for_membershi_waiting_result_use_case.dart';
+import '../../Domain/Use_Cases/get_meetings_created_by_me_use_case.dart';
+import '../../Domain/Use_Cases/get_meetings_for_club_member_in_use_case.dart';
 import '../../Domain/Use_Cases/remove_member_from_club_use_case.dart';
 import '../../Domain/Use_Cases/request_membership_use_case.dart';
 import '../../Domain/Use_Cases/update_availability_for_club_use_case.dart';
@@ -53,9 +58,74 @@ class ClubsCubit extends Cubit<ClubsStates> {
         (serverFailure){
           emit(CreateMeetingWithFailureState(message: serverFailure.errorMessage));
         },
-        (unit){
-          // TODO: GET MEETINGS
+        (unit) async {
+          await getMeetingsCreatedByMe(clubID: idForClubILead);
           emit(CreateMeetingSuccessState());
+        }
+    );
+  }
+
+  Future<void> getDataAboutSpecificMember({required String memberID}) async {
+    emit(GetMemberDataLoadingState());
+    final result = await sl<GetMemberDataUseCase>().execute(memberID:memberID);
+    result.fold(
+        (serverFailure)
+        {
+          emit(GetMemberDataWithFailureState(message: serverFailure.errorMessage));
+        },
+        (user)
+        {
+          emit(GetMemberDataSuccessState(userEntity: user));
+        }
+    );
+  }
+
+  Future<void> getMeetingRelatedToClubIMemberIn({required List idForClubsMemberIn}) async {
+    emit(GetMeetingRelatedToClubIMemberInLoadingState());
+    final result = await sl<GetMeetingRelatedToClubIMemberInUseCase>().execute(idForClubsMemberIn: idForClubsMemberIn);
+    result.fold(
+        (serverFailure)
+        {
+          emit(GetMeetingRelatedToClubIMemberInWithFailureState(message: serverFailure.errorMessage));
+        },
+        (meetingsData)
+        {
+          emit(GetMeetingRelatedToClubIMemberInSuccessState(meetings: meetingsData));
+        }
+    );
+  }
+
+  // TODO: Get MEETINGS CREATED BY ME
+  List<MeetingEntity> meetingsDataCreatedByMe = [];
+    Future<void> getMeetingsCreatedByMe({required String clubID}) async {
+    meetingsDataCreatedByMe.clear();
+    emit(GetMeetingCreatedByLoadingState());
+    final result = await sl<GetMeetingsCreatedByMeUseCase>().execute(clubID:clubID);
+        result.fold(
+        (serverFailure){
+          emit(GetMeetingCreatedByWithFailureState(message: serverFailure.errorMessage));
+        },
+        (meetings)
+        {
+          meetingsDataCreatedByMe = meetings;
+          debugPrint("Num of meetings is : ${meetings.length}");
+          emit(GetMeetingCreatedBySuccessState());
+        }
+    );
+  }
+
+  // TODO: Get MEETINGS CREATED BY ME
+  Future<void> deleteMeeting({required String clubID,required String meetingID}) async {
+    emit(DeleteMeetingLoadingState());
+    final result = await sl<DeleteMeetingUseCase>().execute(clubID:clubID,meetingID:meetingID);
+    result.fold(
+        (serverFailure){
+          emit(DeleteMeetingWithFailureState(message: serverFailure.errorMessage));
+        },
+        (unit)
+        async {
+          await getMeetingsCreatedByMe(clubID: clubID);
+          emit(DeleteMeetingSuccessState());
         }
     );
   }

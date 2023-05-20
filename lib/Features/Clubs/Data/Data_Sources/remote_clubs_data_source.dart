@@ -206,6 +206,68 @@ class RemoteClubsDataSource{
     }
   }
 
+  Future<List<MeetingModel>> getMeetingRelatedToClubIMemberIn({required List idForClubsMemberIn}) async {
+    try
+    {
+      List<MeetingModel> meetings = [];
+      // ف كلا الحالتين هحذف م الطلبات
+      await FirebaseFirestore.instance.collection(Constants.kClubsCollectionName).get().then((value) async {
+        debugPrint("start getting meetings .......");
+        for( var item in value.docs )
+        {
+          if( idForClubsMemberIn.contains(item.id.trim()) )
+            {
+              debugPrint("Yes this meeting related to you .........");
+              await item.reference.collection(Constants.kMeetingsCollectionName).get().then((val) async {
+                for( var meetingDoc in val.docs )
+                  {
+                    meetings.add(MeetingModel.fromJson(json: meetingDoc.data()));
+                    debugPrint("During process, Meetings num is : ${meetings.length}");
+                  }
+              });
+            }
+        }
+      });
+      debugPrint("in the end, Meetings num is : ${meetings.length}");
+      return meetings;
+    }
+    on FirebaseException catch(e){
+      throw ServerException(exceptionMessage: e.code);
+    }
+  }
+
+  Future<List<MeetingModel>> getMeetingCreatedByMe({required String clubID}) async {
+    try
+    {
+      List<MeetingModel> meetings = [];
+      // ف كلا الحالتين هحذف م الطلبات
+      await FirebaseFirestore.instance.collection(Constants.kClubsCollectionName).doc(clubID).collection(Constants.kMeetingsCollectionName).get().then((value){
+        for( var item in value.docs )
+        {
+          meetings.add(MeetingModel.fromJson(json: item.data()));
+        }
+      });
+      return meetings;
+    }
+    on FirebaseException catch(e){
+      throw ServerException(exceptionMessage: e.code);
+    }
+  }
+
+  Future<UserModel> getMemberData({required String memberID}) async {
+    try
+    {
+      late UserModel userModel;
+      await FirebaseFirestore.instance.collection(Constants.kUsersCollectionName).doc(memberID).get().then((value) async {
+        userModel = UserModel.fromJson(json: value.data());
+      });
+      return userModel;
+    }
+    on FirebaseException catch(e){
+      throw ServerException(exceptionMessage: e.code);
+    }
+  }
+
   Future<Unit> createMeeting({required String idForClubILead,required String name,required String description,required String startDate,required String endDate,required String time,required String location,required String link}) async {
     try
     {
@@ -213,7 +275,7 @@ class RemoteClubsDataSource{
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection(Constants.kClubsCollectionName).doc(idForClubILead).collection(Constants.kMeetingsCollectionName).get();
       int newMeetingID = querySnapshot.docs.isNotEmpty ? int.parse(querySnapshot.docs.last.id) : 0;
       ++newMeetingID;
-      MeetingModel meetingModel = MeetingModel(name, newMeetingID.toString(), description, startDate, endDate, time,location, link);
+      MeetingModel meetingModel = MeetingModel(name, newMeetingID.toString(),description, startDate, endDate, time,location, link);
       await FirebaseFirestore.instance.collection(Constants.kClubsCollectionName).doc(idForClubILead).collection(Constants.kMeetingsCollectionName).doc(newMeetingID.toString()).set(meetingModel.toJson());
       return unit;
     }
@@ -221,6 +283,18 @@ class RemoteClubsDataSource{
       throw ServerException(exceptionMessage: e.code);
     }
   }
+
+  Future<Unit> deleteMeeting({required String meetingID,required String clubID}) async {
+    try
+    {
+      await FirebaseFirestore.instance.collection(Constants.kClubsCollectionName).doc(clubID).collection(Constants.kMeetingsCollectionName).doc(meetingID).delete();
+      return unit;
+    }
+    on FirebaseException catch(e){
+      throw ServerException(exceptionMessage: e.code);
+    }
+  }
+
 
   // TODO: Leader can remove A Member from the Club That he lead .....
   Future<Unit> removeMemberFromClubILead({required String memberID,required String clubID}) async {

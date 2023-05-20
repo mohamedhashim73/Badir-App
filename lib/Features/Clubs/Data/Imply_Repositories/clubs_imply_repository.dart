@@ -6,8 +6,10 @@ import 'package:bader_user_app/Features/Clubs/Data/Data_Sources/remote_clubs_dat
 import 'package:bader_user_app/Features/Clubs/Domain/Contract_Repositories/club_contract_repository.dart';
 import 'package:bader_user_app/Features/Clubs/Domain/Entities/club_entity.dart';
 import 'package:dartz/dartz.dart';
+import '../../../Layout/Domain/Entities/user_entity.dart';
 import '../../Domain/Entities/request_membership_entity.dart';
 import '../Models/club_model.dart';
+import '../Models/meeting_model.dart';
 
 class ClubsImplyRepository implements ClubsContractRepository{
   final RemoteClubsDataSource remoteClubsDataSource;
@@ -85,6 +87,50 @@ class ClubsImplyRepository implements ClubsContractRepository{
     try
     {
       return Right(await remoteClubsDataSource.createMeeting(idForClubILead: idForClubILead, name: name, description: description, startDate: startDate, endDate: endDate, time: time, location: location, link: link));
+    }
+    on ServerException catch(e){
+      return Left(ServerFailure(errorMessage: e.exceptionMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure,UserEntity>> getMemberData({required String memberID}) async {
+    try
+    {
+      return Right(await remoteClubsDataSource.getMemberData(memberID: memberID));
+    }
+    on ServerException catch(e){
+      return Left(ServerFailure(errorMessage: e.exceptionMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure,List<MeetingModel>>> getMeetingCreatedByMe({required String clubID}) async {
+    try
+    {
+      return Right(await remoteClubsDataSource.getMeetingCreatedByMe(clubID: clubID));
+    }
+    on ServerException catch(e){
+      return Left(ServerFailure(errorMessage: e.exceptionMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure,List<MeetingModel>>> getMeetingRelatedToClubIMemberIn({required List idForClubsMemberIn}) async {
+    try
+    {
+      return Right(await remoteClubsDataSource.getMeetingRelatedToClubIMemberIn(idForClubsMemberIn: idForClubsMemberIn));
+    }
+    on ServerException catch(e){
+      return Left(ServerFailure(errorMessage: e.exceptionMessage));
+    }
+  }
+
+  @override
+  Future<Either<Failure,Unit>> deleteMeeting({required String meetingID,required String clubID}) async {
+    try
+    {
+      return Right(await remoteClubsDataSource.deleteMeeting(clubID: clubID,meetingID: meetingID));
     }
     on ServerException catch(e){
       return Left(ServerFailure(errorMessage: e.exceptionMessage));

@@ -9,6 +9,7 @@ import '../../Features/Auth/Presentation/Screens/login_screen.dart';
 import '../../Features/Auth/Presentation/Screens/register_screen.dart';
 import '../../Features/Clubs/Presentation/Screens/create_meeting_screen.dart';
 import '../../Features/Clubs/Presentation/Screens/display_membership_requests.dart';
+import '../../Features/Clubs/Presentation/Screens/meetings_for_clubs_member_in_screen.dart';
 import '../../Features/Clubs/Presentation/Screens/view_clubs.dart';
 import '../../Features/Clubs/Presentation/Screens/view_memebrs_on_my_club_screen.dart';
 import '../../Features/Events/Presentation/Screens/create_task_screen.dart';
@@ -30,6 +31,7 @@ class AppRoutes{
     AppStrings.kCreateMeetingScreen : (context) => CreateMeetingScreen(),
     AppStrings.kManageMeetingsScreen : (context) => const MeetingsManagementScreen(),
     AppStrings.kManagementTasksScreen : (context) => const TasksManagementScreen(),
+    AppStrings.kViewMeetingsForClubsMemberInScreen : (context) => const MeetingsForClubsMemberInScreen(),
     AppStrings.kUploadReportScreen : (context) => const UploadReportToAdminScreen(),
     AppStrings.kViewMembersOnMyClubScreen : (context) => const ViewMembersOnMyClubScreen(),
     AppStrings.kViewEventsScreen : (context) => const ViewAllEventsThrowAppScreen(),

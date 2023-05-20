@@ -30,6 +30,11 @@ class DrawerItem extends StatelessWidget {
       'routeName' : AppStrings.kViewAvailableTasksScreen
     },
     {
+      'title' : 'الإجتماعات',
+      'iconData' : Icons.meeting_room_rounded,
+      'routeName' : AppStrings.kViewMeetingsForClubsMemberInScreen
+    },
+    {
       'title' : 'طلبات العضوية',
       'iconData' : Icons.request_page,
       'routeName' : AppStrings.kMembershipRequestsScreen
@@ -81,7 +86,11 @@ class DrawerItem extends StatelessWidget {
   Widget build(BuildContext context){
     LayoutCubit layoutCubit = LayoutCubit.getInstance(context);
     if( layoutCubit.userData == null ) layoutCubit.getMyData();
-    if( layoutCubit.userData != null && layoutCubit.userData!.idForClubLead != null ) drawerData.removeAt(3);      // TODO: عشان المهام المتاحة مش هتنعرض لليدر فقط هتكون للمستخد العادي والعضو
+    if( layoutCubit.userData != null && layoutCubit.userData!.idForClubLead != null )       // TODO: عشان المهام المتاحة مش هتنعرض لليدر فقط هتكون للمستخد العادي والعضو
+    {
+      drawerData.removeAt(3);      // المهام المتاحه للعضو والمستخدم العادي
+      drawerData.removeAt(3);     // الاجتماعات هتظهر بس للعضو
+    }
     ClubsCubit clubsCubit = ClubsCubit.getInstance(context);
     EventsCubit eventsCubit  = EventsCubit.getInstance(context);
     if( eventsCubit.ownEvents.isEmpty && layoutCubit.userData != null && layoutCubit.userData!.idForClubLead != null ) eventsCubit.getPastAndNewAndMyEvents(idForClubILead: layoutCubit.userData!.idForClubLead);
@@ -116,7 +125,7 @@ class DrawerItem extends StatelessWidget {
                         child: ListView.builder(
                             physics: const BouncingScrollPhysics(),
                             // TODO: make length-1 as i display last item ( log out ) on the bottom of Drawer
-                            itemCount: layoutCubit.userData!.idForClubLead != null ? drawerData.length-1 : 4,
+                            itemCount: layoutCubit.userData!.idForClubLead != null ? drawerData.length-1 : layoutCubit.userData!.idForClubsMemberIn != null ? 5 : 4,
                             itemBuilder: (context,index){
                               return Card(
                                 color: Colors.grey.withOpacity(0.1),

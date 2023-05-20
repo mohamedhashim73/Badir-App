@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../Core/Components/alert_dialog_for_loading_item.dart';
+import 'display_member_data_screen.dart';
 
 class ViewMembersOnMyClubScreen extends StatelessWidget {
   const ViewMembersOnMyClubScreen({Key? key}) : super(key: key);
@@ -46,7 +47,7 @@ class ViewMembersOnMyClubScreen extends StatelessWidget {
                   padding: EdgeInsets.symmetric(vertical: 10.h,horizontal: 10.w),
                   child: clubsCubit.membersDataOnMyClub.isNotEmpty ? ListView.builder(
                     itemCount: clubsCubit.membersDataOnMyClub.length,
-                    itemBuilder: (context,index) => _displayMemberInfo(clubsCubit: clubsCubit,layoutCubit: layoutCubit,idForClubILead: idForClubILead,userEntity: clubsCubit.membersDataOnMyClub[index]),
+                    itemBuilder: (context,index) => _displayMemberInfo(context:context,clubsCubit: clubsCubit,layoutCubit: layoutCubit,idForClubILead: idForClubILead,userEntity: clubsCubit.membersDataOnMyClub[index]),
                   ) : Center(
                     child: Text("لم يتم إاضافة أي عضو للنادي حتي الآن",style: TextStyle(color: Colors.black26,fontSize: 15.sp),),
                   ),
@@ -59,25 +60,31 @@ class ViewMembersOnMyClubScreen extends StatelessWidget {
     );
   }
 
-  Widget _displayMemberInfo({required UserEntity userEntity,required ClubsCubit clubsCubit,required LayoutCubit layoutCubit,required String idForClubILead}) {
-    return Card(
-      color: AppColors.kGreyColor,
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 15.h,horizontal: 12.w),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children:
-          [
-            Text(userEntity.name!,style: TextStyle(overflow: TextOverflow.ellipsis,fontWeight: FontWeight.bold,fontSize: 15.5.sp),),
-            _buttonItem(
-                title: "حذف",
-                color: AppColors.kRedColor,
-                onTap: ()
-                {
-                  clubsCubit.removeMemberFromCLubILead(idForClubILead: idForClubILead, memberID: userEntity.id!, layoutCubit: layoutCubit);
-                }
-            )
-          ],
+  Widget _displayMemberInfo({required BuildContext context,required UserEntity userEntity,required ClubsCubit clubsCubit,required LayoutCubit layoutCubit,required String idForClubILead}) {
+    return InkWell(
+      onTap: ()
+      {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => DisplayMemberDataScreen(userEntity:userEntity)));
+      },
+      child: Card(
+        elevation: 0.1,
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 15.h,horizontal: 12.w),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children:
+            [
+              Text("العضو : ${userEntity.name!}",style: TextStyle(overflow: TextOverflow.ellipsis,fontWeight: FontWeight.bold,fontSize: 15.5.sp),),
+              _buttonItem(
+                  title: "حذف",
+                  color: AppColors.kRedColor,
+                  onTap: ()
+                  {
+                    clubsCubit.removeMemberFromCLubILead(idForClubILead: idForClubILead, memberID: userEntity.id!, layoutCubit: layoutCubit);
+                  }
+              )
+            ],
+          ),
         ),
       ),
     );

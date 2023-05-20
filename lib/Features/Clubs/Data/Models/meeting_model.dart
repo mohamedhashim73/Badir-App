@@ -1,7 +1,7 @@
 import '../../Domain/Entities/meeting_entity.dart';
 
 class MeetingModel extends MeetingEntity{
-  const MeetingModel(super.name, super.id, super.description,super.startDate, super.endDate, super.time,super.location,super.link);
+  const MeetingModel(super.name, super.id,super.description,super.startDate, super.endDate, super.time,super.location,super.link);
 
   // Json == Map<String,dynamic>
   factory MeetingModel.fromJson({required json})

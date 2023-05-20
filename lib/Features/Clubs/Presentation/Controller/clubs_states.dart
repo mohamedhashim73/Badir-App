@@ -1,3 +1,6 @@
+import 'package:bader_user_app/Features/Clubs/Domain/Entities/meeting_entity.dart';
+import 'package:bader_user_app/Features/Layout/Domain/Entities/user_entity.dart';
+
 abstract class ClubsStates{}
 
 class ClubsInitialState extends ClubsStates{}
@@ -70,6 +73,40 @@ class CreateMeetingSuccessState extends ClubsStates{}
 class CreateMeetingWithFailureState extends ClubsStates{
   final String message;
   CreateMeetingWithFailureState({required this.message});
+}
+
+class GetMemberDataLoadingState extends ClubsStates{}
+class GetMemberDataSuccessState extends ClubsStates{
+  final UserEntity userEntity;
+  GetMemberDataSuccessState({required this.userEntity});
+}
+class GetMemberDataWithFailureState extends ClubsStates{
+  final String message;
+  GetMemberDataWithFailureState({required this.message});
+}
+
+class GetMeetingRelatedToClubIMemberInLoadingState extends ClubsStates{}
+class GetMeetingRelatedToClubIMemberInSuccessState extends ClubsStates{
+  final List<MeetingEntity> meetings;
+  GetMeetingRelatedToClubIMemberInSuccessState({required this.meetings});
+}
+class GetMeetingRelatedToClubIMemberInWithFailureState extends ClubsStates{
+  final String message;
+  GetMeetingRelatedToClubIMemberInWithFailureState({required this.message});
+}
+
+class DeleteMeetingLoadingState extends ClubsStates{}
+class DeleteMeetingSuccessState extends ClubsStates{}
+class DeleteMeetingWithFailureState extends ClubsStates{
+  final String message;
+  DeleteMeetingWithFailureState({required this.message});
+}
+
+class GetMeetingCreatedByLoadingState extends ClubsStates{}
+class GetMeetingCreatedBySuccessState extends ClubsStates{}
+class GetMeetingCreatedByWithFailureState extends ClubsStates{
+  final String message;
+  GetMeetingCreatedByWithFailureState({required this.message});
 }
 
 class GetMembersOnMyClubDataLoadingState extends ClubsStates{}

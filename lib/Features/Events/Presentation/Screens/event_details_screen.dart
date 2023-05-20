@@ -36,11 +36,9 @@ class EventDetailsScreen extends StatelessWidget {
     final LayoutCubit layoutCubit = LayoutCubit.getInstance(context);
     final UserEntity userEntity = layoutCubit.userData!;
     final EventsCubit eventsCubit = EventsCubit.getInstance(context);
-    bool eventExpiredAndIHaveNotJoined = Constants.eventExpiredAndIHaveNotJoined(event: event,eventExpired: eventExpired,userEntity: userEntity);
     bool eventExpiredAndIHaveJoined = Constants.eventExpiredAndIHaveJoined(event: event,eventExpired: eventExpired,userEntity: userEntity);
     bool eventInDateAndIHaveJoined = Constants.eventInDateAndIHaveJoined(event: event,eventExpired: eventExpired,userEntity: userEntity);
     bool eventInDateAndIHaveNotJoinedYetAndHavePermission = Constants.eventInDateAndIHaveNotJoinedYetAndHavePermission(userEntity: userEntity, eventExpired: eventExpired, event: event);
-    bool eventInDateAndIDoNotHavePermissionToJoin = Constants.eventInDateAndIDoNotHavePermissionToJoin(userEntity: userEntity, eventExpired: eventExpired, event: event);
 
     return SafeArea(
       child: Directionality(

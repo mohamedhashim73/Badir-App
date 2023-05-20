@@ -39,6 +39,8 @@ class CreateMeetingScreen extends StatelessWidget {
                 if( state is CreateMeetingLoadingState ) showLoadingDialog(context: context);
                 if( state is CreateMeetingSuccessState )
                 {
+                  Navigator.pop(context);   // TODO : TO get out from Alert Dialog
+                  Navigator.pop(context);   // TODO: Back to last screen
                   _nameController.clear();
                   _descriptionController.clear();
                   _startDateController.clear();
@@ -46,8 +48,6 @@ class CreateMeetingScreen extends StatelessWidget {
                   _timeController.clear();
                   _linkController.clear();
                   _locationController.clear();
-                  Navigator.pop(context);   // TODO : TO get out from Alert Dialog
-                  Navigator.pushReplacementNamed(context, AppStrings.kLayoutScreen);
                 }
                 if( state is CreateMeetingWithFailureState )
                 {

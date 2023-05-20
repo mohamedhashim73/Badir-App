@@ -2,6 +2,7 @@ class AppStrings{
   static const kLoginScreen = "login_screen";
   static const kViewClubsScreen = "view_clubs_screen";
   static const kViewAvailableTasksScreen = "view_available_tasks_screen";
+  static const kViewMeetingsForClubsMemberInScreen = "view_meetings_related_to_clubs_member_in_screen";
   static const kViewEventsScreen = "view_events_screen";
   static const kEditProfileScreen = "edit_profile_screen";
   static const kRegisterScreen = "register_screen";

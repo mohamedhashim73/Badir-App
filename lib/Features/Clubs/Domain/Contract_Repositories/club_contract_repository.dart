@@ -1,7 +1,9 @@
 import 'package:bader_user_app/Features/Clubs/Data/Models/club_model.dart';
 import 'package:bader_user_app/Features/Clubs/Domain/Entities/request_membership_entity.dart';
+import 'package:bader_user_app/Features/Layout/Domain/Entities/user_entity.dart';
 import 'package:dartz/dartz.dart';
 import '../../../../Core/Errors/failure.dart';
+import '../../Data/Models/meeting_model.dart';
 import '../Entities/club_entity.dart';
 import 'dart:io';
 
@@ -28,5 +30,8 @@ abstract class ClubsContractRepository{
   Future<Either<Failure,List<RequestMembershipEntity>>> getMembershipRequests({required String clubID});
   Future<Either<Failure,Unit>> createMeeting({required String idForClubILead,required String name,required String description,required String startDate,required String endDate,required String time,required String location,required String link});
   Future<Either<Failure,Set>> getIDForClubsIAskedForMembership({List? idForClubsMemberID,required String userID});
-
+  Future<Either<Failure,List<MeetingModel>>> getMeetingCreatedByMe({required String clubID});
+  Future<Either<Failure,Unit>> deleteMeeting({required String meetingID,required String clubID});
+  Future<Either<Failure,UserEntity>> getMemberData({required String memberID});
+  Future<Either<Failure,List<MeetingModel>>> getMeetingRelatedToClubIMemberIn({required List idForClubsMemberIn});
 }
