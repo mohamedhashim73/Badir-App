@@ -30,7 +30,7 @@ class ViewEventsOnSpecificClubScreen extends StatelessWidget {
           textDirection: TextDirection.rtl,
           child: Scaffold(
               appBar: AppBar(
-                title: Text("فعاليات $clubName"),
+                title: const Text("فعاليات النادي"),
               ),
               body: BlocConsumer<EventsCubit,EventsStates>(
                   listener: (context,state){},
@@ -89,8 +89,8 @@ class ViewEventsOnSpecificClubScreen extends StatelessWidget {
                       alignment: AlignmentDirectional.topEnd,
                       child: MaterialButton(
                         elevation: 0,
-                        color: userEntity.idForClubLead != null || eventInDateAndIHaveNotJoinedYetAndHavePermission ? AppColors.kWhiteColor : eventExpiredAndIHaveJoined ? AppColors.kOrangeColor : eventInDateAndIDoNotHavePermissionToJoin || eventExpiredAndIHaveNotJoined ? AppColors.kRedColor : AppColors.kGreenColor,
-                        textColor: userEntity.idForClubLead != null || eventInDateAndIHaveNotJoinedYetAndHavePermission ? AppColors.kBlackColor : AppColors.kWhiteColor,
+                        color: userEntity.idForClubLead != null || eventInDateAndIHaveNotJoinedYetAndHavePermission ? AppColors.kMainColor : eventExpiredAndIHaveJoined ? AppColors.kOrangeColor : eventInDateAndIDoNotHavePermissionToJoin || eventExpiredAndIHaveNotJoined ? AppColors.kRedColor : AppColors.kGreenColor,
+                        textColor: AppColors.kWhiteColor,
                         onPressed: ()
                         {
                           if ( userEntity.idForClubLead != null )

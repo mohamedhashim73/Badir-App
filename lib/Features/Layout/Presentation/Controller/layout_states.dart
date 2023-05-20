@@ -27,6 +27,11 @@ class FailedToLogOut extends LayoutStates{
   FailedToLogOut({required this.message});
 }
 
+class ErrorDuringOpenPdfState extends LayoutStates{
+  final String message;
+  ErrorDuringOpenPdfState({required this.message});
+}
+
 class ChangeBottomNavIndexState extends LayoutStates{}
 class PdfSelectedSuccessState extends LayoutStates{}
 class PdfSelectedWithFailureState extends LayoutStates{}

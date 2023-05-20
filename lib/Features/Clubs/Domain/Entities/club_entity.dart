@@ -45,8 +45,8 @@ class ClubEntity extends Equatable{
 }
 
 class ContactMeansForClub{
-  final String? phone;
+  final String? email;
   final String? twitter;
 
-  ContactMeansForClub({required this.phone,required this.twitter});
+  ContactMeansForClub({required this.email,required this.twitter});
 }

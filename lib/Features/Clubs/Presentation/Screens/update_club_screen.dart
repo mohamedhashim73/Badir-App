@@ -15,7 +15,7 @@ import '../../../Layout/Domain/Entities/user_entity.dart';
 class UpdateClubScreen extends StatelessWidget {
   final _twitterController = TextEditingController();
   final _collegeController = TextEditingController();
-  final _phoneController = TextEditingController();
+  final _emailController = TextEditingController();
   final _nameController = TextEditingController();
   final _membersNumController = TextEditingController();
   final _aboutClubController = TextEditingController();
@@ -31,7 +31,7 @@ class UpdateClubScreen extends StatelessWidget {
     _collegeController.text = cubit.dataAboutClubYouLead!.college!;
     _aboutClubController.text = cubit.dataAboutClubYouLead!.description ?? "";
     _membersNumController.text = cubit.dataAboutClubYouLead!.memberNum != null ? cubit.dataAboutClubYouLead!.memberNum.toString() : "";
-    _phoneController.text = cubit.dataAboutClubYouLead!.contactAccounts != null ? cubit.dataAboutClubYouLead!.contactAccounts!.phone.toString() : '';
+    _emailController.text = cubit.dataAboutClubYouLead!.contactAccounts != null ? cubit.dataAboutClubYouLead!.contactAccounts!.email.toString() : '';
     _twitterController.text = cubit.dataAboutClubYouLead!.contactAccounts != null ? cubit.dataAboutClubYouLead!.contactAccounts!.twitter.toString() : '';
     return SafeArea(
       child: Directionality(
@@ -47,7 +47,7 @@ class UpdateClubScreen extends StatelessWidget {
                 _nameController.clear();
                 _aboutClubController.clear();
                 _twitterController.clear();
-                _phoneController.clear();
+                _emailController.clear();
                 _nameController.clear();
                 cubit.clubImage = null;
                 Navigator.pushNamed(context, AppStrings.kLayoutScreen);
@@ -111,9 +111,9 @@ class UpdateClubScreen extends StatelessWidget {
                               textFieldComponent(controller: _nameController),
                               _textUpperTextField(title: "الكلية"),
                               textFieldComponent(controller: _collegeController,enabled: false),
-                              _textUpperTextField(title: "رقم التليفون"),
-                              textFieldComponent(controller: _phoneController,textInputType: TextInputType.number),
-                              _textUpperTextField(title: "حساب تويتر"),
+                              _textUpperTextField(title: "الإيميل"),
+                              textFieldComponent(controller: _emailController,textInputType: TextInputType.emailAddress),
+                              _textUpperTextField(title: "تويتر"),
                               textFieldComponent(controller: _twitterController),
                               _textUpperTextField(title: "عدد الأعضاء"),
                               textFieldComponent(controller: _membersNumController,textInputType: TextInputType.number),
@@ -133,13 +133,13 @@ class UpdateClubScreen extends StatelessWidget {
                             {
                               showSnackBar(context: context, message: "برجاء اختيار صورة",backgroundColor: AppColors.kRedColor);
                             }
-                          else if( cubit.clubImage != null && _nameController.text.isNotEmpty &&_aboutClubController.text.isNotEmpty &&_twitterController.text.isNotEmpty &&_membersNumController.text.isNotEmpty &&_phoneController.text.isNotEmpty)
+                          else if( cubit.clubImage != null && _nameController.text.isNotEmpty &&_aboutClubController.text.isNotEmpty &&_twitterController.text.isNotEmpty &&_membersNumController.text.isNotEmpty &&_emailController.text.isNotEmpty)
                           {
-                            cubit.updateClubData(userEntity:userEntity,clubID: clubID, image: cubit.clubImage!, name: _nameController.text, memberNum: int.parse(_membersNumController.text), aboutClub: _aboutClubController.text ,phone: _phoneController.text, twitter: _twitterController.text);
+                            cubit.updateClubData(userEntity:userEntity,clubID: clubID, image: cubit.clubImage!, name: _nameController.text, memberNum: int.parse(_membersNumController.text), aboutClub: _aboutClubController.text ,email: _emailController.text, twitter: _twitterController.text);
                           }
                           else
                           {
-                            cubit.updateClubWithoutImage(userEntity:userEntity,clubID: clubID, imgUrl: cubit.dataAboutClubYouLead!.image!, name: _nameController.text, memberNum: int.parse(_membersNumController.text), aboutClub: _aboutClubController.text ,phone: _phoneController.text, twitter: _twitterController.text);
+                            cubit.updateClubWithoutImage(userEntity:userEntity,clubID: clubID, imgUrl: cubit.dataAboutClubYouLead!.image!, name: _nameController.text, memberNum: int.parse(_membersNumController.text), aboutClub: _aboutClubController.text ,email: _emailController.text, twitter: _twitterController.text);
                           }
                         },
                         title: state is UpdateClubLoadingState ? "جاري التعديل" : "حفظ التعديلات",

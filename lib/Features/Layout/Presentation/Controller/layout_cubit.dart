@@ -8,6 +8,7 @@ import 'package:bader_user_app/Features/Layout/Presentation/Screens/profile_scre
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../../Core/Constants/enumeration.dart';
 import '../../../Clubs/Presentation/Controller/clubs_cubit.dart';
 import '../../../Events/Presentation/Controller/events_cubit.dart';
@@ -38,6 +39,11 @@ class LayoutCubit extends Cubit<LayoutStates> {
   void changeBottomNavIndex({required int index}) {
     bottomNavIndex = index;
     emit(ChangeBottomNavIndexState());
+  }
+
+  void openPdf({required String link}) async {
+    bool launchSuccess = await launch(link);
+    if( !launchSuccess ) emit(ErrorDuringOpenPdfState(message: "حدث خطأ ما عند محاوله فتح اللينك، برجاء المحاوله لاحقا"));
   }
 
   File? pdfFile;

@@ -203,9 +203,9 @@ class ClubsCubit extends Cubit<ClubsStates> {
     return url;
   }
 
-  void updateClubData({required UserEntity userEntity,required String clubID,required File image,required String name,required int memberNum,required String aboutClub,required String phone,required String twitter}) async {
+  void updateClubData({required UserEntity userEntity,required String clubID,required File image,required String name,required int memberNum,required String aboutClub,required String email,required String twitter}) async {
     emit(UpdateClubLoadingState());
-    ContactMeansForClubModel contactMeansModel = ContactMeansForClubModel(phone: phone, twitter: twitter);
+    ContactMeansForClubModel contactMeansModel = ContactMeansForClubModel(email: email, twitter: twitter);
     String? imageURL = await uploadClubImageToStorage();
     // Update data on firestore
     final clubUpdateResult = await sl<UpdateClubUseCase>().execute(clubID: clubID, image: imageURL ?? '', name: name, memberNum: memberNum, aboutClub: aboutClub, contactInfo: contactMeansModel);
@@ -221,14 +221,15 @@ class ClubsCubit extends Cubit<ClubsStates> {
         ));
   }
 
-  void updateClubWithoutImage({required UserEntity userEntity,required String clubID,required String imgUrl,required String name,required int memberNum,required String aboutClub,required String phone,required String twitter}) async {
-    ContactMeansForClubModel contactMeansModel = ContactMeansForClubModel(phone: phone, twitter: twitter);
+  void updateClubWithoutImage({required UserEntity userEntity,required String clubID,required String imgUrl,required String name,required int memberNum,required String aboutClub,required String email,required String twitter}) async {
+    ContactMeansForClubModel contactMeansModel = ContactMeansForClubModel(email: email, twitter: twitter);
     final clubUpdateResult = await sl<UpdateClubUseCase>().execute(clubID: clubID, image: imgUrl, name: name, memberNum: memberNum, aboutClub: aboutClub, contactInfo: contactMeansModel);
     await Future.value(
         clubUpdateResult.fold(
-            (serverFailure){
+            (serverFailure)
+            {
               emit(FailedToUpdateClubState(message: serverFailure.errorMessage));
-              },
+            },
             (unit) async {
               await getClubsData(userEntity: userEntity);
               emit(ClubUpdatedSuccessState());

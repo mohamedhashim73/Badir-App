@@ -1,9 +1,11 @@
 import 'package:bader_user_app/Core/Theme/app_colors.dart';
 import 'package:bader_user_app/Features/Clubs/Domain/Entities/club_entity.dart';
+import 'package:bader_user_app/Features/Clubs/Presentation/Screens/view_club_contact_means_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
+import '../../../../Core/Components/snackBar_item.dart';
 import '../../../Events/Presentation/Screens/view_events_on_specific_club_screen.dart';
+import 'club_achievements_screen.dart';
 class ViewClubDetailsScreen extends StatelessWidget {
   final ClubEntity club;
   const ViewClubDetailsScreen({Key? key,required this.club}) : super(key: key);
@@ -28,7 +30,7 @@ class ViewClubDetailsScreen extends StatelessWidget {
                     SizedBox(width: 10.w,),
                     if( club.image != null )
                       CircleAvatar(
-                        radius: 50.h,
+                        radius: 45.h,
                         backgroundImage: NetworkImage(club.image!),
                       ),
                   ],
@@ -51,7 +53,7 @@ class ViewClubDetailsScreen extends StatelessWidget {
                         title: "الإنجازات",
                         onTap: ()
                         {
-                          // Navigator.push(context, MaterialPageRoute(builder: (context) => ViewEventsOnSpecificClubScreen(clubID: club.id.toString(),clubName: club.name!,)));
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => ClubAchievementsScreen(club: club,)));
                         }
                     ),
                     _otherDetailsComponent(
@@ -59,7 +61,15 @@ class ViewClubDetailsScreen extends StatelessWidget {
                         title: "تواصل معنا",
                         onTap: ()
                         {
-                          // Navigator.push(context, MaterialPageRoute(builder: (context) => ViewEventsOnSpecificClubScreen(clubID: club.id.toString(),clubName: club.name!,)));
+                          debugPrint("Contact is : ${club.contactAccounts}");
+                          if( club.contactAccounts != null )
+                            {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => ViewClubContactMeansScreen(contactMeansForClub: club.contactAccounts!)));
+                            }
+                          else
+                            {
+                              showSnackBar(context: context, message: "لم يتم إضافة وسائل للتواصل بعد",backgroundColor: AppColors.kRedColor);
+                            }
                         }
                     ),
                   ],

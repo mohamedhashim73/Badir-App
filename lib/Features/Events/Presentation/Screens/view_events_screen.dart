@@ -104,31 +104,31 @@ class ViewAllEventsThrowAppScreen extends StatelessWidget {
                       alignment: AlignmentDirectional.topEnd,
                       child: MaterialButton(
                           elevation: 0,
-                          color: userEntity.idForClubLead != null || eventInDateAndIHaveNotJoinedYetAndHavePermission ? AppColors.kWhiteColor : eventExpiredAndIHaveJoined ? AppColors.kOrangeColor : eventInDateAndIDoNotHavePermissionToJoin || eventExpiredAndIHaveNotJoined ? AppColors.kRedColor : AppColors.kGreenColor,
-                          textColor: userEntity.idForClubLead != null || eventInDateAndIHaveNotJoinedYetAndHavePermission ? AppColors.kBlackColor : AppColors.kWhiteColor,
+                          color: userEntity.idForClubLead != null || eventInDateAndIHaveNotJoinedYetAndHavePermission ? AppColors.kMainColor : eventExpiredAndIHaveJoined ? AppColors.kOrangeColor : eventInDateAndIDoNotHavePermissionToJoin || eventExpiredAndIHaveNotJoined ? AppColors.kRedColor : AppColors.kGreenColor,
+                          textColor: AppColors.kWhiteColor,
                           onPressed: ()
-                          {
-                            if ( userEntity.idForClubLead != null )
                             {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => EventDetailsScreen(event: events[index],eventExpired: false)));
-                            }
-                            else if( eventExpiredAndIHaveJoined )
-                            {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => SendOpinionAboutEventScreen(eventName:events[index].name!,eventID:events[index].id!)));
-                            }
-                            else if( eventInDateAndIHaveNotJoinedYetAndHavePermission )
-                            {
-                              eventsCubit.joinToEvent(eventID: events[index].id!, layoutCubit: layoutCubit, memberID: userEntity.id ?? Constants.userID!);
-                            }
-                            else if( eventInDateAndIHaveJoined )
-                            {
-                              showSnackBar(context: context, message: "لقد سبق لك التسجيل بالفعالية");
-                            }
-                            else if( eventInDateAndIDoNotHavePermissionToJoin )
-                            {
-                              showSnackBar(context: context, message: 'هذه الفعالية خاصة بأعضاء ${events[index].clubName} فقط',backgroundColor: AppColors.kRedColor);
-                            }
-                          },
+                              if ( userEntity.idForClubLead != null )
+                              {
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => EventDetailsScreen(event: events[index],eventExpired: false)));
+                              }
+                              else if( eventExpiredAndIHaveJoined )
+                              {
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => SendOpinionAboutEventScreen(eventName:events[index].name!,eventID:events[index].id!)));
+                              }
+                              else if( eventInDateAndIHaveNotJoinedYetAndHavePermission )
+                              {
+                                eventsCubit.joinToEvent(eventID: events[index].id!, layoutCubit: layoutCubit, memberID: userEntity.id ?? Constants.userID!);
+                              }
+                              else if( eventInDateAndIHaveJoined )
+                              {
+                                showSnackBar(context: context, message: "لقد سبق لك التسجيل بالفعالية");
+                              }
+                              else if( eventInDateAndIDoNotHavePermissionToJoin )
+                              {
+                                showSnackBar(context: context, message: 'هذه الفعالية خاصة بأعضاء ${events[index].clubName} فقط',backgroundColor: AppColors.kRedColor);
+                              }
+                            },
                         child: Text(userEntity.idForClubLead != null ? "متابعة" : eventInDateAndIHaveJoined ? "تم التسجيل" :  eventInDateAndIHaveNotJoinedYetAndHavePermission ? "سجل الآن" : eventExpiredAndIHaveNotJoined ? "انتهت الفعالية" : eventInDateAndIDoNotHavePermissionToJoin ? "خاصة" : "شاركنا برأيك",style: const TextStyle(fontWeight: FontWeight.bold),),
                       ),
                     )

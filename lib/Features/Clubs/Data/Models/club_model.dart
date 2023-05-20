@@ -6,7 +6,7 @@ class ClubModel extends ClubEntity{
 
   factory ClubModel.fromJson({required json})
   {
-    return ClubModel(json['name'], json['id'], json['description'], json['image'], json['leaderEmail'], json['leaderID'], json['leaderName'], json['college'], json['committees'], json['memberNum'],json['volunteerHours'],json['currentEventsNum'],json['numOfRegisteredMembers'], json['ContactMeansForClubModel'] != null ? ContactMeansForClubModel.fromJson(json: json['contactAccounts']) : null,json['isAvailable'],json['availableOnlyForThisCollege']);
+    return ClubModel(json['name'], json['id'], json['description'], json['image'], json['leaderEmail'], json['leaderID'], json['leaderName'], json['college'], json['committees'], json['memberNum'],json['volunteerHours'],json['currentEventsNum'],json['numOfRegisteredMembers'], json['contactAccounts'] != null ? ContactMeansForClubModel.fromJson(json: json['contactAccounts']) : null,json['isAvailable'],json['availableOnlyForThisCollege']);
   }
 
   Map<String,dynamic> toJson(){
@@ -33,13 +33,13 @@ class ClubModel extends ClubEntity{
 }
 
 class ContactMeansForClubModel extends ContactMeansForClub{
-  ContactMeansForClubModel({required super.phone, required super.twitter});
+  ContactMeansForClubModel({required super.email, required super.twitter});
 
-  factory ContactMeansForClubModel.fromJson({required Map<String,dynamic> json}) => ContactMeansForClubModel(phone: json['phone'], twitter: json['twitter']);
+  factory ContactMeansForClubModel.fromJson({required Map<String,dynamic> json}) => ContactMeansForClubModel(email: json['email'], twitter: json['twitter']);
 
   Map<String,dynamic> toJson(){
     return {
-      'phone' : super.phone,
+      'email' : super.email,
       'twitter' : super.twitter,
     };
   }
