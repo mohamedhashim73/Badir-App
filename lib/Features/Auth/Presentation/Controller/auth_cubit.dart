@@ -4,6 +4,7 @@ import 'package:bader_user_app/Features/Auth/Domain/UseCases/register_use_case.d
 import 'package:bader_user_app/Core/Constants/constants.dart';
 import 'package:bader_user_app/Core/Service%20Locators/service_locators.dart';
 import 'package:bader_user_app/Features/Layout/Data/Models/user_model.dart';
+import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_cubit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../Core/Network/sharedPref.dart';
@@ -48,7 +49,7 @@ class AuthCubit extends Cubit<AuthStates>{
     );
   }
 
-  void login({required String email,required String password}) async {
+  void login({required String email,required String password,required LayoutCubit layoutCubit}) async {
     emit(LoginLoadingState());
     final result = await LoginUseCase(authBaseRepository: sl<AuthRemoteImplyRepository>()).execute(email: email, password: password);
     debugPrint("Result is : $result");
@@ -60,6 +61,7 @@ class AuthCubit extends Cubit<AuthStates>{
             {
               await SharedPref.insertString(key: 'userID',value : right.user!.uid);
               Constants.userID = SharedPref.getString(key: 'userID');
+              await layoutCubit.getMyData();
               emit(LoginSuccessState());
             }
     );

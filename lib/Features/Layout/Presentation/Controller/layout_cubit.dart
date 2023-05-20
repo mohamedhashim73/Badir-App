@@ -29,7 +29,7 @@ class LayoutCubit extends Cubit<LayoutStates> {
 
   int bottomNavIndex = 0;
 
-  List<Widget> layoutScreens = const [
+  List<Widget> layoutScreens = [
     HomeScreen(),
     NotificationsScreen(),
     ProfileScreen(),
@@ -59,13 +59,13 @@ class LayoutCubit extends Cubit<LayoutStates> {
     }
   }
 
-  Future<void> uploadReport({required LayoutCubit layoutCubit,required String clubID,required String reportType}) async{
+  Future<void> uploadReport({required LayoutCubit layoutCubit,required String senderID,required String clubName,required String clubID,required String reportType}) async{
     emit(UploadReportToAdminLoadingState());
     String? pdfUrl = await layoutCubit.uploadFileToStorage(file: pdfFile!);
     // TODO: Connect with Firestore
     if( pdfUrl != null )
       {
-        final result = await sl<UploadReportToAdminUseCase>().execute(clubID: clubID,pdfLink: pdfUrl,reportType: reportType);
+        final result = await sl<UploadReportToAdminUseCase>().execute(clubName:clubName,senderID:senderID,clubID: clubID,pdfLink: pdfUrl,reportType: reportType);
         result.fold(
             (serverFailure)
             {
@@ -144,13 +144,19 @@ class LayoutCubit extends Cubit<LayoutStates> {
 
   // TODO: USER
   UserEntity? userData;
-  Future<void> getMyData() async {
+  Future<void> getMyData({ClubsCubit? clubsCubit}) async {
+    // TODO: ClubsCubit? clubsCubit not required عشان هباصي قيمه فقط لو جالي notification فيه ان اصبحت قائد علي نادي to getDataAboutClubILead from this cubit
     var result = await sl<GetMyDataUseCase>().execute();
     result.fold(
             (serverFailure) => emit(FailedToGetUserDataState(message: serverFailure.errorMessage)),
             (user)
+            async
             {
               userData = user;
+              if( clubsCubit != null && user.idForClubLead != null )
+                {
+                  await clubsCubit.getCLubDataThatILead(clubID: user.idForClubLead!);
+                }
               emit(GetMyDataSuccessState());
             });
   }
@@ -178,8 +184,8 @@ class LayoutCubit extends Cubit<LayoutStates> {
       }
   }
 
-  Future<void> sendNotification({required String senderID,required String receiverID,required String clubID,required String notifyContent,required NotificationType notifyType}) async {
-    var result = await sl<SendNotificationUseCase>().execute(clubID: clubID,receiverID: receiverID,notifyType: notifyType,notifyContent: notifyContent,senderID: senderID);
+  Future<void> sendNotification({required String receiverID,required String clubID,required String notifyContent,required NotificationType notifyType}) async {
+    var result = await sl<SendNotificationUseCase>().execute(clubID: clubID,receiverID: receiverID,notifyType: notifyType,notifyContent: notifyContent);
     result.fold(
             (serverFailure) => emit(FailedSendNotificationState(message: serverFailure.errorMessage)),
             (unit)

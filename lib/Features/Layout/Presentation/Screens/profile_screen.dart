@@ -94,7 +94,7 @@ class ProfileScreen extends StatelessWidget {
                                 child: Column(
                                   children:
                                   [
-                                    _titleBehindDescriptionItem(title: "اللجنة", description: cubit.userData!.committeesName!.join(',')),
+                                    _titleBehindDescriptionItem(title: "اللجنة", description: cubit.userData!.committeesNames!.join(',')),
                                     SizedBox(height: 2.h,),
                                     _titleBehindDescriptionItem(title: "الساعات التطوعية", description: "${cubit.userData!.volunteerHours ?? 0}"),
                                     SizedBox(height: 2.h,),

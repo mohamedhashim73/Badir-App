@@ -56,6 +56,7 @@ class HomeScreen extends StatelessWidget {
               builder: (context,state) {
                 return layoutCubit.userData != null ? ListView(
                   shrinkWrap: true,
+                  scrollDirection: Axis.vertical,
                   physics: const BouncingScrollPhysics(),
                   children:
                   [
@@ -257,7 +258,7 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _displayClubOverView({required ClubEntity clubEntity,required double maxHeight,required double maxWidth,required BuildContext context}){
-    return GestureDetector(
+    return InkWell(
       onTap: ()
       {
         Navigator.push(context, MaterialPageRoute(builder: (context) => ViewClubDetailsScreen(club: clubEntity)));
@@ -293,7 +294,7 @@ class HomeScreen extends StatelessWidget {
     bool eventInDateAndIHaveJoined = Constants.eventInDateAndIHaveJoined(event: eventEntity,eventExpired: eventExpired,userEntity: myData);
     bool eventInDateAndIHaveNotJoinedYetAndHavePermission = Constants.eventInDateAndIHaveNotJoinedYetAndHavePermission(userEntity: myData, eventExpired: eventExpired, event: eventEntity);
     bool eventInDateAndIDoNotHavePermissionToJoin = Constants.eventInDateAndIDoNotHavePermissionToJoin(userEntity: myData, eventExpired: eventExpired, event: eventEntity);
-    return GestureDetector(
+    return InkWell(
       onTap: ()
       {
         bool eventFinished = DateTime.now().isAfter(Jiffy("${eventEntity.endDate!.trim()} ${eventEntity.time!.trim()}", "MMMM dd, yyyy h:mm a").dateTime);

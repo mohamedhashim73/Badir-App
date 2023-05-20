@@ -28,7 +28,8 @@ class EventEntity extends Equatable{
       this.link,
       this.speakers,
       this.clubName,
-      this.clubID);
+      this.clubID
+      );
 
   @override
   // TODO: implement props

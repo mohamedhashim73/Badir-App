@@ -1,8 +1,6 @@
 import 'dart:io';
-
 import 'package:bader_user_app/Core/Constants/constants.dart';
 import 'package:bader_user_app/Core/Errors/exceptions.dart';
-import 'package:bader_user_app/Core/Errors/failure.dart';
 import 'package:bader_user_app/Features/Clubs/Presentation/Controller/clubs_cubit.dart';
 import 'package:bader_user_app/Features/Layout/Data/Models/report_model.dart';
 import 'package:bader_user_app/Features/Layout/Data/Models/user_model.dart';
@@ -53,10 +51,10 @@ class LayoutRemoteDataSource {
     return notifications;
   }
 
-  Future<void> sendNotification({required String senderID,required String receiverID,required String clubID,required String notifyContent,required NotificationType notifyType}) async {
+  Future<void> sendNotification({required String receiverID,required String clubID,required String notifyContent,required NotificationType notifyType}) async {
     try
     {
-      NotifyModel notifyModel = NotifyModel(Constants.getTimeNow(), senderID, notifyType.name, false, notifyContent,clubID);
+      NotifyModel notifyModel = NotifyModel(Constants.getTimeNow(), notifyType.name, false, notifyContent,clubID);
       await FirebaseFirestore.instance.collection(Constants.kUsersCollectionName).doc(receiverID).
       collection(Constants.kNotificationsCollectionName).add(notifyModel.toJson());
     }
@@ -114,13 +112,13 @@ class LayoutRemoteDataSource {
     }
   }
 
-  Future<Unit> uploadReport({required String pdfLink,required String clubID,required String reportType}) async {
+  Future<Unit> uploadReport({required String pdfLink,required String clubName,required String clubID,required String senderID,required String reportType}) async {
     try
     {
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection(Constants.kReportsCollectionName).get();
       int newReportID = querySnapshot.docs.isNotEmpty ? int.parse(querySnapshot.docs.last.id) : 0;
       ++newReportID;
-      ReportModel report = ReportModel(reportID: newReportID.toString(), fileType: reportType, clubID: clubID, pdfLink: pdfLink);
+      ReportModel report = ReportModel(clubName:clubName,senderID:senderID,reportID: newReportID.toString(), reportType: reportType, clubID: clubID, pdfLink: pdfLink);
       await FirebaseFirestore.instance.collection(Constants.kReportsCollectionName).doc(newReportID.toString()).set(report.toJson());
       return unit;
     }

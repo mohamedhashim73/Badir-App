@@ -15,7 +15,7 @@ class Constants {
     BlocProvider(create: (context) => AuthCubit()),
     BlocProvider(create: (context) => ClubsCubit()),
     BlocProvider(create: (context) => EventsCubit()..getAllTasksOnApp()),
-    BlocProvider(create: (context) => LayoutCubit()..getMyData()),
+    BlocProvider(create: (context) => LayoutCubit()),
   ];
   static String? userID;
   static List<String> colleges = ["كلية علوم وهندسة الحاسب الآلي","كلية الآداب والعلوم الإنسانية","كلية إدارة الأعمال","كلية التربية","كلية التمريض","الكلية التطبيقية","كلية الحقوق","كلية الصيدلة","كلية الطب","كلية طب الأسنان","كلية العلوم","كلية علوم الأسرة","كلية علوم التأهيل الطبي","كلية العلوم الطبية التطبيقية","كلية الهندسة"];

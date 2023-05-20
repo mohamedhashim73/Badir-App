@@ -48,10 +48,10 @@ class LayoutImplyRepository implements LayoutBaseRepository {
   }
 
   @override
-  Future<Either<Failure,Unit>> uploadReport({required String pdfLink,required String clubID,required String reportType}) async {
+  Future<Either<Failure,Unit>> uploadReport({required String pdfLink,required String clubName,required String clubID,required String senderID,required String reportType}) async {
     try
     {
-      return Right(await layoutRemoteDataSource.uploadReport(pdfLink: pdfLink, clubID: clubID, reportType: reportType));
+      return Right(await layoutRemoteDataSource.uploadReport(senderID: senderID,pdfLink: pdfLink, clubName:clubName,clubID: clubID, reportType: reportType));
     }
     on ServerException catch(e)
     {
@@ -82,10 +82,10 @@ class LayoutImplyRepository implements LayoutBaseRepository {
   }
 
   @override
-  Future<Either<Failure,Unit>> sendNotification({required String senderID,required String receiverID,required String clubID,required String notifyContent,required NotificationType notifyType}) async {
+  Future<Either<Failure,Unit>> sendNotification({required String receiverID,required String clubID,required String notifyContent,required NotificationType notifyType}) async {
     try
     {
-      await layoutRemoteDataSource.sendNotification(senderID: senderID, receiverID: receiverID, clubID: clubID, notifyContent: notifyContent, notifyType: notifyType);
+      await layoutRemoteDataSource.sendNotification(receiverID: receiverID, clubID: clubID, notifyContent: notifyContent, notifyType: notifyType);
       return const Right(unit);
     }
     on ServerException catch(e){

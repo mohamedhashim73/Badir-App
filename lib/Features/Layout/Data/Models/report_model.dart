@@ -5,8 +5,10 @@ class ReportModel extends ReportEntity{
 
   const ReportModel({
     required super.reportID,
-    required super.fileType,
+    required super.reportType,
     required super.clubID,
+    required super.clubName,
+    required super.senderID,
     required super.pdfLink,
   });
 
@@ -15,8 +17,10 @@ class ReportModel extends ReportEntity{
   {
     return ReportModel(
         reportID: json['reportID'],
-        fileType:json['fileType'],
+        reportType:json['reportType'],
         clubID:json['clubID'],
+        clubName:json['clubName'],
+        senderID:json['senderID'],
         pdfLink:json['pdfLink'],
     );
   }
@@ -25,8 +29,10 @@ class ReportModel extends ReportEntity{
   Map<String,dynamic> toJson(){
     return {
       'reportID' : reportID,
-      'fileType' : fileType,
+      'reportType' : reportType,
       'clubID' : clubID,
+      'clubName' : clubName,
+      'senderID' : senderID,
       'pdfLink' : pdfLink,
     };
   }

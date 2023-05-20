@@ -277,7 +277,6 @@ class RemoteEventsDataSource{
       // TODO: ف كلا الحالتين هحذف م الطلبات
       await FirebaseFirestore.instance.collection(Constants.kTasksCollectionName).doc(taskEntity.id.toString()).collection(Constants.kTaskAuthenticationRequestsCollectionName).doc(requestSenderID).delete();
       await layoutCubit.sendNotification(
-          senderID: myID,          // TODO: ID بتاعي
           receiverID: requestSenderID,
           clubID: taskEntity.clubID,
           notifyContent: respondStatus ? "لقد تم قبول طلبك للمصادقة في مهمه ${taskEntity.name}" : "لقد تم رفض طلبك للمصادقة في مهمه ${taskEntity.name}",

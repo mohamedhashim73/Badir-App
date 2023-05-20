@@ -10,8 +10,8 @@ class UploadReportToAdminUseCase{
 
   UploadReportToAdminUseCase({required this.layoutBaseRepository});
 
-  Future<Either<Failure,Unit>> execute({required String pdfLink,required String clubID,required String reportType}) async {
-    return await layoutBaseRepository.uploadReport(pdfLink: pdfLink, clubID: clubID, reportType: reportType);
+  Future<Either<Failure,Unit>> execute({required String clubName,required String pdfLink,required String senderID,required String clubID,required String reportType}) async {
+    return await layoutBaseRepository.uploadReport(clubName:clubName,senderID:senderID,pdfLink: pdfLink, clubID: clubID, reportType: reportType);
   }
 
 }

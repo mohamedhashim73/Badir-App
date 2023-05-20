@@ -7,7 +7,6 @@ import 'package:bader_user_app/Features/Clubs/Domain/Use_Cases/get_members_on_my
 import 'package:bader_user_app/Features/Clubs/Domain/Use_Cases/upload_image_to_storage_use_case.dart';
 import 'package:bader_user_app/Features/Layout/Domain/Entities/user_entity.dart';
 import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_cubit.dart';
-import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -262,7 +261,7 @@ class ClubsCubit extends Cubit<ClubsStates> {
               emit(FailedToAcceptOrRejectMembershipRequestState(message: serverFailure.errorMessage));
             },
             (unit) async {
-              await layoutCubit.sendNotification(senderID: layoutCubit.userData!.id!, receiverID: requestSenderID, clubID: clubID, notifyContent: respondStatus ? "لقد تم قبول طلب العضوية في $clubName" : "لقد تم رفض طلب العضوية في $clubName", notifyType: respondStatus ? NotificationType.acceptYourMembershipRequest : NotificationType.rejectYourMembershipRequest);
+              await layoutCubit.sendNotification(receiverID: requestSenderID, clubID: clubID, notifyContent: respondStatus ? "لقد تم قبول طلب العضوية في $clubName" : "لقد تم رفض طلب العضوية في $clubName", notifyType: respondStatus ? NotificationType.acceptYourMembershipRequest : NotificationType.rejectYourMembershipRequest);
               await getMembersDataOnMyClub(layoutCubit: layoutCubit, idForClubILead: idForClubILead);
               emit(AcceptOrRejectMembershipRequestSuccessState());
             }

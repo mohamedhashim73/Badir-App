@@ -1,4 +1,6 @@
 import 'package:bader_user_app/Core/Theme/app_colors.dart';
+import 'package:bader_user_app/Features/Clubs/Domain/Entities/club_entity.dart';
+import 'package:bader_user_app/Features/Clubs/Presentation/Controller/clubs_cubit.dart';
 import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_cubit.dart';
 import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_states.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +21,7 @@ class UploadReportToAdminScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     LayoutCubit layoutCubit = LayoutCubit.getInstance(context);
-    String clubID = layoutCubit.userData!.idForClubLead!;
+    ClubEntity club = ClubsCubit.getInstance(context).dataAboutClubYouLead!;
     return Directionality(
       textDirection: TextDirection.rtl,
       child: SafeArea(
@@ -88,7 +90,7 @@ class UploadReportToAdminScreen extends StatelessWidget {
                       {
                         if( layoutCubit.reportType != null && layoutCubit.pdfFile != null )
                         {
-                          layoutCubit.uploadReport(reportType: layoutCubit.reportType!,clubID: clubID,layoutCubit: layoutCubit);
+                          layoutCubit.uploadReport(clubName:club.name!,senderID:layoutCubit.userData!.id ?? Constants.userID!,reportType: layoutCubit.reportType!,clubID: club.id.toString(),layoutCubit: layoutCubit);
                         }
                         else
                         {

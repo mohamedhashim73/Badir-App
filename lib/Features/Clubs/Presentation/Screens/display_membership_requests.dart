@@ -17,7 +17,7 @@ class MembershipRequestsScreen extends StatelessWidget {
     final layoutCubit = LayoutCubit.getInstance(context);
     String clubID = layoutCubit.userData!.idForClubLead!;
     final cubit = ClubsCubit.getInstance(context)..getMembershipRequests(clubID: clubID);
-    String clubName = cubit.dataAboutClubYouLead!.id.toString();
+    String clubName = cubit.dataAboutClubYouLead!.name!;
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(

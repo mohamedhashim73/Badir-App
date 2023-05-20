@@ -128,10 +128,19 @@ class RemoteClubsDataSource{
   }
 
   // TODO: This method will get the number of members | use it when add new member to change its value on Members Number Collection
-  Future<int> getMembersNum() async {
+  Future<int> getMembersNumOnApp() async {
     int membersNum = 0;
     await FirebaseFirestore.instance.collection(Constants.kMembersNumberCollectionName).doc('Number').get().then((value){
       membersNum = value.data() != null  ? value.data()!['total'] : 0;
+    });
+    return membersNum;
+  }
+
+  // TODO: This method will get the number of members | use it when add new member to change its value on Members Number Collection
+  Future<int> getNumOfRegisteredMembersOnSpecificClub({required clubID}) async {
+    int membersNum = 0;
+    await FirebaseFirestore.instance.collection(Constants.kClubsCollectionName).doc(clubID).get().then((value) async {
+      membersNum = value.data() != null ? value.data()!['numOfRegisteredMembers'] ?? 0 : 0;
     });
     return membersNum;
   }
@@ -143,11 +152,16 @@ class RemoteClubsDataSource{
       await FirebaseFirestore.instance.collection(Constants.kClubsCollectionName).doc(clubID).collection(Constants.kMembershipRequestsCollectionName).doc(requestSenderID).delete();
       if( respondStatus )     // TODO: Request Accepted
         {
+          // TODO: Update numOfRegisteredMembers that on Club as he become a member
+          int numOfRegisteredMembersOnClub = await getNumOfRegisteredMembersOnSpecificClub(clubID: clubID);
+          await FirebaseFirestore.instance.collection(Constants.kClubsCollectionName).doc(clubID).update({
+            'numOfRegisteredMembers' : ++numOfRegisteredMembersOnClub
+          });
           // TODO: Get Data about RequestSender....
           DocumentSnapshot requestSenderDocumentSnapshot = await FirebaseFirestore.instance.collection(Constants.kUsersCollectionName).doc(requestSenderID).get();
           UserModel requestSenderUserModel = UserModel.fromJson(json: requestSenderDocumentSnapshot.data());
           List? idForClubsThatSenderMemberIn = requestSenderUserModel.idForClubsMemberIn ?? [];
-          List? committeesNameForRequestSender = requestSenderUserModel.committeesName ?? [];
+          List? committeesNameForRequestSender = requestSenderUserModel.committeesNames ?? [];
           // TODO: بالنسبه لتاريخ بدء العضوية للشخص ده لو في قيمه مش هعدل عليها لو مفيش هبعت التاريخ الحالي
           String memberShipStartDateForRequestSender = requestSenderUserModel.membershipStartDate ?? Constants.getTimeNow();
           // TODO: في key في الداتا بتاع العضو اسمها idForClubMemberIn محتاج ابعت id بتاع النادي لها بما ان اصبح عضو فيه
@@ -160,7 +174,7 @@ class RemoteClubsDataSource{
             'membershipStartDate' : memberShipStartDateForRequestSender
           });
           // TODO: Update Value of Members Number on its Collection as I listen for it on Home Screen
-          int membersNum = await getMembersNum();
+          int membersNum = await getMembersNumOnApp();
           await FirebaseFirestore.instance.collection(Constants.kMembersNumberCollectionName).doc('Number').set({
             'total' : ++membersNum
           });
@@ -212,6 +226,11 @@ class RemoteClubsDataSource{
   Future<Unit> removeMemberFromClubILead({required String memberID,required String clubID}) async {
     try
     {
+      // TODO: Update numOfRegisteredMembers that on Club as he left club
+      int numOfRegisteredMembersOnClub = await getNumOfRegisteredMembersOnSpecificClub(clubID: clubID);
+      await FirebaseFirestore.instance.collection(Constants.kClubsCollectionName).doc(clubID).update({
+        'numOfRegisteredMembers' : --numOfRegisteredMembersOnClub
+      });
       // TODO: Get Data about RequestSender....
       DocumentSnapshot memberDocumentSnapshot = await FirebaseFirestore.instance.collection(Constants.kUsersCollectionName).doc(memberID).get();
       UserModel memberModel = UserModel.fromJson(json: memberDocumentSnapshot.data());
@@ -223,7 +242,7 @@ class RemoteClubsDataSource{
       // TODO: Delete his document from Members Data that on the Club
       await FirebaseFirestore.instance.collection(Constants.kClubsCollectionName).doc(clubID).collection(Constants.kMembersDataCollectionName).doc(memberID).delete();
       // TODO: reduce the number of members on Member Num collection by 1
-      int membersNum = await getMembersNum();
+      int membersNum = await getMembersNumOnApp();
       await FirebaseFirestore.instance.collection(Constants.kMembersNumberCollectionName).doc('Number').update({
         'total' : --membersNum
       });
