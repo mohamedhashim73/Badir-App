@@ -13,6 +13,7 @@ class ClubEntity extends Equatable{
   final List? committees;
   final int? memberNum;
   final int? volunteerHours;
+  final int? currentEventsNum;
   final int? numOfRegisteredMembers;
   final ContactMeansForClubModel? contactAccounts;
   final bool isAvailable;  // TODO: Mean to apply | joining from Users
@@ -30,6 +31,7 @@ class ClubEntity extends Equatable{
       this.committees,
       this.memberNum,
       this.volunteerHours,
+      this.currentEventsNum,
       this.numOfRegisteredMembers,
       this.contactAccounts,
       this.isAvailable,
@@ -38,7 +40,7 @@ class ClubEntity extends Equatable{
 
   @override
   // TODO: implement props
-  List<Object?> get props => [name,id,description,image,leaderName,leaderID,leaderEmail,college,committees,memberNum,volunteerHours,numOfRegisteredMembers,contactAccounts,isAvailable,availableOnlyForThisCollege];
+  List<Object?> get props => [name,id,description,image,leaderName,leaderID,leaderEmail,college,committees,memberNum,volunteerHours,currentEventsNum,numOfRegisteredMembers,contactAccounts,isAvailable,availableOnlyForThisCollege];
 
 }
 

@@ -1,4 +1,5 @@
 import 'package:bader_user_app/Features/Events/Data/Models/request_authentication_on_task_model.dart';
+import 'package:bader_user_app/Features/Events/Domain/Entities/event_entity.dart';
 
 import '../../Data/Models/opinion_about_event_model.dart';
 
@@ -19,6 +20,12 @@ class GetEventsDataSuccessState extends EventsStates{}
 class FailedToGetEventsDataState extends EventsStates{
   final String message;
   FailedToGetEventsDataState({required this.message});
+}
+
+class GetEventsForSpecificClubLoadingState extends EventsStates{}
+class GetEventsForSpecificClubSuccessState extends EventsStates{
+  final List<EventEntity> eventsOnSpecificClub;
+  GetEventsForSpecificClubSuccessState({required this.eventsOnSpecificClub});
 }
 
 class GetMemberOnAnEventLoadingState extends EventsStates{}

@@ -73,10 +73,8 @@ class Constants {
 
   static bool eventInDateAndIHaveNotJoinedYetAndHavePermission({required UserEntity userEntity,required bool eventExpired,required EventEntity event}){
     bool eventForOnlyMembers = event.forPublic!.trim() == EventForPublicOrNot.public.name ? false : true;
-    String eventID = event.id!;
-    String clubID = event.clubID!;
     List? idForEventsJoined = userEntity.idForEventsJoined;
     List? idForClubsMemberIn = userEntity.idForClubsMemberIn;
-    return (!eventForOnlyMembers && !eventExpired && idForEventsJoined == null || (idForEventsJoined != null && idForEventsJoined.contains(eventID) == false)) || (!eventExpired && ((idForClubsMemberIn != null && idForClubsMemberIn.contains(clubID) == true)));
+    return (!eventExpired && ( (idForEventsJoined != null && idForEventsJoined.contains(event.id) == false && idForClubsMemberIn != null && idForClubsMemberIn.contains(event.clubID)) || (idForEventsJoined == null && !eventForOnlyMembers)));
   }
 }

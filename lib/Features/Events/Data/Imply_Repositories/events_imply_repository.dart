@@ -46,10 +46,10 @@ class EventsImplyRepository implements EventsContractRepository{
   }
 
   @override
-  Future<Either<Failure,Unit>> deleteEvent({required String eventID}) async {
+  Future<Either<Failure,Unit>> deleteEvent({required String eventID,required String clubID}) async {
     try
     {
-      await remoteEventsDataSource.deleteEvent(eventID: eventID);
+      await remoteEventsDataSource.deleteEvent(eventID: eventID,clubID: clubID);
       return const Right(unit);
     }
     on ServerException catch(e){

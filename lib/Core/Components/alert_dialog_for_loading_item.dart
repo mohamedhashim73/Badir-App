@@ -8,10 +8,12 @@ void showLoadingDialog({required BuildContext context}) {
       textDirection: TextDirection.rtl,
       child: Row(
         mainAxisSize: MainAxisSize.min,
-        children: [
+        children:
+        [
           const CupertinoActivityIndicator(),
           SizedBox(width: 10.w,),
-          const Text('انتظر لثواني')],
+          const Text('انتظر لثواني')
+        ],
       ),
     ),
   )

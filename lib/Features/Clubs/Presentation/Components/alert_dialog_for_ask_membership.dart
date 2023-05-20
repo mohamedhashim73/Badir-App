@@ -1,5 +1,6 @@
 import 'package:bader_user_app/Core/Components/snackBar_item.dart';
 import 'package:bader_user_app/Core/Components/text_field_component.dart';
+import 'package:bader_user_app/Core/Theme/app_colors.dart';
 import 'package:bader_user_app/Features/Clubs/Domain/Entities/club_entity.dart';
 import 'package:bader_user_app/Features/Clubs/Presentation/Controller/clubs_cubit.dart';
 import 'package:bader_user_app/Features/Layout/Domain/Entities/user_entity.dart';
@@ -21,11 +22,12 @@ void askMembershipDialog({required ClubEntity club,required BuildContext context
           buildWhen: (previousState,currentState) => currentState is CommitteeChosenSuccessState,
           builder:(context,state)
           {
-            return ListView(
-              shrinkWrap: true,
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children:
               [
-                const Text("اللجنة"),
+                Text("اللجنة",style: TextStyle(color: AppColors.kMainColor,fontWeight:FontWeight.bold,fontSize: 15.5.sp),),
                 SizedBox(height: 5.h),
                 dropDownComponent(
                     items: Constants.committees,
@@ -35,7 +37,8 @@ void askMembershipDialog({required ClubEntity club,required BuildContext context
                     },
                     value: cubit.selectedCommittee
                 ),
-                const Text("تحدث عن نفسك"),
+                SizedBox(height: 5.h),
+                Text("تحدث عن نفسك",style: TextStyle(color: AppColors.kMainColor,fontWeight:FontWeight.bold,fontSize: 15.5.sp),),
                 SizedBox(height: 5.h),
                 textFieldComponent(controller: controller,maxLines: 4),
                 SizedBox(height: 7.h,),

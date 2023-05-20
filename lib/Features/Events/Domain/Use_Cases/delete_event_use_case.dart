@@ -8,8 +8,8 @@ class DeleteEventUseCase{
 
   DeleteEventUseCase({required this.eventsContractRepository});
 
-  Future<Either<Failure, Unit>> execute({required String eventID}) async {
-    return await eventsContractRepository.deleteEvent(eventID: eventID);
+  Future<Either<Failure, Unit>> execute({required String eventID,required String clubID}) async {
+    return await eventsContractRepository.deleteEvent(eventID: eventID,clubID: clubID);
   }
 
 }

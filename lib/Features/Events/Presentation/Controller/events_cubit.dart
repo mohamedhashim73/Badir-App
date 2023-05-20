@@ -62,6 +62,22 @@ class EventsCubit extends Cubit<EventsStates> {
     );
   }
 
+  // TODO: ده عشان صفحه تفاصيل النادي لو عاوز اعرض الفعاليات الخاصه به فقط
+  Future<void> getEventsOnSpecificClub({required String clubID,String? idForClubILead}) async {
+    List<EventEntity> eventsOnSpecificClub = [];
+    if( allEvents.isEmpty ) getAllEvents(idForClubILead: idForClubILead);
+    emit(GetEventsForSpecificClubLoadingState());
+    for( var item in allEvents )
+      {
+        if( item.clubID! == clubID )
+          {
+            eventsOnSpecificClub.add(item);
+          }
+      }
+    debugPrint("Events Num on this club is : ${eventsOnSpecificClub.length}");
+    emit(GetEventsForSpecificClubSuccessState(eventsOnSpecificClub : eventsOnSpecificClub));
+  }
+
   // TODO: related to Leader....
   List<MemberEntity> membersDataForAnEvent = [];
   Future<void> getMembersOnAnEvent({required String eventID}) async {
@@ -168,7 +184,7 @@ class EventsCubit extends Cubit<EventsStates> {
 
   void deleteEvent({required String eventID,required String idForClubILead}) async {
     emit(DeleteEventLoadingState());
-    final result = await sl<DeleteEventUseCase>().execute(eventID: eventID);
+    final result = await sl<DeleteEventUseCase>().execute(eventID: eventID,clubID: idForClubILead);
     result.fold(
             (serverFailure)
             {

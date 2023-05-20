@@ -16,6 +16,15 @@ import '../Models/opinion_about_event_model.dart';
 
 class RemoteEventsDataSource{
 
+  // TODO: use it during create or delete event ...
+  Future<int> getNumOfEventsOnSpecificClub({required String clubID}) async {
+    int eventsNum = 0;
+    await FirebaseFirestore.instance.collection(Constants.kClubsCollectionName).doc(clubID).get().then((value){
+      eventsNum = value.data() != null  ? value.data()!['currentEventsNum'] : 0;
+    });
+    return eventsNum;
+  }
+
   Future<Unit> createEvent({required EventForPublicOrNot forPublic,required String name,required String description,required String imageUrl,required String startDate,required String endDate,required String time,required String location,required String link,required String clubID,required String clubName}) async {
     try
     {
@@ -23,6 +32,11 @@ class RemoteEventsDataSource{
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection(Constants.kEventsCollectionName).get();
       int newEventID = querySnapshot.docs.isNotEmpty ? int.parse(querySnapshot.docs.last.id) : 0;
       ++newEventID;
+      // TODO: Update CurrentEventsNum on this club
+      int currentEventsNumOnThisClub = await getNumOfEventsOnSpecificClub(clubID: clubID);
+      await FirebaseFirestore.instance.collection(Constants.kClubsCollectionName).doc(clubID).update({
+        "currentEventsNum" : ++currentEventsNumOnThisClub
+      });
       EventModel eventModel = EventModel(name, newEventID.toString(), description, imageUrl, startDate, endDate, time, forPublic.name, location, link, null, clubName, clubID);
       await FirebaseFirestore.instance.collection(Constants.kEventsCollectionName).doc(newEventID.toString().trim()).set(eventModel.toJson());
       return unit;
@@ -102,9 +116,14 @@ class RemoteEventsDataSource{
     }
   }
 
-  Future<Unit> deleteEvent({required String eventID}) async {
+  Future<Unit> deleteEvent({required String eventID,required String clubID}) async {
     try
     {
+      // TODO: Update CurrentEventsNum on this club
+      int currentEventsNumOnThisClub = await getNumOfEventsOnSpecificClub(clubID: clubID);
+      await FirebaseFirestore.instance.collection(Constants.kClubsCollectionName).doc(clubID).update({
+        "currentEventsNum" : --currentEventsNumOnThisClub
+      });
       await FirebaseFirestore.instance.collection(Constants.kEventsCollectionName).doc(eventID).delete();
       return unit;
     }

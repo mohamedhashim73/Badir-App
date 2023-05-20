@@ -2,6 +2,8 @@ import 'package:bader_user_app/Core/Theme/app_colors.dart';
 import 'package:bader_user_app/Features/Clubs/Domain/Entities/club_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../../Events/Presentation/Screens/view_events_on_specific_club_screen.dart';
 class ViewClubDetailsScreen extends StatelessWidget {
   final ClubEntity club;
   const ViewClubDetailsScreen({Key? key,required this.club}) : super(key: key);
@@ -22,7 +24,7 @@ class ViewClubDetailsScreen extends StatelessWidget {
                 Row(
                   children:
                   [
-                    Expanded(child: Text(club.name!,style: TextStyle(color: AppColors.kYellowColor,fontWeight: FontWeight.bold,fontSize: 18.5.sp),)),
+                    Expanded(child: Text("نادي ${club.name!}",style: TextStyle(color: AppColors.kMainColor,fontWeight: FontWeight.bold,fontSize: 18.5.sp),)),
                     SizedBox(width: 10.w,),
                     if( club.image != null )
                       CircleAvatar(
@@ -36,9 +38,30 @@ class ViewClubDetailsScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children:
                   [
-                    _otherDetailsComponent(imagePath: "assets/images/buffer_icon.png", title: "الفعاليات"),
-                    _otherDetailsComponent(imagePath: "assets/images/badge_icon.png", title: "الإنجازات"),
-                    _otherDetailsComponent(imagePath: "assets/images/chat_icon.png", title: "تواصل معنا"),
+                    _otherDetailsComponent(
+                        imagePath: "assets/images/buffer_icon.png",
+                        title: "الفعاليات",
+                        onTap: ()
+                        {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => ViewEventsOnSpecificClubScreen(clubID: club.id.toString(),clubName: club.name!,)));
+                        }
+                    ),
+                    _otherDetailsComponent(
+                        imagePath: "assets/images/badge_icon.png",
+                        title: "الإنجازات",
+                        onTap: ()
+                        {
+                          // Navigator.push(context, MaterialPageRoute(builder: (context) => ViewEventsOnSpecificClubScreen(clubID: club.id.toString(),clubName: club.name!,)));
+                        }
+                    ),
+                    _otherDetailsComponent(
+                        imagePath: "assets/images/chat_icon.png",
+                        title: "تواصل معنا",
+                        onTap: ()
+                        {
+                          // Navigator.push(context, MaterialPageRoute(builder: (context) => ViewEventsOnSpecificClubScreen(clubID: club.id.toString(),clubName: club.name!,)));
+                        }
+                    ),
                   ],
                 ),
                 SizedBox(height: 7.h,),
@@ -47,12 +70,12 @@ class ViewClubDetailsScreen extends StatelessWidget {
                 Container(
                   width: double.infinity,
                   alignment: club.description != null ? AlignmentDirectional.center : AlignmentDirectional.topStart,
-                  padding: EdgeInsets.symmetric(vertical: club.description != null ? 7.5.h : 20.h,horizontal: 7.5.w),
+                  padding: EdgeInsets.symmetric(vertical: 12.h,horizontal: 12.w),
                   decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black.withOpacity(0.5)),
+                      border: Border.all(color: Colors.black.withOpacity(0.2)),
                       borderRadius: BorderRadius.circular(4)
                   ),
-                  child: Text(club.description != null ? club.description! : "لم يتم اضافة وصف للنادي حتي الآن",style: TextStyle(fontSize: 14.5.sp,fontWeight: FontWeight.w600),),
+                  child: Text(club.description != null ? club.description! : "لم يتم اضافة وصف للنادي حتي الآن",style: TextStyle(fontSize: 13.sp,fontWeight: FontWeight.w600),),
                 ),
               ],
             ),
@@ -63,15 +86,18 @@ class ViewClubDetailsScreen extends StatelessWidget {
   }
 }
 
-Widget _otherDetailsComponent({required String imagePath,required String title}){
-  return Column(
-    mainAxisSize: MainAxisSize.min,
-    children:
-    [
-      FittedBox(fit:BoxFit.scaleDown,child: Text(title,style: TextStyle(fontWeight: FontWeight.w500,fontSize: 16.sp),)),
-      SizedBox(height: 7.5.h,),
-      Image.asset(imagePath,height: 52.h,width: 52.w,),
-    ],
+Widget _otherDetailsComponent({required String imagePath,required String title,required Function() onTap}){
+  return InkWell(
+    onTap: onTap,
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children:
+      [
+        FittedBox(fit:BoxFit.scaleDown,child: Text(title,style: TextStyle(fontWeight: FontWeight.w500,fontSize: 16.sp),)),
+        SizedBox(height: 7.5.h,),
+        Image.asset(imagePath,height: 52.h,width: 52.w,),
+      ],
+    ),
   );
 }
 

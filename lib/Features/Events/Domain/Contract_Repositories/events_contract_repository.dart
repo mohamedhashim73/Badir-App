@@ -14,7 +14,7 @@ abstract class EventsContractRepository{
 
   Future<Either<Failure,Unit>> addEvent({required EventForPublicOrNot forPublic,required String name,required String description,required String imageUrl,required String startDate,required String endDate,required String time,required String location,required String link,required String clubID,required String clubName});
   Future<Either<Failure,Unit>> updateEvent({required String eventID,required EventModel eventModel});
-  Future<Either<Failure,Unit>> deleteEvent({required String eventID});
+  Future<Either<Failure,Unit>> deleteEvent({required String eventID,required String clubID});
   Future<Either<Failure,List<EventEntity>>> getAllEvents();
   Future<Either<Failure,List<TaskEntity>>> getAllTasksOnApp();
   Future<Either<Failure,Unit>> joinToEvent({required String eventID,required String memberID});
