@@ -35,10 +35,10 @@ class UploadReportToAdminScreen extends StatelessWidget {
                 if( state is UploadReportToAdminLoadingState ) showLoadingDialog(context: context);
                 if( state is UploadReportToAdminSuccessState )
                 {
-                  layoutCubit.reportType = null;
-                  layoutCubit.pdfFile = null;
                   Navigator.pop(context);   // TODO : TO get out from Alert Dialog
                   Navigator.pushReplacementNamed(context, AppStrings.kLayoutScreen);
+                  layoutCubit.reportType = null;
+                  layoutCubit.pdfFile = null;
                 }
                 if( state is UploadReportToAdminWithFailureState )
                 {

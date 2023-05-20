@@ -41,6 +41,7 @@ class CreateEventScreen extends StatelessWidget {
               {
                 if( state is CreateEventSuccessState )
                 {
+                  Navigator.pushReplacementNamed(context, AppStrings.kLayoutScreen);
                   _nameController.clear();
                   _descriptionController.clear();
                   _startDateController.clear();
@@ -49,7 +50,6 @@ class CreateEventScreen extends StatelessWidget {
                   _linkController.clear();
                   _locationController.clear();
                   cubit.eventImage = null;
-                  Navigator.pushReplacementNamed(context, AppStrings.kLayoutScreen);
                 }
                 if( state is FailedToCreateEventState )
                 {

@@ -56,7 +56,7 @@ class CreateMeetingScreen extends StatelessWidget {
                 }
               },
               builder: (context,state) {
-                return Column(
+                return ListView(
                   children:
                   [
                     SingleChildScrollView(

@@ -10,9 +10,10 @@ import '../../../../Core/Components/drawer_item.dart';
 import '../../../../Core/Theme/app_colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../Domain/Entities/notification_entity.dart';
+import 'package:bader_user_app/Core/Constants/enumeration.dart';
 
 class NotificationsScreen extends StatelessWidget {
-  final Stream<QuerySnapshot<Map<String, dynamic>>> notificationsSnapshots = FirebaseFirestore.instance.collection(Constants.kUsersCollectionName).doc(Constants.userID).collection(Constants.kNotificationsCollectionName).snapshots();
+  Stream<QuerySnapshot<Map<String, dynamic>>> notificationsSnapshots = FirebaseFirestore.instance.collection(Constants.kUsersCollectionName).doc(Constants.userID).collection(Constants.kNotificationsCollectionName).snapshots();
   List<NotificationEntity> notifications = [];
   NotificationsScreen({Key? key}) : super(key: key);
 
@@ -39,7 +40,7 @@ class NotificationsScreen extends StatelessWidget {
                   notifications.clear();
                   for( var item in snapshots.data!.docs )
                     {
-                      if( item.data()['notifyType'].toString().trim() == "adminMakesYouALeaderOnSpecificClub" && userEntity.idForClubLead == null )
+                      if( item.data()['notifyType'].toString().trim() == NotificationType.adminMakesYouALeaderOnSpecificClub.name.trim() && userEntity.idForClubLead == null )
                         {
                           layoutCubit.getMyData(clubsCubit: clubsCubit);
                         }
@@ -48,6 +49,7 @@ class NotificationsScreen extends StatelessWidget {
                   return Padding(
                     padding: EdgeInsets.symmetric(vertical: 10.h,horizontal: 8.w),
                     child: ListView.separated(
+                        physics: const BouncingScrollPhysics(),
                         itemBuilder: (context,index)
                         {
                           return NotifyComponent(notifyData: notifications[index]);

@@ -81,7 +81,7 @@ class DrawerItem extends StatelessWidget {
   Widget build(BuildContext context){
     LayoutCubit layoutCubit = LayoutCubit.getInstance(context);
     if( layoutCubit.userData == null ) layoutCubit.getMyData();
-    if( layoutCubit.userData != null && layoutCubit.userData!.idForClubLead != null && drawerData.length == 12 ) drawerData.removeAt(3);      // TODO: عشان المهام المتاحة مش هتنعرض لليدر فقط هتكون للمستخد العادي والعضو
+    if( layoutCubit.userData != null && layoutCubit.userData!.idForClubLead != null ) drawerData.removeAt(3);      // TODO: عشان المهام المتاحة مش هتنعرض لليدر فقط هتكون للمستخد العادي والعضو
     ClubsCubit clubsCubit = ClubsCubit.getInstance(context);
     EventsCubit eventsCubit  = EventsCubit.getInstance(context);
     if( eventsCubit.ownEvents.isEmpty && layoutCubit.userData != null && layoutCubit.userData!.idForClubLead != null ) eventsCubit.getPastAndNewAndMyEvents(idForClubILead: layoutCubit.userData!.idForClubLead);

@@ -302,7 +302,7 @@ class HomeScreen extends StatelessWidget {
       },
       child: Container(
         width: 160.w,
-        padding: EdgeInsets.symmetric(horizontal: 10.w,vertical: 10.h),
+        padding: EdgeInsets.symmetric(horizontal: 12.w,vertical: 12.h),
         decoration: BoxDecoration(
           color: AppColors.kMainColor,
           borderRadius: BorderRadius.circular(4.w)
@@ -311,7 +311,7 @@ class HomeScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children:
           [
-            Text("# ${eventEntity.name}",maxLines:2,style: TextStyle(color: AppColors.kYellowColor,fontWeight: FontWeight.w500,fontSize: 15.sp),),
+            Text("# ${eventEntity.name}",maxLines:2,style: TextStyle(color: AppColors.kYellowColor,fontWeight: FontWeight.w500,fontSize: 15.sp,height: 1.4,overflow: TextOverflow.ellipsis),),
             Expanded(
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 7.h),
