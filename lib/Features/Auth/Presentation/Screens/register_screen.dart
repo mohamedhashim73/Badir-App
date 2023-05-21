@@ -31,16 +31,16 @@ class RegisterScreen extends StatelessWidget {
             {
               if( state is RegisterSuccessState )
               {
-                showSnackBar(context: context, message: "تم انشاء الحساب بنجاح",backgroundColor: Colors.green,seconds: 2);
+                Navigator.pushNamed(context, AppStrings.kLoginScreen);
+                showToastMessage(context: context, message: "تم انشاء الحساب بنجاح",backgroundColor: Colors.green,seconds: 2);
                 _emailController.clear();
                 _passwordController.clear();
                 _phoneController.clear();
                 _nameController.clear();
-                Navigator.pushNamed(context, AppStrings.kLoginScreen);
               }
               if( state is RegisterFailedState )
               {
-                showSnackBar(context: context, message: state.message,backgroundColor: Colors.red,seconds: 2);
+                showToastMessage(context: context, message: state.message,backgroundColor: Colors.red,seconds: 2);
               }
             },
             builder: (context,state) {
@@ -96,7 +96,7 @@ class RegisterScreen extends StatelessWidget {
                             }
                             else
                             {
-                              showSnackBar(context: context, message: "برجاء إدخال البيانات كامله",backgroundColor: Colors.red,seconds: 2);
+                              showToastMessage(context: context, message: "برجاء إدخال البيانات كامله",backgroundColor: Colors.red,seconds: 2);
                             }
                           },
                           title: state is RegisterLoadingState ? "جاري انشاء الحساب" : "انشاء حساب",

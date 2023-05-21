@@ -32,7 +32,7 @@ class ViewMembersOnMyClubScreen extends StatelessWidget {
               if( state is RemoveMemberFromClubSuccessState )
                 {
                   Navigator.pop(context);
-                  showSnackBar(context: context, message: 'تم حذف العضو بنجاح',backgroundColor: AppColors.kGreenColor);
+                  showToastMessage(context: context, message: 'تم حذف العضو بنجاح',backgroundColor: AppColors.kGreenColor);
                 }
             },
             builder: (context,state)

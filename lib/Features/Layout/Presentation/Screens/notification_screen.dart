@@ -13,7 +13,6 @@ import '../../Domain/Entities/notification_entity.dart';
 import 'package:bader_user_app/Core/Constants/enumeration.dart';
 
 class NotificationsScreen extends StatelessWidget {
-  Stream<QuerySnapshot<Map<String, dynamic>>> notificationsSnapshots = FirebaseFirestore.instance.collection(Constants.kUsersCollectionName).doc(Constants.userID).collection(Constants.kNotificationsCollectionName).snapshots();
   List<NotificationEntity> notifications = [];
   NotificationsScreen({Key? key}) : super(key: key);
 
@@ -33,7 +32,7 @@ class NotificationsScreen extends StatelessWidget {
               title: const Text("التنبيهات")
           ),
           body: StreamBuilder(
-            stream: notificationsSnapshots,
+            stream: FirebaseFirestore.instance.collection(Constants.kUsersCollectionName).doc(Constants.userID).collection(Constants.kNotificationsCollectionName).snapshots(),
             builder: (context,snapshots){
               if( snapshots.hasData && snapshots.data != null && snapshots.data!.docs.isNotEmpty)
                 {

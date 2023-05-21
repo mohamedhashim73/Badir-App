@@ -12,7 +12,7 @@ void showLoadingDialog({required BuildContext context}) {
         [
           const CupertinoActivityIndicator(),
           SizedBox(width: 10.w,),
-          const Text('انتظر لثواني')
+          const Text('برجاء الإنتظار')
         ],
       ),
     ),

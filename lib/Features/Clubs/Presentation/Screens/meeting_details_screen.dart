@@ -44,7 +44,7 @@ class MeetingDetailsScreen extends StatelessWidget {
             child: BlocListener<LayoutCubit,LayoutStates>(
               listener: (context,state)
               {
-                if( state is ErrorDuringOpenPdfState ) showSnackBar(context: context, message: state.message,backgroundColor: AppColors.kRedColor);
+                if( state is ErrorDuringOpenPdfState ) showToastMessage(context: context, message: state.message,backgroundColor: AppColors.kRedColor);
               },
               child: ListView(
                 physics: const BouncingScrollPhysics(),

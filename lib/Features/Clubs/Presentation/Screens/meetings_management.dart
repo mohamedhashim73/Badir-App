@@ -45,7 +45,7 @@ class MeetingsManagementScreen extends StatelessWidget {
               if( state is DeleteMeetingSuccessState )
                 {
                   Navigator.pop(context);   // To get out from Alert Dialog
-                  showSnackBar(context: context, message: "تم حذف الاجتماع");
+                  showToastMessage(context: context, message: "تم حذف الاجتماع");
                 }
             },
             builder: (context,state) {

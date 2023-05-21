@@ -43,7 +43,7 @@ class UploadReportToAdminScreen extends StatelessWidget {
                 if( state is UploadReportToAdminWithFailureState )
                 {
                   Navigator.pop(context);   // TODO : TO get out from Alert Dialog
-                  showSnackBar(context: context, message: state.message,backgroundColor: AppColors.kRedColor);
+                  showToastMessage(context: context, message: state.message,backgroundColor: AppColors.kRedColor);
                 }
               },
               builder: (context,state){
@@ -94,7 +94,7 @@ class UploadReportToAdminScreen extends StatelessWidget {
                         }
                         else
                         {
-                          showSnackBar(context: context, message: "برجاء إدخال البيانات كامله",backgroundColor: Colors.red,seconds: 2);
+                          showToastMessage(context: context, message: "برجاء إدخال البيانات كامله",backgroundColor: Colors.red,seconds: 2);
                         }
                       },
                       title: "إرسال"

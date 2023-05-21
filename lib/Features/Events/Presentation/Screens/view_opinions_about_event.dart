@@ -39,7 +39,7 @@ class ViewOpinionsAboutEventScreen extends StatelessWidget {
             {
               if( state is FailedToGetOpinionsAboutEventState )
                 {
-                  showSnackBar(context: context, message: state.message,backgroundColor: AppColors.kRedColor);
+                  showToastMessage(context: context, message: state.message,backgroundColor: AppColors.kRedColor);
                 }
             },
             builder: (context,state) {

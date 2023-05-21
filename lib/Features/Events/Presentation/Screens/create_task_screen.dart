@@ -39,13 +39,13 @@ class CreateTaskScreen extends StatelessWidget {
                 {
                   eventsCubit.taskOptionsForCreateIt.clear();
                   Navigator.pop(context);   // TODO : TO get out from Alert Dialog
-                  showSnackBar(context: context, message: "تم إضافة المهمة بنجاح");
+                  showToastMessage(context: context, message: "تم إضافة المهمة بنجاح");
                   Navigator.pop(context);
                 }
                 if( state is FailedCreateTaskState )
                 {
                   Navigator.pop(context);   // TODO : TO get out from Alert Dialog
-                  showSnackBar(context: context, message: state.message,backgroundColor: AppColors.kRedColor);
+                  showToastMessage(context: context, message: state.message,backgroundColor: AppColors.kRedColor);
                 }
               },
               builder: (context,state){
@@ -80,7 +80,7 @@ class CreateTaskScreen extends StatelessWidget {
                         }
                         else
                         {
-                          showSnackBar(context: context, message: "برجاء إدخال البيانات كامله",backgroundColor: Colors.red,seconds: 2);
+                          showToastMessage(context: context, message: "برجاء إدخال البيانات كامله",backgroundColor: Colors.red,seconds: 2);
                         }
                       },
                       title: "إنشاء"

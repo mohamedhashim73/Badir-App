@@ -6,8 +6,8 @@ import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_cu
 import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-
+import 'package:flutter_phoenix/flutter_phoenix.dart';
+import '../../Features/Auth/Presentation/Screens/login_screen.dart';
 import '../Constants/constants.dart';
 
 class DrawerItem extends StatelessWidget {
@@ -158,8 +158,9 @@ class DrawerItem extends StatelessWidget {
                       ListTile(
                         onTap: ()
                         {
-                          // TODO: Call log out method.....
-                          layoutCubit.logout(eventsCubit: eventsCubit, clubsCubit: clubsCubit, layoutCubit: layoutCubit);
+                          layoutCubit.logout(context:context,eventsCubit: eventsCubit, clubsCubit: clubsCubit, layoutCubit: layoutCubit).then((value) async {
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginScreen()));
+                          });
                         },
                         leading: Text(drawerData.last['title']),
                         trailing: Icon(drawerData.last['iconData']),

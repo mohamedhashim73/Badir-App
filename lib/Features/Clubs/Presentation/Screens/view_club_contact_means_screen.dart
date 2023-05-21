@@ -29,7 +29,7 @@ class ViewClubContactMeansScreen extends StatelessWidget {
               {
                 if( state is ErrorDuringOpenPdfState )
                   {
-                    showSnackBar(context: context, message: state.message,backgroundColor: AppColors.kRedColor);
+                    showToastMessage(context: context, message: state.message,backgroundColor: AppColors.kRedColor);
                   }
               },
               child: Column(
@@ -54,7 +54,7 @@ class ViewClubContactMeansScreen extends StatelessWidget {
                       InkWell(
                           onTap:()
                           {
-                            layoutCubit.openPdf(link: contactMeansForClub.email!);
+                            layoutCubit.openPdf(link: contactMeansForClub.twitter!);
                           },
                           child: Image.asset("assets/images/twitter.png",height: 52.h,width: 52.w,)
                       ),

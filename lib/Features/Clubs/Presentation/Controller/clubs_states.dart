@@ -45,7 +45,7 @@ class ChooseClubImageSuccess extends ClubsStates{}
 class ChooseClubImageFailure extends ClubsStates{}
 
 class ChangeSearchAboutClubStatus extends ClubsStates{}
-class GetFilteredClubsSuccessStatus extends ClubsStates{}
+class GetFilteredClubsSuccessState extends ClubsStates{}
 
 class CollegeChosenSuccessState extends ClubsStates{}
 class CommitteeChosenSuccessState extends ClubsStates{}

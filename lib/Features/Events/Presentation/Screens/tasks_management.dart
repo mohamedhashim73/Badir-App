@@ -50,7 +50,7 @@ class TasksManagementScreen extends StatelessWidget {
               if( state is DeleteTaskSuccessState )
                 {
                   Navigator.pop(context);
-                  showSnackBar(context: context, message: 'تم حذف المهمة');
+                  showToastMessage(context: context, message: 'تم حذف المهمة');
                 }
             },
             builder: (context,state) {

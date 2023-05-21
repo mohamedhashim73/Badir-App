@@ -11,8 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jiffy/jiffy.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import '../../../../Core/Components/drawer_item.dart';
-import '../../../../Core/Constants/enumeration.dart';
 import '../../../../Core/Theme/app_colors.dart';
 import '../../../Events/Domain/Entities/event_entity.dart';
 import '../../../Clubs/Presentation/Controller/clubs_cubit.dart';
@@ -50,8 +50,7 @@ class HomeScreen extends StatelessWidget {
               buildWhen: (pastState,currentState) => currentState is GetMyDataSuccessState ,
               listener: (context,state)
               {
-                if( state is LogOutSuccessState ) Navigator.pushNamed(context, AppStrings.kLoginScreen);
-                if( state is FailedToLogOut ) showSnackBar(context: context, message: state.message,backgroundColor: AppColors.kRedColor);
+                if( state is FailedToLogOut ) showToastMessage(context: context, message: state.message,backgroundColor: AppColors.kRedColor);
               },
               builder: (context,state) {
                 return layoutCubit.userData != null ? ListView(
@@ -199,7 +198,7 @@ class HomeScreen extends StatelessWidget {
                           if( state is JoinToEventSuccessState || state is FailedToJoinToEventState )
                             {
                               Navigator.pop(context);    // TODO: Get out from Alert Dialog...
-                              showSnackBar(context: context, message: state is FailedToJoinToEventState ? state.message : 'تم التسجيل بالفعالية بنجاح',backgroundColor: state is FailedToJoinToEventState ? AppColors.kRedColor : AppColors.kGreenColor);
+                              showToastMessage(context: context, message: state is FailedToJoinToEventState ? state.message : 'تم التسجيل بالفعالية بنجاح',backgroundColor: state is FailedToJoinToEventState ? AppColors.kRedColor : AppColors.kGreenColor);
                             }
                         },
                         builder: (context,state) {
@@ -341,11 +340,11 @@ class HomeScreen extends StatelessWidget {
                     }
                     else if( eventInDateAndIHaveJoined )
                     {
-                      showSnackBar(context: context, message: "لقد سبق لك التسجيل بالفعالية",backgroundColor: AppColors.kRedColor);
+                      showToastMessage(context: context, message: "لقد سبق لك التسجيل بالفعالية",backgroundColor: AppColors.kRedColor);
                     }
                     else if( eventInDateAndIDoNotHavePermissionToJoin )
                     {
-                      showSnackBar(context: context, message: 'هذه الفعالية خاصة بأعضاء ${eventEntity.clubName} فقط',backgroundColor: AppColors.kRedColor);
+                      showToastMessage(context: context, message: 'هذه الفعالية خاصة بأعضاء ${eventEntity.clubName} فقط',backgroundColor: AppColors.kRedColor);
                     }
                   },
                   color: myData.idForClubLead != null || eventInDateAndIHaveNotJoinedYetAndHavePermission ? AppColors.kWhiteColor : eventExpiredAndIHaveJoined ? AppColors.kOrangeColor : eventInDateAndIDoNotHavePermissionToJoin || eventExpiredAndIHaveNotJoined ? AppColors.kRedColor : AppColors.kGreenColor,

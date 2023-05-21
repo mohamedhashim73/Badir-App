@@ -22,51 +22,53 @@ void askMembershipDialog({required ClubEntity club,required BuildContext context
           buildWhen: (previousState,currentState) => currentState is CommitteeChosenSuccessState,
           builder:(context,state)
           {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children:
-              [
-                Text("اللجنة",style: TextStyle(color: AppColors.kMainColor,fontWeight:FontWeight.bold,fontSize: 15.5.sp),),
-                SizedBox(height: 5.h),
-                dropDownComponent(
-                    items: Constants.committees,
-                    onChanged: (committeeChosen)
-                    {
-                      cubit.chooseCommittee(chosen: committeeChosen!);
-                    },
-                    value: cubit.selectedCommittee
-                ),
-                SizedBox(height: 5.h),
-                Text("تحدث عن نفسك",style: TextStyle(color: AppColors.kMainColor,fontWeight:FontWeight.bold,fontSize: 15.5.sp),),
-                SizedBox(height: 5.h),
-                textFieldComponent(controller: controller,maxLines: 4),
-                SizedBox(height: 7.h,),
-                Center(
-                  child: DefaultButton(
-                    title: state is SendRequestForMembershipLoadingState ? "جاري ارسال الطلب" : 'إرسال',
-                    roundedRectangleBorder: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4)
-                    ),
-                    onTap: ()
-                    {
-                      if( cubit.selectedCommittee != null && controller.text.isNotEmpty && ( club.availableOnlyForThisCollege.isEmpty || ( club.availableOnlyForThisCollege.isNotEmpty && club.availableOnlyForThisCollege.contains(userEntity.college!) == true ) ) )
+            return SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children:
+                [
+                  Text("اللجنة",style: TextStyle(color: AppColors.kMainColor,fontWeight:FontWeight.bold,fontSize: 15.5.sp),),
+                  SizedBox(height: 5.h),
+                  dropDownComponent(
+                      items: Constants.committees,
+                      onChanged: (committeeChosen)
                       {
-                        cubit.askForMembership(userEntity:userEntity,committeeName: cubit.selectedCommittee!,clubID: club.id.toString(), infoAboutAsker: controller.text, userName: userEntity.name!);
-                      }
-                      else if( cubit.selectedCommittee == null || controller.text.isEmpty )
-                      {
-                        showSnackBar(context: context, message: "برجاء ادخال المعلومات كاملة",backgroundColor: Colors.red);
-                      }
-                      else if( club.availableOnlyForThisCollege.isNotEmpty && club.availableOnlyForThisCollege.contains(userEntity.college!) == false )
-                      {
-                        Navigator.pop(context);  // TODO: Get out from alert dialog
-                        showSnackBar(context: context, message: "غير مصرح لك بالإنضمام نظرا لعدم توفر الشروط !!",backgroundColor: Colors.red);
-                      }
-                    },
+                        cubit.chooseCommittee(chosen: committeeChosen!);
+                      },
+                      value: cubit.selectedCommittee
                   ),
-                )
-              ],
+                  SizedBox(height: 5.h),
+                  Text("تحدث عن نفسك",style: TextStyle(color: AppColors.kMainColor,fontWeight:FontWeight.bold,fontSize: 15.5.sp),),
+                  SizedBox(height: 5.h),
+                  textFieldComponent(controller: controller,maxLines: 4),
+                  SizedBox(height: 7.h,),
+                  Center(
+                    child: DefaultButton(
+                      title: state is SendRequestForMembershipLoadingState ? "جاري ارسال الطلب" : 'إرسال',
+                      roundedRectangleBorder: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4)
+                      ),
+                      onTap: ()
+                      {
+                        if( cubit.selectedCommittee != null && controller.text.isNotEmpty && ( club.availableOnlyForThisCollege.isEmpty || ( club.availableOnlyForThisCollege.isNotEmpty && club.availableOnlyForThisCollege.contains(userEntity.college!) == true ) ) )
+                        {
+                          cubit.askForMembership(userEntity:userEntity,committeeName: cubit.selectedCommittee!,clubID: club.id.toString(), infoAboutAsker: controller.text, userName: userEntity.name!);
+                        }
+                        else if( cubit.selectedCommittee == null || controller.text.isEmpty )
+                        {
+                          showToastMessage(context: context, message: "برجاء ادخال المعلومات كاملة",backgroundColor: Colors.red);
+                        }
+                        else if( club.availableOnlyForThisCollege.isNotEmpty && club.availableOnlyForThisCollege.contains(userEntity.college!) == false )
+                        {
+                          Navigator.pop(context);  // TODO: Get out from alert dialog
+                          showToastMessage(context: context, message: "غير مصرح لك بالإنضمام نظرا لعدم توفر الشروط !!",backgroundColor: Colors.red);
+                        }
+                      },
+                    ),
+                  )
+                ],
+              ),
             );
           }
         )

@@ -196,7 +196,7 @@ class ClubsCubit extends Cubit<ClubsStates> {
     );
     if( requestSent )
       {
-        await getIDForClubsIAskedForMembership(userID: userEntity.id!,idForClubsMemberID: userEntity.idForClubsMemberIn);
+        await getClubsData(userEntity: userEntity);
         emit(SendRequestForMembershipSuccessState());
       }
     else
@@ -216,7 +216,7 @@ class ClubsCubit extends Cubit<ClubsStates> {
     if( clubs.isNotEmpty )
       {
         filteredClubsData = clubs.where((element) => element.name!.toLowerCase().contains(input.toLowerCase())).toList();
-        emit(GetFilteredClubsSuccessStatus());
+        emit(GetFilteredClubsSuccessState());
       }
   }
 

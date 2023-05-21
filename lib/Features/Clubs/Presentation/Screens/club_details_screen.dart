@@ -36,7 +36,7 @@ class ViewClubDetailsScreen extends StatelessWidget {
                           height: 90.h,
                           width: 120.w,
                           decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(4),
+                              borderRadius: BorderRadius.circular(2.5),
                               image: DecorationImage(image: NetworkImage(club.image!),fit: BoxFit.fill)
                           ),
                         ),
@@ -76,7 +76,7 @@ class ViewClubDetailsScreen extends StatelessWidget {
                             }
                           else
                             {
-                              showSnackBar(context: context, message: "لم يتم إضافة وسائل للتواصل بعد",backgroundColor: AppColors.kRedColor);
+                              showToastMessage(context: context, message: "لم يتم إضافة وسائل للتواصل بعد",backgroundColor: AppColors.kRedColor);
                             }
                         }
                     ),

@@ -67,7 +67,7 @@ class UpdateEventScreen extends StatelessWidget {
                 if( state is FailedToUpdateEventState )
                 {
                   Navigator.pop(context);
-                  showSnackBar(context: context, message: state.message,backgroundColor: AppColors.kRedColor);
+                  showToastMessage(context: context, message: state.message,backgroundColor: AppColors.kRedColor);
                 }
               },
               builder: (context,state) {
@@ -131,7 +131,7 @@ class UpdateEventScreen extends StatelessWidget {
                         }
                         else
                         {
-                          showSnackBar(context: context, message: "من فضلك قم بإدخال البيانات كاملة",backgroundColor: AppColors.kRedColor);
+                          showToastMessage(context: context, message: "من فضلك قم بإدخال البيانات كاملة",backgroundColor: AppColors.kRedColor);
                         }
                       },
                       title: "تعديل",

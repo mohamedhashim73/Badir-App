@@ -63,28 +63,27 @@ class MembershipRequestsScreen extends StatelessWidget {
 Widget _requestMembershipItem({required BuildContext context,required RequestMembershipEntity requestData,required LayoutCubit layoutCubit,required ClubsCubit cubit,required String clubID,required String clubName}){
   return InkWell(
     onTap: () => showMemberData(context: context, committeeName: requestData.committeeName!, aboutMember: requestData.infoAboutAsker!),
-    child: Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(4),
-        color: AppColors.kYellowColor,
-      ),
-      padding: EdgeInsets.symmetric(vertical: 10.h,horizontal: 12.w),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children:
-        [
-          Text(requestData.requestUserName!,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15.5.sp),),
-          SizedBox(height: 5.h,),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children:
-            [
-              _buttonItem(committeeNameForRequestSender: requestData.committeeName!,clubID: clubID,cubit: cubit,responseStatus: true,requestSenderID: requestData.userAskForMembershipID!,layoutCubit: layoutCubit,clubName: clubName),
-              SizedBox(width: 10.w,),
-              _buttonItem(committeeNameForRequestSender: requestData.committeeName!,clubID: clubID,cubit: cubit,responseStatus: false,requestSenderID: requestData.userAskForMembershipID!,layoutCubit: layoutCubit,clubName: clubName),
-            ],
-          )
-        ],
+    child: Card(
+      elevation: 0.2,
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 10.h,horizontal: 12.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children:
+          [
+            Text(requestData.requestUserName!,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15.5.sp),),
+            SizedBox(height: 5.h,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children:
+              [
+                _buttonItem(committeeNameForRequestSender: requestData.committeeName!,clubID: clubID,cubit: cubit,responseStatus: true,requestSenderID: requestData.userAskForMembershipID!,layoutCubit: layoutCubit,clubName: clubName),
+                SizedBox(width: 7.5.w,),
+                _buttonItem(committeeNameForRequestSender: requestData.committeeName!,clubID: clubID,cubit: cubit,responseStatus: false,requestSenderID: requestData.userAskForMembershipID!,layoutCubit: layoutCubit,clubName: clubName),
+              ],
+            )
+          ],
+        ),
       ),
     ),
   );

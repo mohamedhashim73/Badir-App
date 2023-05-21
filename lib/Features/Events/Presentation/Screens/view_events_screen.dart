@@ -122,11 +122,11 @@ class ViewAllEventsThrowAppScreen extends StatelessWidget {
                               }
                               else if( eventInDateAndIHaveJoined )
                               {
-                                showSnackBar(context: context, message: "لقد سبق لك التسجيل بالفعالية");
+                                showToastMessage(context: context, message: "لقد سبق لك التسجيل بالفعالية");
                               }
                               else if( eventInDateAndIDoNotHavePermissionToJoin )
                               {
-                                showSnackBar(context: context, message: 'هذه الفعالية خاصة بأعضاء ${events[index].clubName} فقط',backgroundColor: AppColors.kRedColor);
+                                showToastMessage(context: context, message: 'هذه الفعالية خاصة بأعضاء ${events[index].clubName} فقط',backgroundColor: AppColors.kRedColor);
                               }
                             },
                         child: Text(userEntity.idForClubLead != null ? "متابعة" : eventInDateAndIHaveJoined ? "تم التسجيل" :  eventInDateAndIHaveNotJoinedYetAndHavePermission ? "سجل الآن" : eventExpiredAndIHaveNotJoined ? "انتهت الفعالية" : eventInDateAndIDoNotHavePermissionToJoin ? "خاصة" : "شاركنا برأيك",style: const TextStyle(fontWeight: FontWeight.bold),),

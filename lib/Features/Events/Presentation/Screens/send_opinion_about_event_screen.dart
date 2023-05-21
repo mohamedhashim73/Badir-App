@@ -33,13 +33,13 @@ class SendOpinionAboutEventScreen extends StatelessWidget {
                 {
                   Navigator.pop(context); // TODO: Get out from Alert Dialog
                   Navigator.pop(context);
-                  showSnackBar(context: context, message: state.message,backgroundColor: AppColors.kRedColor);
+                  showToastMessage(context: context, message: state.message,backgroundColor: AppColors.kRedColor);
                 }
               if( state is SendOpinionAboutEventSuccessState )
                 {
                   Navigator.pop(context); // TODO: Get out from Alert Dialog
                   Navigator.pop(context);
-                  showSnackBar(context: context, message: 'تم إرسال رأيك بنجاح');
+                  showToastMessage(context: context, message: 'تم إرسال رأيك بنجاح');
                 }
             },
             child: Padding(

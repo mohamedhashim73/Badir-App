@@ -94,7 +94,7 @@ class EventDetailsScreen extends StatelessWidget {
                       }
                     else if( eventInDateAndIHaveJoined )
                       {
-                        showSnackBar(context: context, message: "لقد سبق لك التسجيل بالفعالية",backgroundColor: AppColors.kRedColor);
+                        showToastMessage(context: context, message: "لقد سبق لك التسجيل بالفعالية",backgroundColor: AppColors.kRedColor);
                       }
                   },
                   title: eventExpiredAndIHaveJoined ? "شاركنا برأيك" : eventInDateAndIHaveJoined ? "تم التسجيل" : "سجل الآن",

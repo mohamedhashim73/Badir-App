@@ -46,13 +46,13 @@ class UpdateTaskScreen extends StatelessWidget {
                     {
                       eventsCubit.taskOptionsForCreateIt.clear();
                       Navigator.pop(context);   // TODO : TO get out from Alert Dialog
-                      showSnackBar(context: context, message: "تم تعديل المهمة بنجاح");
+                      showToastMessage(context: context, message: "تم تعديل المهمة بنجاح");
                       Navigator.pop(context);
                     }
                     if( state is FailedToUpdateTaskState )
                     {
                       Navigator.pop(context);   // TODO : TO get out from Alert Dialog
-                      showSnackBar(context: context, message: state.message,backgroundColor: AppColors.kRedColor);
+                      showToastMessage(context: context, message: state.message,backgroundColor: AppColors.kRedColor);
                     }
                   },
                   builder: (context,state){
@@ -87,7 +87,7 @@ class UpdateTaskScreen extends StatelessWidget {
                               }
                               else
                               {
-                                showSnackBar(context: context, message: "برجاء إدخال البيانات كامله",backgroundColor: Colors.red,seconds: 2);
+                                showToastMessage(context: context, message: "برجاء إدخال البيانات كامله",backgroundColor: Colors.red,seconds: 2);
                               }
                             },
                             title: "تعديل"

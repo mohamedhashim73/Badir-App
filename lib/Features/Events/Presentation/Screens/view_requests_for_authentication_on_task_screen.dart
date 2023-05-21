@@ -44,7 +44,7 @@ class ViewRequestsForAuthenticateOnTaskScreen extends StatelessWidget {
               if( state is AcceptOrRejectAuthenticateRequestOnATaskSuccessState )
                 {
                   Navigator.pop(context);
-                  showSnackBar(context: context, message: "تم المصادقة بنجاح");
+                  showToastMessage(context: context, message: "تم المصادقة بنجاح");
                 }
             },
             builder: (context,state) {

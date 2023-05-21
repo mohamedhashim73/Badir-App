@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:bader_user_app/Core/Constants/constants.dart';
 import 'package:bader_user_app/Core/Errors/exceptions.dart';
+import 'package:bader_user_app/Core/Network/sharedPref.dart';
 import 'package:bader_user_app/Features/Clubs/Presentation/Controller/clubs_cubit.dart';
 import 'package:bader_user_app/Features/Layout/Data/Models/report_model.dart';
 import 'package:bader_user_app/Features/Layout/Data/Models/user_model.dart';
@@ -67,11 +68,26 @@ class LayoutRemoteDataSource {
   Future<Unit> logout({required EventsCubit eventsCubit,required ClubsCubit clubsCubit,required LayoutCubit layoutCubit,}) async {
     try
     {
+      await SharedPref.clearCache();
       await FirebaseAuth.instance.signOut();
       layoutCubit.userData = null;
       layoutCubit.notifications.clear();
+      layoutCubit.allUsersDataOnApp.clear();
       clubsCubit.dataAboutClubYouLead = null;
+      clubsCubit.clubs.clear();
+      clubsCubit.meetingsDataCreatedByMe.clear();
+      clubsCubit.idForClubsIAskedToJoinAndWaitingResponse.clear();
+      clubsCubit.membersDataOnMyClub.clear();
+      clubsCubit.membershipRequests.clear();
       eventsCubit.ownEvents.clear();
+      eventsCubit.allEvents.clear();
+      eventsCubit.availableTasks.clear();
+      eventsCubit.idForTasksThatIAskedToAuthenticateBefore = null;
+      eventsCubit.tasksCreatedByMe.clear();
+      eventsCubit.namesForEventsICreated.clear();
+      eventsCubit.membersDataForAnEvent.clear();
+      eventsCubit.pastEvents.clear();
+      eventsCubit.newEvents.clear();
       layoutCubit.bottomNavIndex = 0;   // TODO: عشان اما يجي يعمل تسجيل دخول يدخل علي ال Home مش Profile لان اخر قيمه له هي 2
       return unit;
     }

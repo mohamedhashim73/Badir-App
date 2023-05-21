@@ -1,10 +1,9 @@
+import 'package:bader_user_app/Core/Components/splash_screen.dart';
 import 'package:bader_user_app/Core/Constants/app_routes.dart';
 import 'package:bader_user_app/Features/Auth/Presentation/Screens/login_screen.dart';
 import 'package:bader_user_app/Core/Constants/constants.dart';
 import 'package:bader_user_app/Core/Network/sharedPref.dart';
 import 'package:bader_user_app/Core/Service%20Locators/service_locators.dart';
-import 'package:bader_user_app/Features/Clubs/Presentation/Screens/update_club_availablility_screen.dart';
-import 'package:bader_user_app/Features/Events/Presentation/Screens/send_opinion_about_event_screen.dart';
 import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_cubit.dart';
 import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_states.dart';
 import 'package:bader_user_app/Features/Layout/Presentation/Screens/layout_screen.dart';
@@ -15,6 +14,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'Core/Constants/bloc_oberver.dart';
 import 'Core/Theme/app_colors.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,7 +24,7 @@ Future<void> main() async {
   await SharedPref.cacheInitialization();
   Constants.userID = SharedPref.getString(key: 'userID');
   debugPrint("User ID is : ${Constants.userID}");
-  runApp(const MyApp());
+  runApp(Phoenix(child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -55,7 +55,7 @@ class MyApp extends StatelessWidget {
                   )
                 ),
                 debugShowCheckedModeBanner: false,
-                home: Constants.userID != null ? const LayoutScreen() : LoginScreen()
+                home: SplashScreen()
               );
             }
           ),

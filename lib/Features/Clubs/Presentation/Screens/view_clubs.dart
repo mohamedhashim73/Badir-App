@@ -11,7 +11,6 @@ import 'package:bader_user_app/Features/Clubs/Presentation/Screens/club_details_
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../../Core/Constants/constants.dart';
 import '../Controller/clubs_states.dart';
 
 class ViewClubsScreen extends StatelessWidget {
@@ -35,7 +34,14 @@ class ViewClubsScreen extends StatelessWidget {
           builder: (context,state){
             return Scaffold(
               appBar: AppBar(
-                automaticallyImplyLeading: false,
+                leading: BackButton(
+                  onPressed: ()
+                  {
+                    Navigator.pop(context);
+                    clubsCubit.searchEnabled = false;
+                    clubsCubit.filteredClubsData.clear();
+                  },
+                ),
                 title: clubsCubit.searchEnabled ? TextField(
                   style: TextStyle(color: AppColors.kWhiteColor),
                   onChanged: (input)
@@ -63,6 +69,7 @@ class ViewClubsScreen extends StatelessWidget {
                 ],
               ),
               body: BlocConsumer<ClubsCubit,ClubsStates>(
+                    buildWhen: (pastState,currentState) => currentState is GetClubsDataSuccessState || currentState is GetFilteredClubsSuccessState,
                     listener: (context,state)
                     {
                       if( state is SendRequestForMembershipSuccessState )
@@ -70,16 +77,16 @@ class ViewClubsScreen extends StatelessWidget {
                         clubsCubit.selectedCommittee = null;
                         infoAboutUserController.clear();
                         Navigator.pop(context);
-                        showSnackBar(context: context, message: "تم إرسال الطلب بنجاح في انتظار موافقة الأدمن",backgroundColor: AppColors.kGreenColor,seconds: 3);
+                        showToastMessage(context: context, message: "تم إرسال الطلب بنجاح في انتظار موافقة الأدمن",backgroundColor: AppColors.kGreenColor,seconds: 3);
                       }
                       if( state is FailedToSendRequestForMembershipState )
                       {
                         Navigator.pop(context);
-                        showSnackBar(context: context, message: "حدث خطأ اثناء ارسال الطلب برجاء التأكد من الاتصال بالنت والمحاوله لاحقا",backgroundColor: Colors.red);
+                        showToastMessage(context: context, message: "حدث خطأ اثناء ارسال الطلب برجاء التأكد من الاتصال بالنت والمحاوله لاحقا",backgroundColor: Colors.red);
                       }
                     },
                     builder: (context,state) {
-                      if( state is GetClubsDataSuccessState || state is SendRequestForMembershipSuccessState )
+                      if( state is GetClubsDataSuccessState || state is GetFilteredClubsSuccessState )
                         {
                           return ListView.builder(
                             itemCount: clubsCubit.filteredClubsData.isEmpty ? clubsCubit.clubs.length : clubsCubit.filteredClubsData.length,
@@ -171,15 +178,15 @@ Widget _clubItem({required UserEntity myData,required ClubEntity club,required B
                                 }
                                 else if( alreadyJoinedToClub )
                                 {
-                                  showSnackBar(context: context, message: "لقد تم الإنضمام للنادي بالفعل !!",backgroundColor: AppColors.kOrangeColor);
+                                  showToastMessage(context: context, message: "لقد تم الإنضمام للنادي بالفعل !!");
                                 }
                                 else if( clubNotAvailableAndHaveNotJoinedYet )
                                 {
-                                  showSnackBar(context: context, message: "لقد تم إيقاف الإنضمام للنادي من قبل الليدر تبعه",backgroundColor: AppColors.kRedColor);
+                                  showToastMessage(context: context, message: "لقد تم إيقاف الإنضمام للنادي من قبل الليدر تبعه",backgroundColor: AppColors.kRedColor);
                                 }
                                 else
                                 {
-                                  showSnackBar(context: context, message: "تم طلب العضوية بالفعل وف انتظار موافقه الليدر");
+                                  showToastMessage(context: context, message: "تم طلب العضوية بالفعل وف انتظار موافقه الليدر");
                                 }
                               }
                           )
@@ -204,7 +211,7 @@ Widget _buttonItem({required String title,required Function() onTap,Color? color
         borderRadius: BorderRadius.circular(2.5),
         color: color ?? AppColors.kMainColor,
       ),
-      padding: EdgeInsets.symmetric(horizontal: 10.w,vertical: 3.h),
+      padding: EdgeInsets.symmetric(horizontal: 15.w,vertical: 3.h),
       child: Text(title,style: TextStyle(color: AppColors.kWhiteColor),),
     ),
   );

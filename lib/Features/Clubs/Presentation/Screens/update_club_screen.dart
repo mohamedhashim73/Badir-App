@@ -43,7 +43,7 @@ class UpdateClubScreen extends StatelessWidget {
             {
               if( state is ClubUpdatedSuccessState )
               {
-                showSnackBar(context: context, message: "تم تعديل البيانات بنجاح",backgroundColor: Colors.green,seconds: 2);
+                showToastMessage(context: context, message: "تم تعديل البيانات بنجاح",backgroundColor: Colors.green,seconds: 2);
                 _nameController.clear();
                 _aboutClubController.clear();
                 _twitterController.clear();
@@ -54,7 +54,7 @@ class UpdateClubScreen extends StatelessWidget {
               }
               if( state is FailedToUpdateClubState )
               {
-                showSnackBar(context: context, message: state.message,backgroundColor: Colors.red,seconds: 2);
+                showToastMessage(context: context, message: state.message,backgroundColor: Colors.red,seconds: 2);
               }
             },
             builder: (context,state){
@@ -131,7 +131,7 @@ class UpdateClubScreen extends StatelessWidget {
                         {
                           if( cubit.clubImage == null && cubit.dataAboutClubYouLead!.image != null )
                             {
-                              showSnackBar(context: context, message: "برجاء اختيار صورة",backgroundColor: AppColors.kRedColor);
+                              showToastMessage(context: context, message: "برجاء اختيار صورة",backgroundColor: AppColors.kRedColor);
                             }
                           else if( cubit.clubImage != null && _nameController.text.isNotEmpty &&_aboutClubController.text.isNotEmpty &&_twitterController.text.isNotEmpty &&_membersNumController.text.isNotEmpty &&_emailController.text.isNotEmpty)
                           {

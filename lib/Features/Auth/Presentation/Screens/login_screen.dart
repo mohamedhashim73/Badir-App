@@ -27,12 +27,12 @@ class LoginScreen extends StatelessWidget {
             {
               if( state is LoginSuccessState )
               {
-                showSnackBar(context: context, message: "تم تسجيل الدخول بنجاح",backgroundColor: Colors.green,seconds: 2);
                 Navigator.pushReplacementNamed(context, AppStrings.kLayoutScreen);
+                showToastMessage(context: context, message: "تم تسجيل الدخول بنجاح",backgroundColor: Colors.green,seconds: 2);
               }
               if( state is LoginStateFailed )
               {
-                showSnackBar(context: context, message: state.message,backgroundColor: Colors.red,seconds: 2);
+                showToastMessage(context: context, message: state.message,backgroundColor: Colors.red,seconds: 2);
               }
             },
             builder: (context,state) {
@@ -64,7 +64,7 @@ class LoginScreen extends StatelessWidget {
                           {
                             if( _emailController.text.isEmpty && _passwordController.text.isEmpty )
                               {
-                                showSnackBar(context: context, message: "برجاء إدخال البيانات كامله",backgroundColor: Colors.red,seconds: 2);
+                                showToastMessage(context: context, message: "برجاء إدخال البيانات كامله",backgroundColor: Colors.red,seconds: 2);
                               }
                             else
                               {
@@ -111,7 +111,7 @@ Widget _textField({required TextEditingController controller,required bool isSec
           },
           child: Icon(cubit.passwordShown ? Icons.visibility : Icons.visibility_off),
         ) : const SizedBox(),
-        contentPadding: EdgeInsets.symmetric(horizontal: 12.w,vertical: 0),
+        contentPadding: EdgeInsets.symmetric(horizontal: 12.w,vertical: 10.h),
         border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(4)
         ),

@@ -37,7 +37,7 @@ class UpdateClubAvailabilityScreen extends StatelessWidget {
                       if( state is UpdateClubAvailabilitySuccessState )
                       {
                         Navigator.pop(context);     // TODO: Get out from Alert Dialog
-                        showSnackBar(context: context, message: "تم تعديل بيانات النادي");
+                        showToastMessage(context: context, message: "تم تعديل بيانات النادي");
                         Navigator.pushReplacementNamed(context, AppStrings.kLayoutScreen);
                       }
                     },
@@ -84,11 +84,11 @@ class UpdateClubAvailabilityScreen extends StatelessWidget {
                                     }
                                   else if ( clubEntity.isAvailable == clubsCubit.clubAvailabilityStatus && clubEntity.availableOnlyForThisCollege.length == clubsCubit.selectedColleges.length && clubEntity.availableOnlyForThisCollege.first == clubsCubit.selectedColleges.first && clubEntity.availableOnlyForThisCollege.last == clubsCubit.selectedColleges.last )
                                     {
-                                      showSnackBar(context: context, message: 'لم يحدث أي تعديل علي البيانات القديمة !!',backgroundColor: AppColors.kRedColor);
+                                      showToastMessage(context: context, message: 'لم يحدث أي تعديل علي البيانات القديمة !!',backgroundColor: AppColors.kRedColor);
                                     }
                                   else
                                     {
-                                      showSnackBar(context: context, message: 'برجاء إدخال البيانات كاملة !!',backgroundColor: AppColors.kRedColor);
+                                      showToastMessage(context: context, message: 'برجاء إدخال البيانات كاملة !!',backgroundColor: AppColors.kRedColor);
                                     }
                                 },
                                 color: AppColors.kMainColor,

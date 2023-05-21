@@ -37,9 +37,9 @@ class ViewAvailableTasksScreen extends StatelessWidget {
             {
               if( state is RequestAuthenticateOnATaskSuccessState )
                 {
-                  showSnackBar(context: context, message: "تم إرسال الطلب لليدر");
+                  showToastMessage(context: context, message: "تم إرسال الطلب لليدر");
                 }
-              if( state is FailedToRequestAuthenticateOnATaskState ) showSnackBar(context: context, message: state.message,backgroundColor: AppColors.kRedColor);
+              if( state is FailedToRequestAuthenticateOnATaskState ) showToastMessage(context: context, message: state.message,backgroundColor: AppColors.kRedColor);
             },
             builder: (context,state) {
               return Padding(
@@ -102,11 +102,11 @@ class ViewAvailableTasksScreen extends StatelessWidget {
                       {
                         if( cubit.idForTasksThatIAskedToAuthenticateBefore != null && cubit.idForTasksThatIAskedToAuthenticateBefore!.contains(taskEntity.id.toString().trim()) )
                         {
-                          showSnackBar(context: context, message: 'تم إرسال طلب بالفعل، ف انتظار مصادقة الليدر');
+                          showToastMessage(context: context, message: 'تم إرسال طلب بالفعل، ف انتظار مصادقة الليدر');
                         }
                         else if ( myData.idForTasksAuthenticate != null && myData.idForTasksAuthenticate!.contains(taskEntity.id.toString().trim()) )
                         {
-                          showSnackBar(context: context, message: 'تمت المصادقة من قبل');
+                          showToastMessage(context: context, message: 'تمت المصادقة من قبل');
                         }
                         else
                         {

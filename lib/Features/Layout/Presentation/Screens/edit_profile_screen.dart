@@ -35,14 +35,14 @@ class EditProfileScreen extends StatelessWidget {
             {
               if( state is UpdateMyDataSuccessState )
               {
-                showSnackBar(context: context, message: "تم تعديل البيانات بنجاح",backgroundColor: Colors.green,seconds: 2);
+                showToastMessage(context: context, message: "تم تعديل البيانات بنجاح",backgroundColor: Colors.green,seconds: 2);
                 _phoneController.clear();
                 _nameController.clear();
                 Navigator.pop(context);
               }
               if( state is RegisterFailedState )
               {
-                showSnackBar(context: context, message: "حدث خطأ أثناء تعديلات البيانات برجاء المحاوله لاحقا",backgroundColor: Colors.red,seconds: 2);
+                showToastMessage(context: context, message: "حدث خطأ أثناء تعديلات البيانات برجاء المحاوله لاحقا",backgroundColor: Colors.red,seconds: 2);
               }
             },
             builder: (context,state) {
@@ -91,7 +91,7 @@ class EditProfileScreen extends StatelessWidget {
                           }
                           else
                           {
-                            showSnackBar(context: context, message: "برجاء إدخال البيانات كامله",backgroundColor: Colors.red,seconds: 2);
+                            showToastMessage(context: context, message: "برجاء إدخال البيانات كامله",backgroundColor: Colors.red,seconds: 2);
                           }
                         },
                         title: state is UpdateMyDataLoadingState ? "جاري الحفظ" : "حفظ التعديلات",

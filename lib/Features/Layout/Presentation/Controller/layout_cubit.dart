@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:bader_user_app/Core/Constants/app_strings.dart';
 import 'package:bader_user_app/Core/Service%20Locators/service_locators.dart';
 import 'package:bader_user_app/Features/Layout/Domain/Entities/user_entity.dart';
 import 'package:bader_user_app/Features/Layout/Domain/Use%20Cases/log_out_use_case.dart';
@@ -129,23 +130,24 @@ class LayoutCubit extends Cubit<LayoutStates> {
   Future<void> getAllUsersOnApp () async {
     final result = await sl<GetAllUsersOnAppUseCase>().execute();
     result.fold(
-            (serverFailure){
+        (serverFailure){
           emit(FailedToGetAllUsersOnAppState(message: serverFailure.errorMessage));
         },
-            (users){
+        (users){
           allUsersDataOnApp = users;
           emit(GetAllUsersOnAppSuccessState());
         }
     );
   }
 
-  Future<void> logout({required EventsCubit eventsCubit,required ClubsCubit clubsCubit,required LayoutCubit layoutCubit,}) async {
+  Future<void> logout({required BuildContext context,required EventsCubit eventsCubit,required ClubsCubit clubsCubit,required LayoutCubit layoutCubit,}) async {
     var result = await sl<LogOutUseCase>().execute(layoutCubit: layoutCubit,clubsCubit: clubsCubit,eventsCubit: eventsCubit);
     result.fold(
-            (serverFailure) => emit(FailedToLogOut(message: serverFailure.errorMessage)),
-            (unit){
-               emit(LogOutSuccessState());
-            });
+        (serverFailure) => emit(FailedToLogOut(message: serverFailure.errorMessage)),
+        (unit)
+        {
+          emit(LogOutSuccessState());
+        });
   }
 
   // TODO: USER

@@ -53,7 +53,7 @@ class CreateEventScreen extends StatelessWidget {
                 }
                 if( state is FailedToCreateEventState )
                 {
-                  showSnackBar(context: context, message: state.message,backgroundColor: AppColors.kRedColor);
+                  showToastMessage(context: context, message: state.message,backgroundColor: AppColors.kRedColor);
                 }
               },
               builder: (context,state) {
@@ -116,7 +116,7 @@ class CreateEventScreen extends StatelessWidget {
                       {
                         if( cubit.eventImage == null )
                         {
-                          showSnackBar(context: context, message: "برجاء اختيار صورة",backgroundColor: AppColors.kRedColor);
+                          showToastMessage(context: context, message: "برجاء اختيار صورة",backgroundColor: AppColors.kRedColor);
                         }
                         else if( cubit.eventImage != null && _timeController.text.isNotEmpty &&_nameController.text.isNotEmpty &&_descriptionController.text.isNotEmpty &&_endDateController.text.isNotEmpty &&_startDateController.text.isNotEmpty &&_linkController.text.isNotEmpty &&_locationController.text.isNotEmpty)
                         {
@@ -124,7 +124,7 @@ class CreateEventScreen extends StatelessWidget {
                         }
                         else
                         {
-                          showSnackBar(context: context, message: "من فضلك قم بإدخال البيانات كاملة",backgroundColor: AppColors.kRedColor);
+                          showToastMessage(context: context, message: "من فضلك قم بإدخال البيانات كاملة",backgroundColor: AppColors.kRedColor);
                         }
                       },
                       title: state is CreateEventLoadingState ? "جاري الإنشاء" : "إنشاء",

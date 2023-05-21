@@ -52,7 +52,7 @@ class CreateMeetingScreen extends StatelessWidget {
                 if( state is CreateMeetingWithFailureState )
                 {
                   Navigator.pop(context);   // TODO : TO get out from Alert Dialog
-                  showSnackBar(context: context, message: state.message,backgroundColor: AppColors.kRedColor);
+                  showToastMessage(context: context, message: state.message,backgroundColor: AppColors.kRedColor);
                 }
               },
               builder: (context,state) {
@@ -88,7 +88,7 @@ class CreateMeetingScreen extends StatelessWidget {
                               }
                               else
                               {
-                                showSnackBar(context: context, message: "من فضلك قم بإدخال البيانات كاملة",backgroundColor: AppColors.kRedColor);
+                                showToastMessage(context: context, message: "من فضلك قم بإدخال البيانات كاملة",backgroundColor: AppColors.kRedColor);
                               }
                             },
                             title: "إنشاء",
