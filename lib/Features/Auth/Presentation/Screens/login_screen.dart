@@ -27,8 +27,8 @@ class LoginScreen extends StatelessWidget {
             {
               if( state is LoginSuccessState )
               {
+                showToastMessage(context: context, message: "تم تسجيل الدخول بنجاح",backgroundColor: Colors.green);
                 Navigator.pushReplacementNamed(context, AppStrings.kLayoutScreen);
-                showToastMessage(context: context, message: "تم تسجيل الدخول بنجاح",backgroundColor: Colors.green,seconds: 2);
               }
               if( state is LoginStateFailed )
               {
@@ -58,30 +58,37 @@ class LoginScreen extends StatelessWidget {
                         SizedBox(height: 8.h,),
                         _textField(controller: _passwordController,isSecure: true,cubit: cubit),
                         SizedBox(height: 20.h,),
-                        DefaultButton(
-                          width: double.infinity,
-                          onTap: ()
-                          {
-                            if( _emailController.text.isEmpty && _passwordController.text.isEmpty )
-                              {
-                                showToastMessage(context: context, message: "برجاء إدخال البيانات كامله",backgroundColor: Colors.red,seconds: 2);
-                              }
-                            else
-                              {
-                                cubit.login(layoutCubit:layoutCubit,email: _emailController.text, password: _passwordController.text);
-                              }
-                          },
-                          title: "تسجيل",
-                        ),
-                        SizedBox(height: 7.5.h,),
-                        Center(
-                          child: GestureDetector(
-                            child: Text("انشاء حساب",style: TextStyle(color: AppColors.kMainColor),),
+                        BlocBuilder<AuthCubit,AuthStates>(
+                          builder: (context,state) => DefaultButton(
+                            width: double.infinity,
                             onTap: ()
                             {
-                              Navigator.pushNamed(context, AppStrings.kRegisterScreen);
+                              if( _emailController.text.isEmpty && _passwordController.text.isEmpty )
+                                {
+                                  showToastMessage(context: context, message: "برجاء إدخال البيانات كامله",backgroundColor: Colors.red,seconds: 2);
+                                }
+                              else
+                                {
+                                  cubit.login(layoutCubit:layoutCubit,email: _emailController.text, password: _passwordController.text);
+                                }
                             },
+                            title: state is LoginLoadingState ? "جاري التسجيل" : "تسجيل",
                           ),
+                        ),
+                        SizedBox(height: 7.5.h,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children:
+                          [
+                            Text("ليس لديك حساب ",style: TextStyle(),),
+                            GestureDetector(
+                              child: Text("إضغط هنا",style: TextStyle(color: AppColors.kMainColor),),
+                              onTap: ()
+                              {
+                                Navigator.pushNamed(context, AppStrings.kRegisterScreen);
+                              },
+                            ),
+                          ],
                         )
                       ],
                     ),

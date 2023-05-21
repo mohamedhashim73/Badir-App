@@ -46,73 +46,71 @@ class RegisterScreen extends StatelessWidget {
             builder: (context,state) {
               return Center(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 12.h,horizontal: 12.w),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children:
-                      [
-                        const TextUpperTextFormField(text: "الاسم"),
-                        textFieldComponent(controller: _nameController),
-                        const TextUpperTextFormField(text: "رقم التليفون"),
-                        textFieldComponent(controller: _phoneController),
-                        const TextUpperTextFormField(text: "الكية"),
-                        dropDownComponent(
-                            items: Constants.colleges,
-                            onChanged: (college)
-                            {
-                              cubit.chooseCollege(college: college!);
-                            },
-                            value: cubit.selectedCollege
-                        ),
-                        const TextUpperTextFormField(text: "الجنس"),
-                        dropDownComponent(
-                            items: Constants.genderStatus,
-                            onChanged: (gender)
-                            {
-                              cubit.chooseGender(gender: gender!);
-                            },
-                            value: cubit.selectedGender
-                        ),
-                        const TextUpperTextFormField(text: "البريد الإلكتروني"),
-                        textFieldComponent(controller: _emailController),
-                        const TextUpperTextFormField(text: "كلمة المرور"),
-                        textFieldComponent(controller: _passwordController, isSecure: true),
-                        SizedBox(height: 20.h,),
-                        DefaultButton(
-                          width: double.infinity,
+                  padding: EdgeInsets.symmetric(vertical: 30.h,horizontal: 12.w),
+                  child: ListView(
+                    physics: const BouncingScrollPhysics(),
+                    children:
+                    [
+                      const TextUpperTextFormField(text: "الاسم"),
+                      textFieldComponent(controller: _nameController),
+                      const TextUpperTextFormField(text: "رقم التليفون"),
+                      textFieldComponent(controller: _phoneController),
+                      const TextUpperTextFormField(text: "الكية"),
+                      dropDownComponent(
+                          items: Constants.colleges,
+                          onChanged: (college)
+                          {
+                            cubit.chooseCollege(college: college!);
+                          },
+                          value: cubit.selectedCollege
+                      ),
+                      const TextUpperTextFormField(text: "الجنس"),
+                      dropDownComponent(
+                          items: Constants.genderStatus,
+                          onChanged: (gender)
+                          {
+                            cubit.chooseGender(gender: gender!);
+                          },
+                          value: cubit.selectedGender
+                      ),
+                      const TextUpperTextFormField(text: "البريد الإلكتروني"),
+                      textFieldComponent(controller: _emailController),
+                      const TextUpperTextFormField(text: "كلمة المرور"),
+                      textFieldComponent(controller: _passwordController, isSecure: true),
+                      SizedBox(height: 20.h,),
+                      DefaultButton(
+                        width: double.infinity,
+                        onTap: ()
+                        {
+                          if( _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty && cubit.selectedGender != null && cubit.selectedCollege != null && _nameController.text.isNotEmpty && _phoneController.text.isNotEmpty )
+                          {
+                            cubit.register(
+                                name: _nameController.text,
+                                email: _emailController.text,
+                                phone: int.parse(_phoneController.text),
+                                password: _passwordController.text,
+                                gender: cubit.selectedGender!,
+                                college: cubit.selectedCollege!
+                            );
+                          }
+                          else
+                          {
+                            showToastMessage(context: context, message: "برجاء إدخال البيانات كامله",backgroundColor: Colors.red,seconds: 2);
+                          }
+                        },
+                        title: state is RegisterLoadingState ? "جاري انشاء الحساب" : "انشاء حساب",
+                      ),
+                      SizedBox(height: 7.5.h,),
+                      Center(
+                        child: GestureDetector(
+                          child: Text("رجوع لتسجيل الدخول",style: TextStyle(color: AppColors.kMainColor),),
                           onTap: ()
                           {
-                            if( _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty && cubit.selectedGender != null && cubit.selectedCollege != null && _nameController.text.isNotEmpty && _phoneController.text.isNotEmpty )
-                            {
-                              cubit.register(
-                                  name: _nameController.text,
-                                  email: _emailController.text,
-                                  phone: int.parse(_phoneController.text),
-                                  password: _passwordController.text,
-                                  gender: cubit.selectedGender!,
-                                  college: cubit.selectedCollege!
-                              );
-                            }
-                            else
-                            {
-                              showToastMessage(context: context, message: "برجاء إدخال البيانات كامله",backgroundColor: Colors.red,seconds: 2);
-                            }
+                            Navigator.pushNamed(context, AppStrings.kLoginScreen);
                           },
-                          title: state is RegisterLoadingState ? "جاري انشاء الحساب" : "انشاء حساب",
                         ),
-                        SizedBox(height: 7.5.h,),
-                        Center(
-                          child: GestureDetector(
-                            child: Text("تسجيل الدخول",style: TextStyle(color: AppColors.kMainColor),),
-                            onTap: ()
-                            {
-                              Navigator.pushNamed(context, AppStrings.kLoginScreen);
-                            },
-                          ),
-                        )
-                      ],
-                    ),
+                      )
+                    ],
                   ),
                 ),
               );

@@ -310,11 +310,11 @@ class HomeScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children:
           [
-            Text("# ${eventEntity.name}",maxLines:2,style: TextStyle(color: AppColors.kYellowColor,fontWeight: FontWeight.w500,fontSize: 15.sp,height: 1.4,overflow: TextOverflow.ellipsis),),
+            Text("# ${eventEntity.name}",style: TextStyle(color: AppColors.kYellowColor,fontWeight: FontWeight.w500,fontSize: 15.sp,height: 1.4),),
             Expanded(
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 7.h),
-                child: Text(eventEntity.description!,style: TextStyle(color: AppColors.kWhiteColor,overflow:TextOverflow.ellipsis,fontWeight: FontWeight.w500,fontSize: 12.sp),maxLines: 2,),
+                child: Text(eventEntity.description!,style: TextStyle(color: AppColors.kWhiteColor,overflow:TextOverflow.ellipsis,fontWeight: FontWeight.w500,fontSize: 11.sp),maxLines: 3,),
               ),
             ),
             SizedBox(width: 4.w,),

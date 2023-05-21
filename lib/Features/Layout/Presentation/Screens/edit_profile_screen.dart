@@ -27,7 +27,6 @@ class EditProfileScreen extends StatelessWidget {
         textDirection: TextDirection.rtl,
         child: Scaffold(
           appBar: AppBar(
-            automaticallyImplyLeading: false,
             title: const Text("تعديل البيانات"),
           ),
           body: BlocConsumer<LayoutCubit,LayoutStates>(

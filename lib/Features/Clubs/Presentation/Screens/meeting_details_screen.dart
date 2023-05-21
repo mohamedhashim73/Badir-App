@@ -32,6 +32,7 @@ class MeetingDetailsScreen extends StatelessWidget {
     _timeController.text = meetingEntity.time!;
     _locationController.text = meetingEntity.location!;
     _linkController.text = meetingEntity.link!;
+    LayoutCubit layoutCubit = LayoutCubit.getInstance(context);
     return SafeArea(
       child: Directionality(
         textDirection: TextDirection.rtl,
@@ -58,7 +59,12 @@ class MeetingDetailsScreen extends StatelessWidget {
                         _textFieldItem(controller:_dateController,title: 'التاريخ'),
                         _textFieldItem(controller:_timeController,title: 'الوقت'),
                         _textFieldItem(controller:_locationController,title: 'المكان'),
-                        _textFieldItem(controller:_linkController,title: 'الرابط'),
+                        InkWell(
+                            onTap: ()
+                              {
+                                layoutCubit.openPdf(link: _linkController.text.trim());
+                              },
+                            child: _textFieldItem(controller:_linkController,title: 'الرابط',isLink:true)),
                         SizedBox(height: 10.h,),
                         DefaultButton(
                           width: double.infinity,
@@ -80,7 +86,7 @@ class MeetingDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _textFieldItem({required TextEditingController controller,int? maxLines,required String title}){
+  Widget _textFieldItem({bool isLink = false,required TextEditingController controller,int? maxLines,required String title}){
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10.h),
       child: TextFormField(
@@ -88,13 +94,17 @@ class MeetingDetailsScreen extends StatelessWidget {
         controller: controller,
         maxLines: maxLines ?? 1,
         style: TextStyle(
-            fontSize: 14.sp
+            fontSize: 14.sp,color: AppColors.kBlackColor.withOpacity(0.8)
         ),
         decoration: InputDecoration(
             filled: true,
             fillColor: AppColors.kGreyColor,
             contentPadding: EdgeInsets.symmetric(vertical: 10.h,horizontal: 10.w),
             labelText: title,
+            suffix: isLink? Padding(
+              padding: EdgeInsets.only(right: 10.0.w),
+              child: Text("إضغط هنا",style: TextStyle(fontSize: 12.sp,color: AppColors.kRedColor),),
+            ) : null,
             labelStyle: TextStyle(color: AppColors.kMainColor,fontSize: 16.sp,fontWeight: FontWeight.bold),
             border: const OutlineInputBorder()
         ),
