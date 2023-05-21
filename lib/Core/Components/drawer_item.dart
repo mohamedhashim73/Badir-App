@@ -6,6 +6,9 @@ import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_cu
 import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../Constants/constants.dart';
 
 class DrawerItem extends StatelessWidget {
   final List<Map<String,dynamic>> drawerData = [
@@ -110,10 +113,10 @@ class DrawerItem extends StatelessWidget {
                         color: AppColors.kMainColor
                     ),
                     accountName: Text(layoutCubit.userData!.name!),
-                    accountEmail: Text(layoutCubit.userData!.email!),
-                    currentAccountPicture: const CircleAvatar(
-                      backgroundColor: Colors.white,
-                      child: Icon(Icons.person,color: Colors.black,),
+                    accountEmail: Text(clubsCubit.dataAboutClubYouLead != null ? "قائد نادي ${clubsCubit.dataAboutClubYouLead!.name!}": layoutCubit.userData!.email!),
+                    currentAccountPicture: CircleAvatar(
+                      backgroundImage: layoutCubit.userData!.idForClubLead == null ? AssetImage(layoutCubit.userData!.gender == Constants.man ? "assets/images/man.png" : "assets/images/woman.png") : null ,
+                      child: layoutCubit.userData!.idForClubLead != null ? Image.asset("assets/images/badge_icon.png") : null,
                     ),
                 ),
                 if( layoutCubit.userData != null )
@@ -132,7 +135,14 @@ class DrawerItem extends StatelessWidget {
                                 child: ListTile(
                                   onTap: ()
                                   {
-                                    Navigator.pushNamed(context, drawerData[index]['routeName']);
+                                    if( index == 0 )
+                                      {
+                                        Navigator.pop(context);
+                                      }
+                                    else
+                                      {
+                                        Navigator.pushNamed(context, drawerData[index]['routeName']);
+                                      }
                                   },
                                   iconColor: AppColors.kMainColor,
                                   textColor: AppColors.kMainColor,

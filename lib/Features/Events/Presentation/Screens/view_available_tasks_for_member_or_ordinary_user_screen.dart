@@ -35,20 +35,15 @@ class ViewAvailableTasksScreen extends StatelessWidget {
             buildWhen: (pastState,currentState) => currentState is GetAvailableTasksSuccessState || currentState is GetIDForTasksIAskedToAuthenticateSuccessState ,
             listener: (context,state)
             {
-              // if( state is RequestAuthenticateOnATaskLoadingState )
-              //   {
-              //     showLoadingDialog(context:context);
-              //   }
               if( state is RequestAuthenticateOnATaskSuccessState )
                 {
-                  // Navigator.pop(context);
                   showSnackBar(context: context, message: "تم إرسال الطلب لليدر");
                 }
               if( state is FailedToRequestAuthenticateOnATaskState ) showSnackBar(context: context, message: state.message,backgroundColor: AppColors.kRedColor);
             },
             builder: (context,state) {
               return Padding(
-                padding: EdgeInsets.symmetric(vertical: 10.h,horizontal: 10.w),
+                padding: EdgeInsets.symmetric(vertical: 10.h,horizontal: 12.w),
                 child: eventCubit.availableTasks.isNotEmpty && (state is GetAvailableTasksSuccessState || state is GetIDForTasksIAskedToAuthenticateSuccessState) ? ListView.separated(
                     physics: const BouncingScrollPhysics(),
                     itemCount: eventCubit.availableTasks.length,   // TODO: Events Related to Club I lead
@@ -79,8 +74,9 @@ class ViewAvailableTasksScreen extends StatelessWidget {
         Navigator.push(context, MaterialPageRoute(builder: (context) => ViewTaskDetailsScreen(taskEntity: taskEntity)));
       },
       child: Card(
+        elevation: 0.2,
         child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 15.h,horizontal: 10.w),
+          padding: EdgeInsets.symmetric(vertical: 15.h,horizontal: 12.w),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children:

@@ -16,26 +16,34 @@ class ViewClubDetailsScreen extends StatelessWidget {
       child: Directionality(
         textDirection: TextDirection.rtl,
         child: Scaffold(
-          appBar: AppBar(title: const Text("تفاصيل النادي")),
+          appBar: AppBar(title: Text(club.name!,overflow: TextOverflow.ellipsis,)),
           body: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 12.w,vertical:12.h),
+            padding: EdgeInsets.symmetric(horizontal: 12.w,vertical:15.h),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children:
               [
-                Row(
-                  children:
-                  [
-                    Expanded(child: Text("نادي ${club.name!}",style: TextStyle(color: AppColors.kMainColor,fontWeight: FontWeight.bold,fontSize: 18.5.sp),)),
-                    SizedBox(width: 10.w,),
-                    if( club.image != null )
-                      CircleAvatar(
-                        radius: 45.h,
-                        backgroundImage: NetworkImage(club.image!),
-                      ),
-                  ],
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8.w),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children:
+                    [
+                      Text("هيكلة النادي",style: TextStyle(color: AppColors.kMainColor,fontWeight: FontWeight.bold,fontSize: 20.sp,overflow: TextOverflow.ellipsis),),
+                      const Spacer(),
+                      if( club.image != null )
+                        Container(
+                          height: 90.h,
+                          width: 120.w,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(4),
+                              image: DecorationImage(image: NetworkImage(club.image!),fit: BoxFit.fill)
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
-                SizedBox(height: 7.h,),
+                SizedBox(height: 15.h,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children:
@@ -77,15 +85,20 @@ class ViewClubDetailsScreen extends StatelessWidget {
                 SizedBox(height: 7.h,),
                 Text("عن النادي",style: TextStyle(fontSize: 18.sp,fontWeight: FontWeight.bold),),
                 SizedBox(height: 10.h,),
-                Container(
-                  width: double.infinity,
-                  alignment: club.description != null ? AlignmentDirectional.center : AlignmentDirectional.topStart,
-                  padding: EdgeInsets.symmetric(vertical: 12.h,horizontal: 12.w),
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black.withOpacity(0.2)),
-                      borderRadius: BorderRadius.circular(4)
+                Expanded(
+                  child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    child: Container(
+                      width: double.infinity,
+                      alignment: club.description != null ? AlignmentDirectional.center : AlignmentDirectional.topStart,
+                      padding: EdgeInsets.symmetric(vertical: 12.h,horizontal: 12.w),
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black.withOpacity(0.2)),
+                          borderRadius: BorderRadius.circular(4)
+                      ),
+                      child: Text(club.description != null ? club.description! : "لم يتم اضافة وصف للنادي حتي الآن",style: TextStyle(fontSize: 13.sp,fontWeight: FontWeight.w600,color: Colors.black.withOpacity(0.5)),),
+                    ),
                   ),
-                  child: Text(club.description != null ? club.description! : "لم يتم اضافة وصف للنادي حتي الآن",style: TextStyle(fontSize: 13.sp,fontWeight: FontWeight.w600),),
                 ),
               ],
             ),

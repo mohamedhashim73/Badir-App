@@ -81,9 +81,8 @@ class ViewClubsScreen extends StatelessWidget {
                     builder: (context,state) {
                       if( state is GetClubsDataSuccessState || state is SendRequestForMembershipSuccessState )
                         {
-                          return ListView.separated(
+                          return ListView.builder(
                             itemCount: clubsCubit.filteredClubsData.isEmpty ? clubsCubit.clubs.length : clubsCubit.filteredClubsData.length,
-                            separatorBuilder: (context,index) => SizedBox(height: 8.h,),
                             itemBuilder: (context,index)
                             {
                               return _clubItem(myData:myData,club: clubsCubit.filteredClubsData.isEmpty ? clubsCubit.clubs[index] : clubsCubit.filteredClubsData[index],context: context,cubit: clubsCubit,requestMembershipController: infoAboutUserController);
@@ -110,85 +109,89 @@ Widget _clubItem({required UserEntity myData,required ClubEntity club,required B
   bool alreadyJoinedToClub = myData.idForClubsMemberIn != null && myData.idForClubsMemberIn!.contains(club.id.toString());
   bool clubAvailableAndHaveNotJoinedYetAndHaveNotSendRequestBefore = club.isAvailable == true && (myData.idForClubsMemberIn == null || (myData.idForClubsMemberIn != null && myData.idForClubsMemberIn!.contains(club.id.toString()) == false ) ) && (cubit.idForClubsIAskedToJoinAndWaitingResponse.contains(club.id.toString()) == false ) ;
   bool clubNotAvailableAndHaveNotJoinedYet = club.isAvailable == false && (myData.idForClubsMemberIn == null || (myData.idForClubsMemberIn != null && myData.idForClubsMemberIn!.contains(club.id.toString()) == false ) );
-  return GestureDetector(
-    onTap: ()
-    {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => ViewClubDetailsScreen(club: club)));
-    },
-    child: Card(
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 18.h,horizontal: 10.w),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children:
-          [
-            Container(
-              height: 85.h,
-              width: 100.w,
-              decoration: BoxDecoration(
-                  color: club.image == null ? AppColors.kGreyColor : Colors.transparent,
-                  image: club.image != null ? DecorationImage(image: NetworkImage(club.image!),fit: BoxFit.cover) : null,
-                  border: Border.all(color: Colors.black.withOpacity(0.5)),
-                  borderRadius: BorderRadius.circular(4)
+  return Padding(
+    padding: EdgeInsets.symmetric(horizontal: 10.w,vertical: 5.h),
+    child: GestureDetector(
+      onTap: ()
+      {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => ViewClubDetailsScreen(club: club)));
+      },
+      child: Card(
+        elevation: 0.2,
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 18.h,horizontal: 12.w),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children:
+            [
+              Container(
+                height: 85.h,
+                width: 100.w,
+                decoration: BoxDecoration(
+                    color: club.image == null ? AppColors.kGreyColor : Colors.transparent,
+                    image: club.image != null ? DecorationImage(image: NetworkImage(club.image!),fit: BoxFit.cover) : null,
+                    border: Border.all(color: Colors.black.withOpacity(0.5)),
+                    borderRadius: BorderRadius.circular(2)
+                ),
+                child: club.image == null ? Center(child: Icon(Icons.image,color: AppColors.kGreenColor,size: 35,)) : null,
               ),
-              child: club.image == null ? Center(child: Icon(Icons.image,color: AppColors.kGreenColor,size: 35,)) : null,
-            ),
-            SizedBox(width: 20.w,),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children:
-                [
-                  Text(club.name!,style: TextStyle(fontSize: 16.sp,fontWeight: FontWeight.bold,overflow: TextOverflow.ellipsis),),
-                  SizedBox(height: 10.h,),
-                  Row(
-                    // TODO: If he is a leader only one item will be shown
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children:
-                    [
-                      if( myData.idForClubLead != null )
-                      _buttonItem(
-                        title: "عرض",
-                        onTap: ()
-                        {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => ViewClubDetailsScreen(club: club)));
-                        },
-                      ),
-                      if( myData.idForClubLead != null )
-                      SizedBox(width: 10.w,),
-                      if( myData.idForClubLead == null )    // TODO: AS it will be shown only if a Visitor or Member Not Leader....
+              SizedBox(width: 20.w,),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children:
+                  [
+                    Text(club.name!,style: TextStyle(fontSize: 16.sp,fontWeight: FontWeight.bold,overflow: TextOverflow.ellipsis),),
+                    SizedBox(height: 10.h,),
+                    Row(
+                      // TODO: If he is a leader only one item will be shown
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children:
+                      [
+                        if( myData.idForClubLead != null )
                         _buttonItem(
-                            title: alreadyJoinedToClub ? "تم الالتحاق" : clubAvailableAndHaveNotJoinedYetAndHaveNotSendRequestBefore ? "إنضم إلينا" : clubNotAvailableAndHaveNotJoinedYet ? "غير متاح" : "تم طلب العضوية",
-                            color: alreadyJoinedToClub ? AppColors.kGreenColor : clubAvailableAndHaveNotJoinedYetAndHaveNotSendRequestBefore ? AppColors.kMainColor : clubNotAvailableAndHaveNotJoinedYet ? AppColors.kRedColor : AppColors.kYellowColor,
-                            onTap: ()
-                            {
-                              // TODO: ask for membership ( لازم يكون الليدر فاتح الانضمام للنادي غير كده مش هقدر )
-                              if( clubAvailableAndHaveNotJoinedYetAndHaveNotSendRequestBefore )
+                          title: "عرض",
+                          onTap: ()
+                          {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => ViewClubDetailsScreen(club: club)));
+                          },
+                        ),
+                        if( myData.idForClubLead != null )
+                        SizedBox(width: 10.w,),
+                        if( myData.idForClubLead == null )    // TODO: AS it will be shown only if a Visitor or Member Not Leader....
+                          _buttonItem(
+                              title: alreadyJoinedToClub ? "تم الالتحاق" : clubAvailableAndHaveNotJoinedYetAndHaveNotSendRequestBefore ? "إنضم إلينا" : clubNotAvailableAndHaveNotJoinedYet ? "غير متاح" : "تم طلب العضوية",
+                              color: alreadyJoinedToClub ? AppColors.kGreenColor : clubAvailableAndHaveNotJoinedYetAndHaveNotSendRequestBefore ? AppColors.kMainColor : clubNotAvailableAndHaveNotJoinedYet ? AppColors.kRedColor : AppColors.kYellowColor,
+                              onTap: ()
                               {
-                                askMembershipDialog(context: context, cubit: cubit, controller: requestMembershipController, club: club,userEntity: LayoutCubit.getInstance(context).userData!);
+                                // TODO: ask for membership ( لازم يكون الليدر فاتح الانضمام للنادي غير كده مش هقدر )
+                                if( clubAvailableAndHaveNotJoinedYetAndHaveNotSendRequestBefore )
+                                {
+                                  askMembershipDialog(context: context, cubit: cubit, controller: requestMembershipController, club: club,userEntity: LayoutCubit.getInstance(context).userData!);
+                                }
+                                else if( alreadyJoinedToClub )
+                                {
+                                  showSnackBar(context: context, message: "لقد تم الإنضمام للنادي بالفعل !!",backgroundColor: AppColors.kOrangeColor);
+                                }
+                                else if( clubNotAvailableAndHaveNotJoinedYet )
+                                {
+                                  showSnackBar(context: context, message: "لقد تم إيقاف الإنضمام للنادي من قبل الليدر تبعه",backgroundColor: AppColors.kRedColor);
+                                }
+                                else
+                                {
+                                  showSnackBar(context: context, message: "تم طلب العضوية بالفعل وف انتظار موافقه الليدر");
+                                }
                               }
-                              else if( alreadyJoinedToClub )
-                              {
-                                showSnackBar(context: context, message: "لقد تم الإنضمام للنادي بالفعل !!",backgroundColor: AppColors.kOrangeColor);
-                              }
-                              else if( clubNotAvailableAndHaveNotJoinedYet )
-                              {
-                                showSnackBar(context: context, message: "لقد تم إيقاف الإنضمام للنادي من قبل الليدر تبعه",backgroundColor: AppColors.kRedColor);
-                              }
-                              else
-                              {
-                                showSnackBar(context: context, message: "تم طلب العضوية بالفعل وف انتظار موافقه الليدر");
-                              }
-                            }
-                        )
-                    ],
-                  )
-                ],
-              ),
-            )
-          ],
-        ),
-      )
+                          )
+                      ],
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
+        )
+      ),
     ),
   );
 }

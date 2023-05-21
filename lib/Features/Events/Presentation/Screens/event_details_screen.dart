@@ -44,16 +44,19 @@ class EventDetailsScreen extends StatelessWidget {
       child: Directionality(
         textDirection: TextDirection.rtl,
         child: Scaffold(
-          appBar: AppBar(title: const Text("تفاضيل الفعالية"),),
+          appBar: AppBar(title: const Text("تفاصيل الفعالية"),),
           body: Padding(
             padding: EdgeInsets.symmetric(vertical: 10.0.h,horizontal: 12.w),
             child: ListView(
               physics: const BouncingScrollPhysics(),
               children:
               [
-                CircleAvatar(
-                  radius: 45.h,
-                  backgroundImage: NetworkImage(event.image!),
+                Container(
+                  clipBehavior: Clip.hardEdge,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Image.network(event.image!,fit: BoxFit.cover,),
                 ),
                 SizedBox(height: 12.5.h,),
                 _textFieldItem(controller: _nameController,title:  'اسم الفعالية'),

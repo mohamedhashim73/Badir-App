@@ -1,5 +1,7 @@
 import 'package:bader_user_app/Core/Components/drawer_item.dart';
 import 'package:bader_user_app/Core/Constants/app_strings.dart';
+import 'package:bader_user_app/Core/Constants/constants.dart';
+import 'package:bader_user_app/Features/Layout/Domain/Entities/user_entity.dart';
 import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_cubit.dart';
 import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_states.dart';
 import 'package:flutter/material.dart';
@@ -46,12 +48,12 @@ class ProfileScreen extends StatelessWidget {
                               alignment: AlignmentDirectional.bottomStart,
                               children: [
                                 CircleAvatar(
-                                  backgroundColor: AppColors.kYellowColor,
-                                  radius: 35.w,
+                                  backgroundImage: cubit.userData!.idForClubLead == null ? AssetImage(cubit.userData!.gender == Constants.man ? "assets/images/man.png" : "assets/images/woman.png") : null ,                                  radius: 45.w,
+                                  child: cubit.userData!.idForClubLead != null ? Image.asset("assets/images/badge_icon.png") : null,
                                 ),
                                 CircleAvatar(
                                   radius: 12.5.w,
-                                  backgroundColor: Colors.grey,
+                                  backgroundColor: AppColors.kYellowColor,
                                   child: GestureDetector(
                                     onTap: ()
                                     {

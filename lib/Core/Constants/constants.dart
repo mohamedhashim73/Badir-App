@@ -21,7 +21,9 @@ class Constants {
   static List<String> colleges = ["كلية علوم وهندسة الحاسب الآلي","كلية الآداب والعلوم الإنسانية","كلية إدارة الأعمال","كلية التربية","كلية التمريض","الكلية التطبيقية","كلية الحقوق","كلية الصيدلة","كلية الطب","كلية طب الأسنان","كلية العلوم","كلية علوم الأسرة","كلية علوم التأهيل الطبي","كلية العلوم الطبية التطبيقية","كلية الهندسة"];
   static List<String> reportTypes = ["خطة سنوية","فعالية","ساعات تطوعية"];
   static List<String> committees = ["التنظيمية" , "الإعلامية" , "التصميم"];
-  static List<String> genderStatus = ["ذكر","أنثي"];
+  static String man = "ذكر";
+  static String woman = "أنثي";
+  static List<String> genderStatus = [man,woman];
   static String kNotificationsCollectionName = "Notifications";
   static String kUsersCollectionName = "Users";
   static String kClubsCollectionName = "Clubs";
