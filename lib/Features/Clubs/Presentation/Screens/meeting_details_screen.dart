@@ -18,8 +18,7 @@ class MeetingDetailsScreen extends StatelessWidget {
   final MeetingEntity meetingEntity;
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
-  final _startDateController = TextEditingController();
-  final _endDateController = TextEditingController();
+  final _dateController = TextEditingController();
   final _timeController = TextEditingController();
   final _locationController = TextEditingController();
   final _linkController = TextEditingController();
@@ -29,8 +28,7 @@ class MeetingDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     _nameController.text = meetingEntity.name!;
     _descriptionController.text = meetingEntity.description!;
-    _startDateController.text = meetingEntity.startDate!;
-    _endDateController.text = meetingEntity.endDate!;
+    _dateController.text = meetingEntity.date!;
     _timeController.text = meetingEntity.time!;
     _locationController.text = meetingEntity.location!;
     _linkController.text = meetingEntity.link!;
@@ -57,8 +55,7 @@ class MeetingDetailsScreen extends StatelessWidget {
                       [
                         _textFieldItem(controller: _nameController,title:  'اسم الاجتماع'),
                         _textFieldItem(controller:_descriptionController,title: 'الوصف',maxLines: 3),
-                        _textFieldItem(controller:_startDateController,title: 'تاريخ البداية'),
-                        _textFieldItem(controller:_endDateController,title: 'تاريخ الانتهاء'),
+                        _textFieldItem(controller:_dateController,title: 'التاريخ'),
                         _textFieldItem(controller:_timeController,title: 'الوقت'),
                         _textFieldItem(controller:_locationController,title: 'المكان'),
                         _textFieldItem(controller:_linkController,title: 'الرابط'),

@@ -51,9 +51,9 @@ class ClubsCubit extends Cubit<ClubsStates> {
   }
 
   // TODO: CREATE MEETING
-  Future<void> createMeeting({required String idForClubILead,required String name,required String description,required String startDate,required String endDate,required String time,required String location,required String link}) async {
+  Future<void> createMeeting({required String idForClubILead,required String name,required String description,required String date,required String time,required String location,required String link}) async {
     emit(CreateMeetingLoadingState());
-    final result = await sl<CreateMeetingUseCase>().execute(idForClubILead: idForClubILead, name: name, description: description, startDate: startDate, endDate: endDate, time: time, location: location, link: link);
+    final result = await sl<CreateMeetingUseCase>().execute(idForClubILead: idForClubILead, name: name, description: description, date: date, time: time, location: location, link: link);
     result.fold(
         (serverFailure){
           emit(CreateMeetingWithFailureState(message: serverFailure.errorMessage));

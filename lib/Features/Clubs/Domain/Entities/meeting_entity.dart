@@ -4,8 +4,7 @@ class MeetingEntity extends Equatable{
   final String? name;
   final String? id;
   final String? description;
-  final String? startDate;
-  final String? endDate;
+  final String? date;
   final String? time;
   final String? location;
   final String? link;
@@ -14,8 +13,7 @@ class MeetingEntity extends Equatable{
       this.name,
       this.id,
       this.description,
-      this.startDate,
-      this.endDate,
+      this.date,
       this.time,
       this.location,
       this.link,
@@ -23,5 +21,5 @@ class MeetingEntity extends Equatable{
 
   @override
   // TODO: implement props
-  List<Object?> get props => [name,id,description,startDate,endDate,time,location,link];
+  List<Object?> get props => [name,id,description,date,time,location,link];
 }

@@ -266,14 +266,14 @@ class RemoteClubsDataSource{
     }
   }
 
-  Future<Unit> createMeeting({required String idForClubILead,required String name,required String description,required String startDate,required String endDate,required String time,required String location,required String link}) async {
+  Future<Unit> createMeeting({required String idForClubILead,required String name,required String description,required String date,required String time,required String location,required String link}) async {
     try
     {
       // TODO: Get Last ID For Last Event to increase it by one
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection(Constants.kClubsCollectionName).doc(idForClubILead).collection(Constants.kMeetingsCollectionName).get();
       int newMeetingID = querySnapshot.docs.isNotEmpty ? int.parse(querySnapshot.docs.last.id) : 0;
       ++newMeetingID;
-      MeetingModel meetingModel = MeetingModel(name, newMeetingID.toString(),description, startDate, endDate, time,location, link);
+      MeetingModel meetingModel = MeetingModel(name, newMeetingID.toString(),description, date,time,location, link);
       await FirebaseFirestore.instance.collection(Constants.kClubsCollectionName).doc(idForClubILead).collection(Constants.kMeetingsCollectionName).doc(newMeetingID.toString()).set(meetingModel.toJson());
       return unit;
     }

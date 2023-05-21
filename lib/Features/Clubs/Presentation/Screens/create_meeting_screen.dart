@@ -15,8 +15,7 @@ import '../../../../Core/Components/snackBar_item.dart';
 class CreateMeetingScreen extends StatelessWidget {
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
-  final _startDateController = TextEditingController();
-  final _endDateController = TextEditingController();
+  final _dateController = TextEditingController();
   final _timeController = TextEditingController();
   final _locationController = TextEditingController();
   final _linkController = TextEditingController();
@@ -43,8 +42,7 @@ class CreateMeetingScreen extends StatelessWidget {
                   Navigator.pop(context);   // TODO: Back to last screen
                   _nameController.clear();
                   _descriptionController.clear();
-                  _startDateController.clear();
-                  _endDateController.clear();
+                  _dateController.clear();
                   _timeController.clear();
                   _linkController.clear();
                   _locationController.clear();
@@ -66,8 +64,7 @@ class CreateMeetingScreen extends StatelessWidget {
                         [
                           _textField(controller: _nameController,title:  'اسم الاجتماع'),
                           _textField(controller:_descriptionController,title: 'الوصف'),
-                          _textField(controller:_startDateController,title: 'تاريخ البداية',onTap: () async => _startDateController.text = Jiffy(await Constants.selectDate(context: context)).yMMMd),
-                          _textField(controller:_endDateController,title: 'تاريخ الانتهاء',onTap: () async => _endDateController.text = Jiffy(await Constants.selectDate(context: context)).yMMMd),
+                          _textField(controller:_dateController,title: 'التاريخ',onTap: () async => _dateController.text = Jiffy(await Constants.selectDate(context: context)).yMMMd),
                           _textField(controller:_timeController,title: 'الوقت',onTap: () async {
                             TimeOfDay? timeNow = await Constants.selectTime(context: context);
                             _timeController.text = Jiffy({
@@ -82,9 +79,9 @@ class CreateMeetingScreen extends StatelessWidget {
                             width: double.infinity,
                             onTap: ()
                             {
-                              if( _timeController.text.isNotEmpty &&_nameController.text.isNotEmpty &&_descriptionController.text.isNotEmpty &&_endDateController.text.isNotEmpty &&_startDateController.text.isNotEmpty &&_linkController.text.isNotEmpty &&_locationController.text.isNotEmpty)
+                              if( _timeController.text.isNotEmpty &&_nameController.text.isNotEmpty &&_descriptionController.text.isNotEmpty &&_dateController.text.isNotEmpty &&_linkController.text.isNotEmpty &&_locationController.text.isNotEmpty)
                               {
-                                clubsCubit.createMeeting(idForClubILead: clubID,name: _nameController.text, description: _descriptionController.text, startDate: _startDateController.text, endDate: _endDateController.text, time: _timeController.text, location: _locationController.text, link: _linkController.text);
+                                clubsCubit.createMeeting(idForClubILead: clubID,name: _nameController.text, description: _descriptionController.text, date: _dateController.text,time: _timeController.text, location: _locationController.text, link: _linkController.text);
                               }
                               else
                               {
