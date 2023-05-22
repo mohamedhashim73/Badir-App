@@ -147,10 +147,10 @@ class EventsCubit extends Cubit<EventsStates> {
       {
         final result = await sl<CreateEventUseCase>().execute(forPublic: forPublic, name: name, description: description, imageUrl: imageUrl, startDate: startDate, endDate: endDate, time: time, location: location, link: link, clubID: clubID, clubName: clubName);
         result.fold(
-                (serverFailure){
+            (serverFailure){
               emit(FailedToCreateEventState(message: serverFailure.errorMessage));
             },
-                (unit) async {
+            (unit) async {
               await getAllEvents();    // TODO: as it updated
               emit(CreateEventSuccessState());
             }

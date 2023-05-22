@@ -42,8 +42,8 @@ class ClubAchievementsScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children:
         [
-          Text(text,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18.sp),),
-          Text("$num",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25.sp)),
+          Text(text,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 17.5.sp),),
+          Text("$num",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 22.sp)),
         ],
       ),
     );

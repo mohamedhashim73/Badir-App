@@ -48,8 +48,9 @@ class ProfileScreen extends StatelessWidget {
                               alignment: AlignmentDirectional.bottomStart,
                               children: [
                                 CircleAvatar(
+                                  backgroundColor: cubit.userData!.idForClubLead != null ? AppColors.kGreenColor.withOpacity(0.4) : Colors.transparent,
                                   backgroundImage: cubit.userData!.idForClubLead == null ? AssetImage(cubit.userData!.gender == Constants.man ? "assets/images/man.png" : "assets/images/woman.png") : null ,                                  radius: 45.w,
-                                  child: cubit.userData!.idForClubLead != null ? Image.asset("assets/images/badge_icon.png") : null,
+                                  child: cubit.userData!.idForClubLead != null ? Image.asset("assets/images/leader_icon.png",height: 45.h,width: 45.w,) : null,
                                 ),
                                 CircleAvatar(
                                   radius: 12.5.w,

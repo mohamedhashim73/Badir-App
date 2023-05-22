@@ -36,15 +36,16 @@ class ViewTaskDetailsScreen extends StatelessWidget {
       textDirection: TextDirection.rtl,
       child: SafeArea(
           child: Scaffold(
-            appBar: AppBar(title: Text(taskEntity.name),),
+            appBar: AppBar(title: Text("تفاصيل المهمة"),),
             body: Padding(
               padding: EdgeInsets.symmetric(vertical: 12.h,horizontal: 12.w),
               child: ListView(
+                physics: const BouncingScrollPhysics(),
                 children:
                 [
                   _textFieldItem(controller: _nameController,labelText: 'اسم المهمة'),
                   _textFieldItem(controller: _eventName,labelText: 'اسم الفعالية'),
-                  _textFieldItem(maxLines:3,controller: _descriptionController,labelText: 'وصف المهمة'),
+                  _textFieldItem(maxLines:5,controller: _descriptionController,labelText: 'وصف المهمة'),
                   _textFieldItem(controller: _numOfHoursController,labelText: 'عدد الساعات'),
                   _textFieldItem(controller: _numOfRegisteredController,labelText: 'عدد المسجلين'),
                   _textFieldItem(controller: _numOfPositionsController,labelText: 'عدد الأشخاص'),
@@ -64,7 +65,7 @@ class ViewTaskDetailsScreen extends StatelessWidget {
         controller: controller,
         maxLines: maxLines ?? 1,
         style: TextStyle(
-            fontSize: 14.sp
+            fontSize: 14.sp,color: AppColors.kBlackColor.withOpacity(0.8)
         ),
         decoration: InputDecoration(
             filled: true,

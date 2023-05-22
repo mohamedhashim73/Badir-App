@@ -7,6 +7,7 @@ import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_st
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../Features/Auth/Presentation/Screens/login_screen.dart';
 import '../Constants/constants.dart';
 
@@ -115,8 +116,9 @@ class DrawerItem extends StatelessWidget {
                     accountName: Text(layoutCubit.userData!.name!),
                     accountEmail: Text(clubsCubit.dataAboutClubYouLead != null ? "قائد نادي ${clubsCubit.dataAboutClubYouLead!.name!}": layoutCubit.userData!.email!),
                     currentAccountPicture: CircleAvatar(
+                      backgroundColor: layoutCubit.userData!.idForClubLead != null ? AppColors.kWhiteColor : Colors.transparent,
                       backgroundImage: layoutCubit.userData!.idForClubLead == null ? AssetImage(layoutCubit.userData!.gender == Constants.man ? "assets/images/man.png" : "assets/images/woman.png") : null ,
-                      child: layoutCubit.userData!.idForClubLead != null ? Image.asset("assets/images/badge_icon.png") : null,
+                      child: layoutCubit.userData!.idForClubLead != null ? Image.asset("assets/images/leader_icon.png",height: 45.h,width: 45.w,) : null,
                     ),
                 ),
                 if( layoutCubit.userData != null )

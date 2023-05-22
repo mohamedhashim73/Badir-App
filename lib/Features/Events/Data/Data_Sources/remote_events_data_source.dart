@@ -20,7 +20,7 @@ class RemoteEventsDataSource{
   Future<int> getNumOfEventsOnSpecificClub({required String clubID}) async {
     int eventsNum = 0;
     await FirebaseFirestore.instance.collection(Constants.kClubsCollectionName).doc(clubID).get().then((value){
-      eventsNum = value.data() != null  ? value.data()!['currentEventsNum'] : 0;
+      eventsNum = value.data() != null  ? value.data()!['currentEventsNum'] ?? 0 : 0;
     });
     return eventsNum;
   }
@@ -38,7 +38,7 @@ class RemoteEventsDataSource{
         "currentEventsNum" : ++currentEventsNumOnThisClub
       });
       EventModel eventModel = EventModel(name, newEventID.toString(), description, imageUrl, startDate, endDate, time, forPublic.name, location, link, null, clubName, clubID);
-      await FirebaseFirestore.instance.collection(Constants.kEventsCollectionName).doc(newEventID.toString().trim()).set(eventModel.toJson());
+      await FirebaseFirestore.instance.collection(Constants.kEventsCollectionName).doc(newEventID.toString()).set(eventModel.toJson());
       return unit;
     }
     on FirebaseException catch(e){
@@ -254,19 +254,21 @@ class RemoteEventsDataSource{
   Future<Set> getIDForTasksIAskedToAuthenticate({List? idForClubsIMemberIn,required String userID}) async {
     Set tasksID = {};
     await FirebaseFirestore.instance.collection(Constants.kTasksCollectionName).get().then((value) async {
-      for( var item in value.docs )
-      {
-        if( item.data()['forPublicOrSpecificToAnEvent'] || ( idForClubsIMemberIn != null && idForClubsIMemberIn.contains(item.data()['clubID'].toString()) ) )
+      if( value.docs.isNotEmpty )
         {
-          await item.reference.collection(Constants.kTaskAuthenticationRequestsCollectionName).get().then((value) async {
-            for( var itemDoc in value.docs )
-              {
-                if( itemDoc.id.trim() == userID.trim() ) tasksID.add(item.id);
-                debugPrint("tasksID totally is : $tasksID, first is : ${tasksID.first}, last is : ${tasksID.last}");
-              }
-          });
+          for( var item in value.docs )
+          {
+            if( item.data()['forPublicOrSpecificToAnEvent'] == true || ( idForClubsIMemberIn != null && idForClubsIMemberIn.contains(item.data()['clubID'].toString()) ) )
+            {
+              await item.reference.collection(Constants.kTaskAuthenticationRequestsCollectionName).get().then((value) async {
+                for( var itemDoc in value.docs )
+                {
+                  if( itemDoc.id.trim() == userID.trim() ) tasksID.add(item.id);
+                }
+              });
+            }
+          }
         }
-      }
     });
     debugPrint("Num of Requests send to Tasks is : ${tasksID.length}");
     return tasksID;

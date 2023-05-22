@@ -102,7 +102,6 @@ class RemoteClubsDataSource{
             for( var itemDoc in value.docs )
             {
               if( itemDoc.id.trim() == userID.trim() ) clubsID.add(item.id);
-              debugPrint("tasksID totally is : $clubsID, first is : ${clubsID.first}, last is : ${clubsID.last}");
             }
           });
         }
@@ -170,7 +169,7 @@ class RemoteClubsDataSource{
           // TODO: هنا مش هضيف اسم اللجنه لو هو بالفعل مثلا عضو في نادي تاني بس منضم لنفس اللجنة
           await FirebaseFirestore.instance.collection(Constants.kUsersCollectionName).doc(requestSenderID).update({
             'idForClubsMemberIn' : idForClubsThatSenderMemberIn,
-            'committeesName' : committeesNameForRequestSender,
+            'committeesNames' : committeesNameForRequestSender,
             'membershipStartDate' : memberShipStartDateForRequestSender
           });
           // TODO: Update Value of Members Number on its Collection as I listen for it on Home Screen

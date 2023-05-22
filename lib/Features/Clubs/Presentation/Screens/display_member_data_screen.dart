@@ -75,7 +75,7 @@ class DisplayMemberDataScreen extends StatelessWidget {
         enabled: false,
         controller: controller,
         style: TextStyle(
-            fontSize: 14.sp
+            fontSize: 14.sp,color: AppColors.kBlackColor.withOpacity(0.8)
         ),
         decoration: InputDecoration(
             filled: true,

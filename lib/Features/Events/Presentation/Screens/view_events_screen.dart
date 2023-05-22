@@ -126,7 +126,7 @@ class ViewAllEventsThrowAppScreen extends StatelessWidget {
                               }
                               else if( eventInDateAndIDoNotHavePermissionToJoin )
                               {
-                                showToastMessage(context: context, message: 'هذه الفعالية خاصة بأعضاء ${events[index].clubName} فقط',backgroundColor: AppColors.kRedColor);
+                                showToastMessage(context: context, message: 'خاصة بأعضاء نادي ${events[index].clubName}',backgroundColor: AppColors.kRedColor);
                               }
                             },
                         child: Text(userEntity.idForClubLead != null ? "متابعة" : eventInDateAndIHaveJoined ? "تم التسجيل" :  eventInDateAndIHaveNotJoinedYetAndHavePermission ? "سجل الآن" : eventExpiredAndIHaveNotJoined ? "انتهت الفعالية" : eventInDateAndIDoNotHavePermissionToJoin ? "خاصة" : "شاركنا برأيك",style: const TextStyle(fontWeight: FontWeight.bold),),

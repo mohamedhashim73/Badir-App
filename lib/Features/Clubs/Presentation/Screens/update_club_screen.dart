@@ -107,13 +107,14 @@ class UpdateClubScreen extends StatelessWidget {
                                   ),
                                 ),
                               ),
+                              SizedBox(height: 10.h,),
                               _textUpperTextField(title: "اسم النادي"),
                               textFieldComponent(controller: _nameController),
                               _textUpperTextField(title: "الكلية"),
                               textFieldComponent(controller: _collegeController,enabled: false),
                               _textUpperTextField(title: "الإيميل"),
                               textFieldComponent(controller: _emailController,textInputType: TextInputType.emailAddress),
-                              _textUpperTextField(title: "تويتر"),
+                              _textUpperTextField(title: "حساب تويتر"),
                               textFieldComponent(controller: _twitterController),
                               _textUpperTextField(title: "عدد الأعضاء"),
                               textFieldComponent(controller: _membersNumController,textInputType: TextInputType.number),
@@ -158,8 +159,8 @@ class UpdateClubScreen extends StatelessWidget {
 
 Widget _textUpperTextField({required String title}){
   return Container(
-      margin: EdgeInsets.only(bottom: 5.h),
-      child: Text(title,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 17.sp),)
+      margin: EdgeInsets.only(bottom: 10.h),
+      child: Text(title,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15.sp),)
   );
 }
 

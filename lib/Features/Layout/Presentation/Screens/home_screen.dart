@@ -340,11 +340,11 @@ class HomeScreen extends StatelessWidget {
                     }
                     else if( eventInDateAndIHaveJoined )
                     {
-                      showToastMessage(context: context, message: "لقد سبق لك التسجيل بالفعالية",backgroundColor: AppColors.kRedColor);
+                      showToastMessage(context: context, message: "لقد سبق لك التسجيل بالفعالية");
                     }
                     else if( eventInDateAndIDoNotHavePermissionToJoin )
                     {
-                      showToastMessage(context: context, message: 'هذه الفعالية خاصة بأعضاء ${eventEntity.clubName} فقط',backgroundColor: AppColors.kRedColor);
+                      showToastMessage(context: context, message: 'خاصة بأعضاء نادي ${eventEntity.clubName}',backgroundColor: AppColors.kRedColor);
                     }
                   },
                   color: myData.idForClubLead != null || eventInDateAndIHaveNotJoinedYetAndHavePermission ? AppColors.kWhiteColor : eventExpiredAndIHaveJoined ? AppColors.kOrangeColor : eventInDateAndIDoNotHavePermissionToJoin || eventExpiredAndIHaveNotJoined ? AppColors.kRedColor : AppColors.kGreenColor,

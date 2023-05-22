@@ -77,12 +77,12 @@ class ViewClubsScreen extends StatelessWidget {
                         clubsCubit.selectedCommittee = null;
                         infoAboutUserController.clear();
                         Navigator.pop(context);
-                        showToastMessage(context: context, message: "تم إرسال الطلب بنجاح في انتظار موافقة الأدمن",backgroundColor: AppColors.kGreenColor,seconds: 3);
+                        showToastMessage(context: context, message: "تم إرسال الطلب بنجاح",backgroundColor: AppColors.kGreenColor,seconds: 3);
                       }
                       if( state is FailedToSendRequestForMembershipState )
                       {
                         Navigator.pop(context);
-                        showToastMessage(context: context, message: "حدث خطأ اثناء ارسال الطلب برجاء التأكد من الاتصال بالنت والمحاوله لاحقا",backgroundColor: Colors.red);
+                        showToastMessage(context: context, message: "حدث خطأ اثناء ارسال الطلب",backgroundColor: Colors.red);
                       }
                     },
                     builder: (context,state) {

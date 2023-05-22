@@ -55,6 +55,7 @@ class UploadReportToAdminScreen extends StatelessWidget {
                       margin: EdgeInsets.only(bottom: 7.h),
                       child: Text("نوع التقرير",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 17.sp),)
                       ),
+                    SizedBox(height: 5.h,),
                     dropDownComponent(
                         items: Constants.reportTypes,
                         onChanged: (reportType)
@@ -63,7 +64,7 @@ class UploadReportToAdminScreen extends StatelessWidget {
                         },
                         value: layoutCubit.reportType
                     ),
-                    SizedBox(height: 10.h,),
+                    SizedBox(height: 12.5.h,),
                     if( layoutCubit.pdfFile != null )
                       InkWell(
                         onTap: () => layoutCubit.getPDF(),
@@ -83,7 +84,7 @@ class UploadReportToAdminScreen extends StatelessWidget {
                       ),
                     if( layoutCubit.pdfFile == null )
                       ClickToChooseFile(onTap : () => layoutCubit.getPDF(),text: "اضغط لاختيار ملف"),
-                    SizedBox(height: 15.h,),
+                    SizedBox(height: 20.h,),
                     DefaultButton(
                       width: double.infinity,
                       onTap: ()

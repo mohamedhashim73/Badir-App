@@ -13,7 +13,7 @@ Widget dropDownComponent({required List<String> items,required void Function(Str
         hint: const Text("اختار"),
         value: value,
         onChanged: onChanged,
-        items: items.map((e) => DropdownMenuItem(value: e,child: Text(e,textDirection: TextDirection.rtl,),)).toList(),
+        items: items.map((e) => DropdownMenuItem(value:e,child: Directionality(textDirection:TextDirection.rtl,child: Align(alignment:AlignmentDirectional.centerStart,child: Text(e),)))).toList(),
       ),
     ),
   );
