@@ -1,4 +1,4 @@
-import 'package:bader_user_app/Core/Components/splash_screen.dart';
+import 'package:bader_user_app/Features/Layout/Presentation/Screens/splash_screen.dart';
 import 'package:bader_user_app/Core/Constants/app_routes.dart';
 import 'package:bader_user_app/Features/Auth/Presentation/Screens/login_screen.dart';
 import 'package:bader_user_app/Core/Constants/constants.dart';
@@ -9,12 +9,17 @@ import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_st
 import 'package:bader_user_app/Features/Layout/Presentation/Screens/layout_screen.dart';
 import 'package:bader_user_app/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'Core/Constants/bloc_oberver.dart';
 import 'Core/Theme/app_colors.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
+
+Future<void> firebaseBackgroundMessageHandler(RemoteMessage message) async {
+  debugPrint("Message while App is closed, message's data is : ${message.data}");
+}
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,6 +29,20 @@ Future<void> main() async {
   await SharedPref.cacheInitialization();
   Constants.userID = SharedPref.getString(key: 'userID');
   debugPrint("User ID is : ${Constants.userID}");
+
+  // Todo: receive messages from Firebase Messaging ( while app is open and user is in it )
+  FirebaseMessaging.onMessage.listen((message) {
+    debugPrint("Message while App is open, message's data is : ${message.data}");
+  });
+
+  // Todo: Get message while app is open but user outside The Application
+  FirebaseMessaging.onMessageOpenedApp.listen((message) {
+    debugPrint("Message while App is open but user is outside, message's data is : ${message.data}");
+  });
+
+  // Todo: Receive message on Background as app is closed
+  FirebaseMessaging.onBackgroundMessage(firebaseBackgroundMessageHandler);
+
   runApp(Phoenix(child: const MyApp()));
 }
 

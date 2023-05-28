@@ -1,6 +1,4 @@
 import 'dart:io';
-
-import 'package:bader_user_app/Core/Constants/app_strings.dart';
 import 'package:bader_user_app/Core/Service%20Locators/service_locators.dart';
 import 'package:bader_user_app/Features/Layout/Domain/Entities/user_entity.dart';
 import 'package:bader_user_app/Features/Layout/Domain/Use%20Cases/log_out_use_case.dart';
@@ -34,7 +32,7 @@ class LayoutCubit extends Cubit<LayoutStates> {
   List<Widget> layoutScreens = [
     HomeScreen(),
     NotificationsScreen(),
-    ProfileScreen(),
+    ProfileScreen()
   ];
 
   void changeBottomNavIndex({required int index}) {
@@ -44,7 +42,7 @@ class LayoutCubit extends Cubit<LayoutStates> {
 
   void openPdf({required String link}) async {
     bool launchSuccess = await launch(link);
-    if( !launchSuccess ) emit(ErrorDuringOpenPdfState(message: "حدث خطأ ما عند محاوله فتح اللينك، برجاء المحاوله لاحقا"));
+    if( launchSuccess == false ) emit(ErrorDuringOpenPdfState(message: "حدث خطأ ما عند محاوله فتح اللينك، برجاء المحاوله لاحقا"));
   }
 
   File? pdfFile;
@@ -157,8 +155,7 @@ class LayoutCubit extends Cubit<LayoutStates> {
     var result = await sl<GetMyDataUseCase>().execute();
     result.fold(
             (serverFailure) => emit(FailedToGetUserDataState(message: serverFailure.errorMessage)),
-            (user)
-            async
+            (user) async
             {
               userData = user;
               if( clubsCubit != null && user.idForClubLead != null )

@@ -3,7 +3,9 @@ import 'package:bader_user_app/Features/Clubs/Domain/Entities/club_entity.dart';
 import 'package:bader_user_app/Features/Clubs/Presentation/Screens/view_club_contact_means_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../Core/Components/awesome_dialog_to_ask_visitor_to_login_first.dart';
 import '../../../../Core/Components/snackBar_item.dart';
+import '../../../../Core/Constants/constants.dart';
 import '../../../Events/Presentation/Screens/view_events_on_specific_club_screen.dart';
 import 'club_achievements_screen.dart';
 class ViewClubDetailsScreen extends StatelessWidget {
@@ -53,7 +55,15 @@ class ViewClubDetailsScreen extends StatelessWidget {
                         title: "الفعاليات",
                         onTap: ()
                         {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => ViewEventsOnSpecificClubScreen(clubID: club.id.toString(),clubName: club.name!,)));
+                          if( Constants.userID != null )
+                          {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => ViewEventsOnSpecificClubScreen(clubID: club.id.toString(),clubName: club.name!,)));
+                          }
+                          else
+                          {
+                            // TODO: لأن الفعاليات مش هتظهر الا اذا كان عمل تسجيل دخول
+                            showDialogToVisitorToAskHimToLogin(context: context);
+                          }
                         }
                     ),
                     _otherDetailsComponent(

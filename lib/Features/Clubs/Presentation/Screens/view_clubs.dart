@@ -1,10 +1,9 @@
-import 'package:bader_user_app/Core/Components/button_item.dart';
 import 'package:bader_user_app/Core/Components/snackBar_item.dart';
+import 'package:bader_user_app/Core/Constants/constants.dart';
 import 'package:bader_user_app/Core/Theme/app_colors.dart';
 import 'package:bader_user_app/Features/Clubs/Domain/Entities/club_entity.dart';
 import 'package:bader_user_app/Features/Clubs/Presentation/Components/alert_dialog_for_ask_membership.dart';
 import 'package:bader_user_app/Features/Clubs/Presentation/Controller/clubs_cubit.dart';
-import 'package:bader_user_app/Features/Events/Presentation/Controller/events_cubit.dart';
 import 'package:bader_user_app/Features/Layout/Domain/Entities/user_entity.dart';
 import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_cubit.dart';
 import 'package:bader_user_app/Features/Clubs/Presentation/Screens/club_details_screen.dart';
@@ -14,15 +13,18 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../Controller/clubs_states.dart';
 
 class ViewClubsScreen extends StatelessWidget {
-  final infoAboutUserController = TextEditingController();
+
   ViewClubsScreen({Key? key}) : super(key: key);
+
+  final infoAboutUserController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    final ClubsCubit clubsCubit = ClubsCubit.getInstance(context);
-    final UserEntity myData = LayoutCubit.getInstance(context).userData!;
-    clubsCubit.filteredClubsData.clear();    // عشان لو كنت خرجت من الصفحه ورجعت تاني ميجبش داتا قديمه
-    if( clubsCubit.idForClubsIAskedToJoinAndWaitingResponse.isEmpty ) clubsCubit.getClubsData(userEntity: myData);
+    final ClubsCubit clubsCubit = ClubsCubit.getInstance(context)..changeSearchAboutClubStatus(value: false);
+    clubsCubit.filteredClubsData.clear();     // TODO: عشان لو كنت بحثت عن حاجه في HomePage
+    // TODO: userID check it's value to know if he visitor or not
+    UserEntity? myData = Constants.userID != null ? LayoutCubit.getInstance(context).userData! : null ;
+    if( Constants.userID != null && clubsCubit.idForClubsIAskedToJoinAndWaitingResponse.isEmpty ) clubsCubit.getAllClubs(userEntity: myData);
     return SafeArea(
       child: Directionality(
         textDirection: TextDirection.rtl,
@@ -37,9 +39,9 @@ class ViewClubsScreen extends StatelessWidget {
                 leading: BackButton(
                   onPressed: ()
                   {
-                    Navigator.pop(context);
-                    clubsCubit.searchEnabled = false;
+                    clubsCubit.changeSearchAboutClubStatus(value: false);
                     clubsCubit.filteredClubsData.clear();
+                    Navigator.pop(context);
                   },
                 ),
                 title: clubsCubit.searchEnabled ? TextField(
@@ -86,13 +88,13 @@ class ViewClubsScreen extends StatelessWidget {
                       }
                     },
                     builder: (context,state) {
-                      if( state is GetClubsDataSuccessState || state is GetFilteredClubsSuccessState )
+                      if( state is GetClubsDataSuccessState || state is GetFilteredClubsSuccessState || clubsCubit.clubs.isNotEmpty )
                         {
                           return ListView.builder(
                             itemCount: clubsCubit.filteredClubsData.isEmpty ? clubsCubit.clubs.length : clubsCubit.filteredClubsData.length,
                             itemBuilder: (context,index)
                             {
-                              return _clubItem(myData:myData,club: clubsCubit.filteredClubsData.isEmpty ? clubsCubit.clubs[index] : clubsCubit.filteredClubsData[index],context: context,cubit: clubsCubit,requestMembershipController: infoAboutUserController);
+                              return _clubItem(myData: myData,club: clubsCubit.filteredClubsData.isEmpty ? clubsCubit.clubs[index] : clubsCubit.filteredClubsData[index],context: context,cubit: clubsCubit,requestMembershipController: infoAboutUserController);
                             },
                           );
                         }
@@ -112,10 +114,11 @@ class ViewClubsScreen extends StatelessWidget {
   }
 }
 
-Widget _clubItem({required UserEntity myData,required ClubEntity club,required BuildContext context,required ClubsCubit cubit,required TextEditingController requestMembershipController}){
-  bool alreadyJoinedToClub = myData.idForClubsMemberIn != null && myData.idForClubsMemberIn!.contains(club.id.toString());
-  bool clubAvailableAndHaveNotJoinedYetAndHaveNotSendRequestBefore = club.isAvailable == true && (myData.idForClubsMemberIn == null || (myData.idForClubsMemberIn != null && myData.idForClubsMemberIn!.contains(club.id.toString()) == false ) ) && (cubit.idForClubsIAskedToJoinAndWaitingResponse.contains(club.id.toString()) == false ) ;
-  bool clubNotAvailableAndHaveNotJoinedYet = club.isAvailable == false && (myData.idForClubsMemberIn == null || (myData.idForClubsMemberIn != null && myData.idForClubsMemberIn!.contains(club.id.toString()) == false ) );
+Widget _clubItem({UserEntity? myData,required ClubEntity club,required BuildContext context,required ClubsCubit cubit,required TextEditingController requestMembershipController}){
+  // TODO: بالنسبه لتلت متغيرات دول انا عامل if علي id بتاع المستخدم عشان اعرف اذا كان visitor ولا لا
+  bool alreadyJoinedToClub = Constants.userID != null ? myData!.idForClubsMemberIn != null && myData.idForClubsMemberIn!.contains(club.id.toString()) : false;
+  bool clubAvailableAndHaveNotJoinedYetAndHaveNotSendRequestBefore = Constants.userID != null ? club.isAvailable == true && (myData!.idForClubsMemberIn == null || (myData.idForClubsMemberIn != null && myData.idForClubsMemberIn!.contains(club.id.toString()) == false ) ) && (cubit.idForClubsIAskedToJoinAndWaitingResponse.contains(club.id.toString()) == false ) : false ;
+  bool clubNotAvailableAndHaveNotJoinedYet = Constants.userID != null ? club.isAvailable == false && (myData!.idForClubsMemberIn == null || (myData.idForClubsMemberIn != null && myData.idForClubsMemberIn!.contains(club.id.toString()) == false ) ) : false ;
   return Padding(
     padding: EdgeInsets.symmetric(horizontal: 10.w,vertical: 5.h),
     child: GestureDetector(
@@ -155,7 +158,6 @@ Widget _clubItem({required UserEntity myData,required ClubEntity club,required B
                       mainAxisAlignment: MainAxisAlignment.start,
                       children:
                       [
-                        if( myData.idForClubLead != null )
                         _buttonItem(
                           title: "عرض",
                           onTap: ()
@@ -163,9 +165,9 @@ Widget _clubItem({required UserEntity myData,required ClubEntity club,required B
                             Navigator.push(context, MaterialPageRoute(builder: (context) => ViewClubDetailsScreen(club: club)));
                           },
                         ),
-                        if( myData.idForClubLead != null )
+                        if( myData != null && myData.idForClubLead != null && Constants.userID != null )
                         SizedBox(width: 10.w,),
-                        if( myData.idForClubLead == null )    // TODO: AS it will be shown only if a Visitor or Member Not Leader....
+                        if( myData != null && myData.idForClubLead == null && Constants.userID != null )    // TODO: AS it will be shown only if a Visitor or Member Not Leader....
                           _buttonItem(
                               title: alreadyJoinedToClub ? "تم الالتحاق" : clubAvailableAndHaveNotJoinedYetAndHaveNotSendRequestBefore ? "إنضم إلينا" : clubNotAvailableAndHaveNotJoinedYet ? "غير متاح" : "تم طلب العضوية",
                               color: alreadyJoinedToClub ? AppColors.kGreenColor : clubAvailableAndHaveNotJoinedYetAndHaveNotSendRequestBefore ? AppColors.kMainColor : clubNotAvailableAndHaveNotJoinedYet ? AppColors.kRedColor : AppColors.kYellowColor,

@@ -17,6 +17,7 @@ import '../../Features/Events/Presentation/Screens/events_management.dart';
 import '../../Features/Events/Presentation/Screens/view_available_tasks_for_member_or_ordinary_user_screen.dart';
 import '../../Features/Events/Presentation/Screens/view_events_screen.dart';
 import '../../Features/Layout/Presentation/Screens/edit_profile_screen.dart';
+import '../../Features/Layout/Presentation/Screens/home_screen.dart';
 import '../../Features/Layout/Presentation/Screens/layout_screen.dart';
 import '../../Features/Layout/Presentation/Screens/upload_report_to_admin_screen.dart';
 import 'app_strings.dart';
@@ -26,6 +27,7 @@ class AppRoutes{
   static Map<String, Widget Function(BuildContext)> routes = {
     AppStrings.kLoginScreen : (context) => LoginScreen(),
     AppStrings.kViewClubsScreen : (context) => ViewClubsScreen(),
+    AppStrings.kHomeScreen : (context) => HomeScreen(),
     AppStrings.kClubAvailabilityScreen : (context) => const UpdateClubAvailabilityScreen(),
     AppStrings.kViewAvailableTasksScreen : (context) => const ViewAvailableTasksScreen(),
     AppStrings.kCreateMeetingScreen : (context) => CreateMeetingScreen(),

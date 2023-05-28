@@ -1,4 +1,4 @@
-abstract class LayoutStates{}
+abstract class LayoutStates {}
 
 class LayoutInitialState extends LayoutStates{}
 

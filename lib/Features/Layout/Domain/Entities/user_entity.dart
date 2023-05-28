@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 class UserEntity extends Equatable{
   final String? name;
   final String? id;
+  final String? firebaseMessagingToken;
   final String? email;
   final String? role;
   final String? password;
@@ -18,9 +19,9 @@ class UserEntity extends Equatable{
   final List? committeesNames;    // اسم اللجنة اللي هو اختارها اما جه يعمل انضمام لنادي ك عضو
   final List? idForClubsMemberIn;   // TODO: ID for Clubs that i'm a Member in .....
 
-  const UserEntity(this.name, this.id,this.idForClubLead, this.email, this.role, this.password, this.gender, this.college, this.phone,this.idForEventsJoined,this.idForTasksAuthenticate,this.isALeader,this.committeesNames,this.membershipStartDate,this.volunteerHours,this.idForClubsMemberIn);
+  const UserEntity(this.name, this.id,this.firebaseMessagingToken,this.idForClubLead, this.email, this.role, this.password, this.gender, this.college, this.phone,this.idForEventsJoined,this.idForTasksAuthenticate,this.isALeader,this.committeesNames,this.membershipStartDate,this.volunteerHours,this.idForClubsMemberIn);
 
   @override
   // TODO: implement props
-  List<Object?> get props => [name,id,idForClubLead,email,role,password,gender,college,phone,idForEventsJoined,idForTasksAuthenticate,isALeader,committeesNames,membershipStartDate,volunteerHours,idForClubsMemberIn];
+  List<Object?> get props => [name,id,firebaseMessagingToken,idForClubLead,email,role,password,gender,college,phone,idForEventsJoined,idForTasksAuthenticate,isALeader,committeesNames,membershipStartDate,volunteerHours,idForClubsMemberIn];
 }

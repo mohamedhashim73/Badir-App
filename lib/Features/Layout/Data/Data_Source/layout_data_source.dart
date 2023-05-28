@@ -14,6 +14,7 @@ import 'package:path/path.dart';
 import '../../../../Core/Constants/enumeration.dart';
 import '../../../Events/Presentation/Controller/events_cubit.dart';
 import '../Models/notification_model.dart';
+import 'package:http/http.dart' as http;
 
 class LayoutRemoteDataSource {
 
@@ -100,6 +101,7 @@ class LayoutRemoteDataSource {
   Future<String> uploadImageToStorage({required File imgFile}) async {
     try
     {
+      // path
       Reference imageRef = FirebaseStorage.instance.ref(basename(imgFile.path));
       await imageRef.putFile(imgFile);
       return await imageRef.getDownloadURL();
@@ -115,7 +117,7 @@ class LayoutRemoteDataSource {
     try
     {
       await FirebaseFirestore.instance.collection(Constants.kUsersCollectionName).get().then((value){
-        for( var item in  value.docs )
+        for( var item in value.docs )
           {
             users.add(UserModel.fromJson(json: item.data()));
           }
@@ -144,4 +146,64 @@ class LayoutRemoteDataSource {
     }
   }
 
+  // Todo: Send Notification to Community's author after anyone join to his community
+  Future<void> sendNotifyToSpecificUserUsingFirebaseMessaging({required String receiverFirebaseMessagingToken,required NotificationType notifyType,required String notifyTitle,required String notifyBody}) async {
+    Uri apiUri = Uri.parse("https://fcm.googleapis.com/fcm/send");
+    await http.post(
+        apiUri,
+        headers:
+        {
+          'Content-Type': "application/json",
+          // Todo: Authorization to know from App will send Notifications
+          'Authorization': "key=BFY0wjvc0Id0Rnq4lhYKAtvXmRzsHyGlAMi5aqwYlxyWgqE9l7pAvmh5nVxLGqNkyyHIjxwj61AbQf0C-tUw4r0"
+        },
+    body: {
+      {
+        "to": receiverFirebaseMessagingToken, // Todo: receiverFirebaseMessagingToken == firebase_messaging_token for community's author
+        "notification":
+        {
+          "title": notifyTitle,
+          "body": notifyBody,
+          "mutable_content": true,
+          "sound": "default"
+        },
+        "priority": "high",
+        "data":
+        {
+          "type": notifyType.name,
+          "click_action": "FLUTTER_NOTIFICATION_CLICK",
+        }
+      }
+    });
+  }// Todo: Send Notification to Community's author after anyone join to his community
+
+  Future<void> sendNotifyToAllUsersOnAppUsingFirebaseMessaging({required NotificationType notifyType,required String notifyTitle,required String notifyBody}) async {
+    Uri apiUri = Uri.parse("https://fcm.googleapis.com/fcm/send");
+    await http.post(
+        apiUri,
+        headers:
+        {
+          'Content-Type': "application/json",
+          // Todo: Authorization to know from App will send Notifications
+          'Authorization': "key=BFY0wjvc0Id0Rnq4lhYKAtvXmRzsHyGlAMi5aqwYlxyWgqE9l7pAvmh5nVxLGqNkyyHIjxwj61AbQf0C-tUw4r0"
+        },
+    body: {
+      {
+        "to": "/topics/all", // Todo: receiverFirebaseMessagingToken == firebase_messaging_token for community's author
+        "notification":
+        {
+          "title": notifyTitle,
+          "body": notifyBody,
+          "mutable_content": true,
+          "sound": "default"
+        },
+        "priority": "high",
+        "data":
+        {
+          "type": notifyType.name,
+          "click_action": "FLUTTER_NOTIFICATION_CLICK",
+        }
+      }
+    });
+  }
 }

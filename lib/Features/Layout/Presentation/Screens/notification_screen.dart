@@ -2,7 +2,6 @@ import 'package:bader_user_app/Core/Constants/constants.dart';
 import 'package:bader_user_app/Features/Clubs/Presentation/Controller/clubs_cubit.dart';
 import 'package:bader_user_app/Features/Layout/Data/Models/notification_model.dart';
 import 'package:bader_user_app/Features/Layout/Domain/Entities/user_entity.dart';
-import 'package:bader_user_app/Features/Layout/Presentation/Components/notification_components/notify_component.dart';
 import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,6 +10,7 @@ import '../../../../Core/Theme/app_colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../Domain/Entities/notification_entity.dart';
 import 'package:bader_user_app/Core/Constants/enumeration.dart';
+import '../Widgets/notify_component.dart';
 
 class NotificationsScreen extends StatelessWidget {
   List<NotificationEntity> notifications = [];

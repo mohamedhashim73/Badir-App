@@ -35,7 +35,7 @@ class ClubsCubit extends Cubit<ClubsStates> {
 
   // TODO: Get Notifications
   List<ClubEntity> clubs = [];
-  Future<void> getClubsData({UserEntity? userEntity}) async {
+  Future<void> getAllClubs({UserEntity? userEntity}) async {
     emit(GetClubsLoadingState());
     final result = await sl<GetAllClubsUseCase>().execute();
     result.fold(
@@ -141,7 +141,7 @@ class ClubsCubit extends Cubit<ClubsStates> {
         },
         (unit) async
         {
-          await getClubsData(userEntity: userEntity);
+          await getAllClubs(userEntity: userEntity);
           await getCLubDataThatILead(clubID: clubID);
           emit(UpdateClubAvailabilitySuccessState());
         }
@@ -196,7 +196,7 @@ class ClubsCubit extends Cubit<ClubsStates> {
     );
     if( requestSent )
       {
-        await getClubsData(userEntity: userEntity);
+        await getAllClubs(userEntity: userEntity);
         emit(SendRequestForMembershipSuccessState());
       }
     else
@@ -206,8 +206,8 @@ class ClubsCubit extends Cubit<ClubsStates> {
   }
 
   bool searchEnabled = false;
-  void changeSearchAboutClubStatus(){
-    searchEnabled = !searchEnabled;
+  void changeSearchAboutClubStatus({bool? value}){
+    searchEnabled = value == null ? !searchEnabled : value;      // TODO: لان ف بعض الحالات هعوز اخليها false ف هبعت value ساعتها
     emit(ChangeSearchAboutClubStatus());
   }
 
@@ -285,7 +285,7 @@ class ClubsCubit extends Cubit<ClubsStates> {
                    emit(FailedToUpdateClubState(message: serverFailure.errorMessage));
                 },
                 (unit) async {
-                   await getClubsData(userEntity: userEntity);
+                   await getAllClubs(userEntity: userEntity);
                    emit(ClubUpdatedSuccessState());
                 }
         ));
@@ -301,7 +301,7 @@ class ClubsCubit extends Cubit<ClubsStates> {
               emit(FailedToUpdateClubState(message: serverFailure.errorMessage));
             },
             (unit) async {
-              await getClubsData(userEntity: userEntity);
+              await getAllClubs(userEntity: userEntity);
               emit(ClubUpdatedSuccessState());
             }
         )

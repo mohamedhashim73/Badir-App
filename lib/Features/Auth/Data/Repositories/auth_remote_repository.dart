@@ -3,10 +3,10 @@ import 'package:bader_user_app/Features/Auth/Domain/Repositories/auth_contract_r
 import 'package:bader_user_app/Features/Layout/Data/Models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class AuthRemoteImplyRepository extends AuthBaseRepository{
+class AuthImplyRepository extends AuthBaseRepository{
   final AuthRemoteDataSource authRemoteDataSource;
 
-  AuthRemoteImplyRepository({required this.authRemoteDataSource});
+  AuthImplyRepository({required this.authRemoteDataSource});
 
   @override
   Future<UserCredential> login({required String email, required String password}) async {
@@ -26,6 +26,18 @@ class AuthRemoteImplyRepository extends AuthBaseRepository{
       return true;
     }
     on FirebaseException catch(exception){
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> updateMyFirebaseMessagingToken({required String userID}) async {
+    try
+    {
+      await authRemoteDataSource.updateMyFirebaseMessagingToken(userID: userID);
+      return true;
+    }
+    catch(exception){
       return false;
     }
   }

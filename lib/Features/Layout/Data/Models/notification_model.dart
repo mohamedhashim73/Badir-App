@@ -1,6 +1,6 @@
 import 'package:bader_user_app/Features/Layout/Domain/Entities/notification_entity.dart';
 
-class NotifyModel extends NotificationEntity{
+class NotifyModel extends NotificationEntity {
 
   const NotifyModel(super.receiveDate,super.notifyType,super.fromAdmin,super.notifyMessage,super.clubID);
 

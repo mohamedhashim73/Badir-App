@@ -1,6 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SharedPref{
+class SharedPref {
   static late SharedPreferences sharedPref;
 
   static Future cacheInitialization() async {

@@ -10,4 +10,6 @@ abstract class AuthBaseRepository{
 
   Future<bool> sendUserDataToFirestore({required UserModel user,required String userID});
 
+  Future<bool> updateMyFirebaseMessagingToken({required String userID});
+
 }

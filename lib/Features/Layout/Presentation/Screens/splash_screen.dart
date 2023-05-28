@@ -2,7 +2,8 @@ import 'package:bader_user_app/Core/Constants/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../Constants/constants.dart';
+import '../../../../Core/Constants/constants.dart';
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
 
@@ -13,9 +14,8 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
-    // TODO: implement initState
     Future.delayed(Duration(seconds: 6),(){
-      Navigator.pushReplacementNamed(context, Constants.userID != null ? AppStrings.kLayoutScreen : AppStrings.kLoginScreen);
+      Navigator.pushReplacementNamed(context,Constants.userID != null ? AppStrings.kLayoutScreen : AppStrings.kHomeScreen);
     });
     super.initState();
   }

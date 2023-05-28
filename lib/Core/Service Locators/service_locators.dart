@@ -1,5 +1,6 @@
 import 'package:bader_user_app/Features/Auth/Data/Data_Source/auth_data_source.dart';
 import 'package:bader_user_app/Features/Auth/Data/Repositories/auth_remote_repository.dart';
+import 'package:bader_user_app/Features/Auth/Domain/UseCases/login_use_case.dart';
 import 'package:bader_user_app/Features/Clubs/Data/Data_Sources/local_clubs_data_source.dart';
 import 'package:bader_user_app/Features/Clubs/Data/Data_Sources/remote_clubs_data_source.dart';
 import 'package:bader_user_app/Features/Clubs/Data/Imply_Repositories/clubs_imply_repository.dart';
@@ -19,7 +20,10 @@ import 'package:bader_user_app/Features/Layout/Domain/Use%20Cases/log_out_use_ca
 import 'package:bader_user_app/Features/Layout/Domain/Use%20Cases/send_notification.dart';
 import 'package:bader_user_app/Features/Layout/Domain/Use%20Cases/upload_image_to_storage_use_case.dart';
 import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_states.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get_it/get_it.dart';
+import '../../Features/Auth/Domain/UseCases/register_use_case.dart';
+import '../../Features/Auth/Domain/UseCases/update_firebase_messaging_token_use_case.dart';
 import '../../Features/Clubs/Domain/Use_Cases/delete_meeting_use_case.dart';
 import '../../Features/Clubs/Domain/Use_Cases/get_all_membership_requests_use_case.dart';
 import '../../Features/Clubs/Domain/Use_Cases/get_id_for_clubs_that_i_ask_for_membershi_waiting_result_use_case.dart';
@@ -57,6 +61,7 @@ class ServiceLocators{
   static Future<void> serviceLocatorInitialization() async {
 
     // TODO: Data Source Instance ......
+
     // LAYOUT DATA SOURCE
     sl.registerLazySingleton<LayoutRemoteDataSource>(() => LayoutRemoteDataSource());
 
@@ -79,10 +84,15 @@ class ServiceLocators{
 
     sl.registerLazySingleton<EventsImplyRepository>(() => EventsImplyRepository(remoteEventsDataSource: sl(), localEventsDataSource: sl()));
 
-    sl.registerLazySingleton<AuthRemoteImplyRepository>(() => AuthRemoteImplyRepository(authRemoteDataSource: sl()));
+    sl.registerLazySingleton<AuthImplyRepository>(() => AuthImplyRepository(authRemoteDataSource: sl()));
 
 
     // TODO: USE CASES ......
+
+    // Auth USE CASES
+    sl.registerLazySingleton<UpdateMyFirebaseMessagingTokenUseCase>(() => UpdateMyFirebaseMessagingTokenUseCase(authBaseRepository: sl<AuthImplyRepository>()));
+    sl.registerLazySingleton<RegisterUseCase>(() => RegisterUseCase(authBaseRepository: sl<AuthImplyRepository>()));
+    sl.registerLazySingleton<LoginUseCase>(() => LoginUseCase(authBaseRepository: sl<AuthImplyRepository>()));
 
     // CLUBS USE CASES
     sl.registerLazySingleton<RequestAMembershipUseCase>(() => RequestAMembershipUseCase(clubsContractRepository: sl<ClubsImplyRepository>()));

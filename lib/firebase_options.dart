@@ -25,7 +25,10 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        return macos;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for macos - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -44,44 +47,32 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyC2LxmQAWks858G3xqsTPRDHxgLKe3yjSk',
-    appId: '1:605990300251:web:f554b2f84b25ad620f2d7e',
-    messagingSenderId: '605990300251',
-    projectId: 'badir-app',
-    authDomain: 'badir-app.firebaseapp.com',
-    databaseURL: 'https://badir-app-default-rtdb.firebaseio.com',
-    storageBucket: 'badir-app.appspot.com',
-    measurementId: 'G-NDZVN1K4S6',
+    apiKey: 'AIzaSyCQKypvvuKsaXAaNd_A-vGb0vCzSZ7dkL4',
+    appId: '1:546364339262:web:31c44d7c003770e1834d6f',
+    messagingSenderId: '546364339262',
+    projectId: 'badir-app-4b953',
+    authDomain: 'badir-app-4b953.firebaseapp.com',
+    databaseURL: 'https://badir-app-4b953-default-rtdb.firebaseio.com',
+    storageBucket: 'badir-app-4b953.appspot.com',
+    measurementId: 'G-JEXS0YXNET',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCUgujdtlUNut-JMZretoA9yPzx2Nl_b78',
-    appId: '1:605990300251:android:68120670ebff3efa0f2d7e',
-    messagingSenderId: '605990300251',
-    projectId: 'badir-app',
-    databaseURL: 'https://badir-app-default-rtdb.firebaseio.com',
-    storageBucket: 'badir-app.appspot.com',
+    apiKey: 'AIzaSyApCGHc3EgtKhk8paEpAiP_K0KsM3i45cs',
+    appId: '1:546364339262:android:3bc8965305b5924d834d6f',
+    messagingSenderId: '546364339262',
+    projectId: 'badir-app-4b953',
+    databaseURL: 'https://badir-app-4b953-default-rtdb.firebaseio.com',
+    storageBucket: 'badir-app-4b953.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDpDpUcDWL5TgkNZtqCOAC3Gh15AnfvAEU',
-    appId: '1:605990300251:ios:ca6864a7a4cd7a9c0f2d7e',
-    messagingSenderId: '605990300251',
-    projectId: 'badir-app',
-    databaseURL: 'https://badir-app-default-rtdb.firebaseio.com',
-    storageBucket: 'badir-app.appspot.com',
-    iosClientId: '605990300251-i1lt9nif5bbs1usp7dr1vv8dojn5kqc7.apps.googleusercontent.com',
-    iosBundleId: 'com.example.baderUserApp',
-  );
-
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyDpDpUcDWL5TgkNZtqCOAC3Gh15AnfvAEU',
-    appId: '1:605990300251:ios:ca6864a7a4cd7a9c0f2d7e',
-    messagingSenderId: '605990300251',
-    projectId: 'badir-app',
-    databaseURL: 'https://badir-app-default-rtdb.firebaseio.com',
-    storageBucket: 'badir-app.appspot.com',
-    iosClientId: '605990300251-i1lt9nif5bbs1usp7dr1vv8dojn5kqc7.apps.googleusercontent.com',
+    apiKey: 'AIzaSyAp1IGtTrNWcyFU9alGehBhaH_N-JC9kj4',
+    appId: '1:546364339262:ios:c2fc1172ce59fc16834d6f',
+    messagingSenderId: '546364339262',
+    projectId: 'badir-app-4b953',
+    databaseURL: 'https://badir-app-4b953-default-rtdb.firebaseio.com',
+    storageBucket: 'badir-app-4b953.appspot.com',
     iosBundleId: 'com.example.baderUserApp',
   );
 }

@@ -3,8 +3,10 @@ import 'package:bader_user_app/Features/Auth/Domain/UseCases/login_use_case.dart
 import 'package:bader_user_app/Features/Auth/Domain/UseCases/register_use_case.dart';
 import 'package:bader_user_app/Core/Constants/constants.dart';
 import 'package:bader_user_app/Core/Service%20Locators/service_locators.dart';
+import 'package:bader_user_app/Features/Auth/Domain/UseCases/update_firebase_messaging_token_use_case.dart';
 import 'package:bader_user_app/Features/Layout/Data/Models/user_model.dart';
 import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_cubit.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../Core/Network/sharedPref.dart';
@@ -32,7 +34,7 @@ class AuthCubit extends Cubit<AuthStates>{
   void register({required String name,required String email,required int phone,required String password,required String gender,required String college}) async {
     emit(RegisterLoadingState());
     // Todo: ServiceLocator contain an instance from AuthBaseRepository
-    final result = await RegisterUseCase(authBaseRepository: sl<AuthRemoteImplyRepository>()).execute(email: email, password: password);
+    final result = await sl<RegisterUseCase>().execute(email: email, password: password);
     // TODO: left => result that on the left side ( Instance from Failure ) , right => Instance from UserCredential
     result.fold(
             (serverFailure)
@@ -41,9 +43,11 @@ class AuthCubit extends Cubit<AuthStates>{
             },
             (right) async
             {
+              // TODO: I will use firebaseMessagingToken in send notification to this User
+              String? firebaseMessagingToken = await FirebaseMessaging.instance.getToken();
               // Todo: Send User Data to Firestore
-              UserModel userModel = UserModel(name, right.user!.uid,null, email,"User", password, gender, college, phone,null,null,false,null,null,null,null);
-              await SendUserDataToFirestoreUseCase(authBaseRepository: sl<AuthRemoteImplyRepository>()).execute(user: userModel, userID: right.user!.uid);
+              UserModel userModel = UserModel(name, right.user!.uid,firebaseMessagingToken,null, email,"User", password, gender, college, phone,null,null,false,null,null,null,null);
+              await SendUserDataToFirestoreUseCase(authBaseRepository: sl<AuthImplyRepository>()).execute(user: userModel, userID: right.user!.uid);
               emit(RegisterSuccessState());
             }
     );
@@ -51,15 +55,17 @@ class AuthCubit extends Cubit<AuthStates>{
 
   void login({required String email,required String password,required LayoutCubit layoutCubit}) async {
     emit(LoginLoadingState());
-    final result = await LoginUseCase(authBaseRepository: sl<AuthRemoteImplyRepository>()).execute(email: email, password: password);
+    final result = await sl<LoginUseCase>().execute(email: email, password: password);
     debugPrint("Result is : $result");
     // TODO: left => result that on the left side ( Instance from Failure ) , right => Instance from UserCredential
     result.fold(
             (serverFailure) => emit(LoginStateFailed(message: serverFailure.errorMessage)),
-            (right)
+            (userCredential)
             async
             {
-              await SharedPref.insertString(key: 'userID',value : right.user!.uid);
+              await FirebaseMessaging.instance.subscribeToTopic("all");     // TODO: عشان بعدين لو حبت ابعت حاجه لكل المتسخدمين هبعت من خلال Topic ده
+              await sl<UpdateMyFirebaseMessagingTokenUseCase>().execute(userID: userCredential.user!.uid);
+              await SharedPref.insertString(key: 'userID',value : userCredential.user!.uid);
               Constants.userID = SharedPref.getString(key: 'userID');
               await layoutCubit.getMyData();
               emit(LoginSuccessState());
