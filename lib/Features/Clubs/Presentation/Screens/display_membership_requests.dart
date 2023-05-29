@@ -62,7 +62,7 @@ class MembershipRequestsScreen extends StatelessWidget {
 
 Widget _requestMembershipItem({required BuildContext context,required RequestMembershipEntity requestData,required LayoutCubit layoutCubit,required ClubsCubit cubit,required String clubID,required String clubName}){
   return InkWell(
-    onTap: () => showMemberData(context: context, committeeName: requestData.committeeName!, aboutMember: requestData.infoAboutAsker!),
+    onTap: () => showMemberData(context: context, committeeName: requestData.committeeName!, aboutMember: requestData.infoAboutSender!),
     child: Card(
       elevation: 0.2,
       child: Padding(
@@ -71,15 +71,15 @@ Widget _requestMembershipItem({required BuildContext context,required RequestMem
           crossAxisAlignment: CrossAxisAlignment.start,
           children:
           [
-            Text(requestData.requestUserName!,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15.5.sp),),
+            Text(requestData.senderName,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15.5.sp),),
             SizedBox(height: 5.h,),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children:
               [
-                _buttonItem(committeeNameForRequestSender: requestData.committeeName!,clubID: clubID,cubit: cubit,responseStatus: true,requestSenderID: requestData.userAskForMembershipID!,layoutCubit: layoutCubit,clubName: clubName),
+                _buttonItem(requestSenderFirebaseFCMToken: requestData.senderFirebaseFCMToken,committeeNameForRequestSender: requestData.committeeName,clubID: clubID,cubit: cubit,responseStatus: true,requestSenderID: requestData.senderID!,layoutCubit: layoutCubit,clubName: clubName),
                 SizedBox(width: 7.5.w,),
-                _buttonItem(committeeNameForRequestSender: requestData.committeeName!,clubID: clubID,cubit: cubit,responseStatus: false,requestSenderID: requestData.userAskForMembershipID!,layoutCubit: layoutCubit,clubName: clubName),
+                _buttonItem(requestSenderFirebaseFCMToken: requestData.senderFirebaseFCMToken,committeeNameForRequestSender: requestData.committeeName,clubID: clubID,cubit: cubit,responseStatus: false,requestSenderID: requestData.senderID!,layoutCubit: layoutCubit,clubName: clubName),
               ],
             )
           ],
@@ -89,11 +89,11 @@ Widget _requestMembershipItem({required BuildContext context,required RequestMem
   );
 }
 
-Widget _buttonItem({required bool responseStatus,required ClubsCubit cubit,required String committeeNameForRequestSender,required String requestSenderID,required String clubID,required String clubName,required LayoutCubit layoutCubit}){
+Widget _buttonItem({required bool responseStatus,required ClubsCubit cubit,required String committeeNameForRequestSender,required String requestSenderID,required String requestSenderFirebaseFCMToken,required String clubID,required String clubName,required LayoutCubit layoutCubit}){
   return MaterialButton(
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
     height: 30.h,
-    onPressed: () => cubit.acceptOrRejectMembershipRequest(committeeNameForRequestSender: committeeNameForRequestSender,idForClubILead: clubID,requestSenderID: requestSenderID, clubID: clubID, respondStatus: responseStatus,layoutCubit: layoutCubit,clubName: clubName),
+    onPressed: () => cubit.acceptOrRejectMembershipRequest(receiverFirebaseToken: requestSenderFirebaseFCMToken,committeeNameForRequestSender: committeeNameForRequestSender,idForClubILead: clubID,requestSenderID: requestSenderID, clubID: clubID, respondStatus: responseStatus,layoutCubit: layoutCubit,clubName: clubName),
     color: responseStatus ? AppColors.kGreenColor : AppColors.kRedColor,
     child: Text(responseStatus ? 'قبول' : "رفض",)
   );

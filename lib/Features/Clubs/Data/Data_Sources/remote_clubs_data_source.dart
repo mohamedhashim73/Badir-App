@@ -5,6 +5,7 @@ import 'package:bader_user_app/Features/Clubs/Data/Models/member_model.dart';
 import 'package:bader_user_app/Features/Clubs/Domain/Entities/club_entity.dart';
 import 'package:bader_user_app/Features/Layout/Data/Models/user_model.dart';
 import 'package:bader_user_app/Features/Layout/Domain/Entities/user_entity.dart';
+import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_cubit.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -62,9 +63,9 @@ class RemoteClubsDataSource{
   }
 
   // TODO: ASK FOR MEMBERSHIP
-  Future<bool> requestAMembershipOnSpecificClub({required String clubID,required String requestUserName,required String userAskForMembershipID,required String infoAboutAsker,required String committeeName}) async {
+  Future<bool> requestAMembershipOnSpecificClub({required String clubID,required String senderFirebaseFCMToken,required String requestUserName,required String userAskForMembershipID,required String infoAboutAsker,required String committeeName}) async {
     try{
-      final model = RequestMembershipModel(userAskForMembershipID, infoAboutAsker,committeeName,requestUserName);
+      final model = RequestMembershipModel(userAskForMembershipID, infoAboutAsker,committeeName,requestUserName,senderFirebaseFCMToken);
       await FirebaseFirestore.instance.collection(Constants.kClubsCollectionName).doc(clubID).collection(Constants.kMembershipRequestsCollectionName).doc(userAskForMembershipID).set(model.toJson());
       return true;
     }

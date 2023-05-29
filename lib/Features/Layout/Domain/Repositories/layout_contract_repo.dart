@@ -21,7 +21,7 @@ abstract class LayoutBaseRepository{
 
   Future<Either<Failure,List<NotificationEntity>>> getNotifications();
   Future<Either<Failure,List<UserEntity>>> getAllUsersOnApp();
-  Future<Either<Failure,Unit>> sendNotification({required String receiverID,required String clubID,required String notifyContent,required NotificationType notifyType});
+  Future<Either<Failure,Unit>> sendNotification({required String notifyTitle,required bool toSpecificUserOrNumOfUsers,String? topicName,String? receiverFirebaseToken,required String receiverID,required String clubID,required String notifyContent,required NotificationType notifyType});
 
   // TODO: Upload Image to Storage
   Future<Either<Failure,String>> uploadFileToStorage({required File file});

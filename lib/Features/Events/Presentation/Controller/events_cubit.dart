@@ -339,9 +339,9 @@ class EventsCubit extends Cubit<EventsStates> {
   }
 
   // TODO: Will pass RequestsData to GedRequestForAuthenticateOnATaskSuccessState and display it on screen using state.....
-  Future<void> acceptOrRejectAuthenticateRequestOnATask({required String myID,required LayoutCubit layoutCubit,required String requestSenderName,required TaskEntity taskEntity,required String requestSenderID,required bool respondStatus}) async {
+  Future<void> acceptOrRejectAuthenticateRequestOnATask({required String myID,required LayoutCubit layoutCubit,required String requestSenderName,required TaskEntity taskEntity,required String requestFirebaseFCMToken,required String requestSenderID,required bool respondStatus}) async {
     emit(AcceptOrRejectAuthenticateRequestOnATaskLoadingState());
-    final result = await sl<AcceptOrRejectAuthenticateRequestOnATaskUseCase>().execute(myID: myID, layoutCubit: layoutCubit, requestSenderName: requestSenderName, taskEntity: taskEntity, requestSenderID: requestSenderID, respondStatus: respondStatus);
+    final result = await sl<AcceptOrRejectAuthenticateRequestOnATaskUseCase>().execute(myID: myID, layoutCubit: layoutCubit, requestSenderName: requestSenderName, taskEntity: taskEntity, requestSenderID: requestSenderID,requestFirebaseFCMToken: requestFirebaseFCMToken, respondStatus: respondStatus);
     result.fold(
         (serverFailure)
         {
@@ -386,9 +386,9 @@ class EventsCubit extends Cubit<EventsStates> {
   }
 
   // TODO: User or Member ....
-  void requestToAuthenticateOnATask({required UserEntity myData,required String taskID,required String senderID,required String senderName}) async {
+  void requestToAuthenticateOnATask({required UserEntity myData,required String taskID,required String senderFirebaseFCMToken,required String senderID,required String senderName}) async {
     // emit(RequestAuthenticateOnATaskLoadingState());
-    final result = await sl<RequestAuthenticationOnATaskUseCase>().execute(taskID: taskID, senderID: senderID, senderName: senderName);
+    final result = await sl<RequestAuthenticationOnATaskUseCase>().execute(senderFirebaseFCMToken: senderFirebaseFCMToken ,taskID: taskID, senderID: senderID, senderName: senderName);
     result.fold(
         (serverFailure)
         {

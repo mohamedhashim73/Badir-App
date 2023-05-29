@@ -1,23 +1,14 @@
 import 'package:bader_user_app/Core/Components/snackBar_item.dart';
 import 'package:bader_user_app/Core/Constants/constants.dart';
 import 'package:bader_user_app/Core/Theme/app_colors.dart';
-import 'package:bader_user_app/Core/Constants/app_strings.dart';
 import 'package:bader_user_app/Features/Events/Data/Models/request_authentication_on_task_model.dart';
-import 'package:bader_user_app/Features/Events/Domain/Entities/event_entity.dart';
 import 'package:bader_user_app/Features/Events/Domain/Entities/task_entity.dart';
 import 'package:bader_user_app/Features/Events/Presentation/Controller/events_cubit.dart';
 import 'package:bader_user_app/Features/Events/Presentation/Controller/events_states.dart';
-import 'package:bader_user_app/Features/Events/Presentation/Screens/event_details_screen.dart';
-import 'package:bader_user_app/Features/Events/Presentation/Screens/update_event_screen.dart';
-import 'package:bader_user_app/Features/Events/Presentation/Screens/update_task_screen.dart';
-import 'package:bader_user_app/Features/Events/Presentation/Screens/view_memebrs_on_an_event_screen.dart';
-import 'package:bader_user_app/Features/Events/Presentation/Screens/view_task_details_screen.dart';
-import 'package:bader_user_app/Features/Layout/Domain/Entities/user_entity.dart';
 import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:jiffy/jiffy.dart';
 import '../../../../Core/Components/alert_dialog_for_loading_item.dart';
 
 class ViewRequestsForAuthenticateOnTaskScreen extends StatelessWidget {
@@ -79,7 +70,7 @@ class ViewRequestsForAuthenticateOnTaskScreen extends StatelessWidget {
           [
             _textSpan(title: "إسم المهمة", value:task.name),
             _textSpan(title: "إسم الفعالية", value: "${task.forPublicOrSpecificToAnEvent ? "غير خاص بفعالية معينه" : task.eventName}"),
-            _textSpan(title: "العضو", value:requestData.senderName!),
+            _textSpan(title: "العضو", value:requestData.senderName),
             _textSpan(title: "عدد الساعات", value:task.hours.toString()),
             SizedBox(height: 10.h,),
             Row(
@@ -91,7 +82,7 @@ class ViewRequestsForAuthenticateOnTaskScreen extends StatelessWidget {
                     color: AppColors.kGreenColor,
                     onTap: ()
                     {
-                      eventsCubit.acceptOrRejectAuthenticateRequestOnATask(myID: layoutCubit.userData!.id ?? Constants.userID!, layoutCubit: layoutCubit, requestSenderName: requestData.senderName!, taskEntity: task, requestSenderID: requestData.senderID!, respondStatus: true);
+                      eventsCubit.acceptOrRejectAuthenticateRequestOnATask(myID: layoutCubit.userData!.id ?? Constants.userID!, layoutCubit: layoutCubit, requestSenderName: requestData.senderName,requestFirebaseFCMToken: requestData.senderFirebaseFCMToken, taskEntity: task, requestSenderID: requestData.senderID!, respondStatus: true);
                     }
                 ),
                 SizedBox(width: 10.w,),
@@ -100,7 +91,7 @@ class ViewRequestsForAuthenticateOnTaskScreen extends StatelessWidget {
                     color: AppColors.kRedColor,
                     onTap: ()
                     {
-                      eventsCubit.acceptOrRejectAuthenticateRequestOnATask(myID: layoutCubit.userData!.id ?? Constants.userID!, layoutCubit: layoutCubit, requestSenderName: requestData.senderName!, taskEntity: task, requestSenderID: requestData.senderID!, respondStatus: false);
+                      eventsCubit.acceptOrRejectAuthenticateRequestOnATask(myID: layoutCubit.userData!.id ?? Constants.userID!, layoutCubit: layoutCubit, requestSenderName: requestData.senderName,requestFirebaseFCMToken: requestData.senderFirebaseFCMToken, taskEntity: task, requestSenderID: requestData.senderID, respondStatus: false);
                     }
                     ),
               ],

@@ -158,6 +158,7 @@ Widget _clubItem({UserEntity? myData,required ClubEntity club,required BuildCont
                       mainAxisAlignment: MainAxisAlignment.start,
                       children:
                       [
+                        if( myData != null && myData.idForClubLead != null && Constants.userID != null )
                         _buttonItem(
                           title: "عرض",
                           onTap: ()
@@ -166,7 +167,7 @@ Widget _clubItem({UserEntity? myData,required ClubEntity club,required BuildCont
                           },
                         ),
                         if( myData != null && myData.idForClubLead != null && Constants.userID != null )
-                        SizedBox(width: 10.w,),
+                        SizedBox(width: 15.w,),
                         if( myData != null && myData.idForClubLead == null && Constants.userID != null )    // TODO: AS it will be shown only if a Visitor or Member Not Leader....
                           _buttonItem(
                               title: alreadyJoinedToClub ? "تم الالتحاق" : clubAvailableAndHaveNotJoinedYetAndHaveNotSendRequestBefore ? "إنضم إلينا" : clubNotAvailableAndHaveNotJoinedYet ? "غير متاح" : "تم طلب العضوية",

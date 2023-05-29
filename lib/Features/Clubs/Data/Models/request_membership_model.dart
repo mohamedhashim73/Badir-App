@@ -1,16 +1,17 @@
 import 'package:bader_user_app/Features/Clubs/Domain/Entities/request_membership_entity.dart';
 
 class RequestMembershipModel extends RequestMembershipEntity{
-  const RequestMembershipModel(super.userAskForMembershipID, super.infoAboutAsker,super.committeeName,super.requestUserName);
+  const RequestMembershipModel(super.senderID, super.infoAboutSender,super.committeeName,super.senderName,super.senderFirebaseFCMToken);
 
-  factory RequestMembershipModel.fromJson({required json}) => RequestMembershipModel(json['userAskForMembershipID'], json['infoAboutAsker'],json['committeeName'],json['requestUserName']);
+  factory RequestMembershipModel.fromJson({required json}) => RequestMembershipModel(json['senderID'], json['infoAboutSender'],json['committeeName'],json['senderName'],json['senderFirebaseFCMToken']);
 
   Map<String,dynamic> toJson(){
     return {
-      'userAskForMembershipID' : super.userAskForMembershipID,
-      'infoAboutAsker' : super.infoAboutAsker,
+      'senderID' : super.senderID,
+      'infoAboutSender' : super.infoAboutSender,
       'committeeName' : super.committeeName,
-      'requestUserName' : super.requestUserName,
+      'senderName' : super.senderName,
+      'senderFirebaseFCMToken' : super.senderFirebaseFCMToken,
     };
   }
 }

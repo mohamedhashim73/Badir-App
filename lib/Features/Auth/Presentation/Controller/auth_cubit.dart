@@ -12,6 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../Core/Network/sharedPref.dart';
 import '../../Domain/UseCases/save_userData_use_case.dart';
 import 'auth_states.dart';
+import 'dart:io';
 
 // TODO: Deal with UseCases
 class AuthCubit extends Cubit<AuthStates>{
@@ -44,7 +45,13 @@ class AuthCubit extends Cubit<AuthStates>{
             (right) async
             {
               // TODO: I will use firebaseMessagingToken in send notification to this User
-              String? firebaseMessagingToken = await FirebaseMessaging.instance.getToken();
+              String? firebaseMessagingToken;
+              Constants.isPhysicalDevice().then((value) async {
+                if( value )
+                {
+                  firebaseMessagingToken = await FirebaseMessaging.instance.getToken();
+                }
+              });
               // Todo: Send User Data to Firestore
               UserModel userModel = UserModel(name, right.user!.uid,firebaseMessagingToken,null, email,"User", password, gender, college, phone,null,null,false,null,null,null,null);
               await SendUserDataToFirestoreUseCase(authBaseRepository: sl<AuthImplyRepository>()).execute(user: userModel, userID: right.user!.uid);
@@ -63,8 +70,13 @@ class AuthCubit extends Cubit<AuthStates>{
             (userCredential)
             async
             {
-              await FirebaseMessaging.instance.subscribeToTopic("all");     // TODO: عشان بعدين لو حبت ابعت حاجه لكل المتسخدمين هبعت من خلال Topic ده
-              await sl<UpdateMyFirebaseMessagingTokenUseCase>().execute(userID: userCredential.user!.uid);
+              bool appOnRealDevice = await Constants.isPhysicalDevice();
+              debugPrint("App run on real Device is : $appOnRealDevice , operating id is : ${Platform.operatingSystemVersion}");
+              if( appOnRealDevice == true )
+              {
+                await FirebaseMessaging.instance.subscribeToTopic("all");     // TODO: عشان بعدين لو حبت ابعت حاجه لكل المتسخدمين هبعت من خلال Topic ده
+                await sl<UpdateMyFirebaseMessagingTokenUseCase>().execute(userID: userCredential.user!.uid);
+              }
               await SharedPref.insertString(key: 'userID',value : userCredential.user!.uid);
               Constants.userID = SharedPref.getString(key: 'userID');
               await layoutCubit.getMyData();

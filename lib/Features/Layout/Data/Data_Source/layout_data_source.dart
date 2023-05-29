@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:bader_user_app/Core/Constants/constants.dart';
 import 'package:bader_user_app/Core/Errors/exceptions.dart';
@@ -10,6 +11,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:path/path.dart';
 import '../../../../Core/Constants/enumeration.dart';
 import '../../../Events/Presentation/Controller/events_cubit.dart';
@@ -37,7 +39,7 @@ class LayoutRemoteDataSource {
       });
       return true;
     }
-    on FirebaseException catch(e){
+    on FirebaseException {
       return false;
     }
   }
@@ -53,10 +55,12 @@ class LayoutRemoteDataSource {
     return notifications;
   }
 
-  Future<void> sendNotification({required String receiverID,required String clubID,required String notifyContent,required NotificationType notifyType}) async {
+  // TODO: Include send it using Firebase FCM && save Notify Data on User Document
+  Future<void> sendNotification({required String notifyTitle,required bool toSpecificUserOrNumOfUsers,String? topicName,String? receiverFirebaseToken,required String receiverID,required String clubID,required String notifyContent,required NotificationType notifyType}) async {
     try
     {
       NotifyModel notifyModel = NotifyModel(Constants.getTimeNow(), notifyType.name, false, notifyContent,clubID);
+      await notifyUserOrNumberOfUsersUsingFCMAPI(notifyTitle:notifyTitle,topicName: topicName,toSpecificUserOrNumOfUsers: toSpecificUserOrNumOfUsers,receiverFirebaseMessagingToken: receiverFirebaseToken, notifyType: notifyType, notifyBody: notifyContent);
       await FirebaseFirestore.instance.collection(Constants.kUsersCollectionName).doc(receiverID).
       collection(Constants.kNotificationsCollectionName).add(notifyModel.toJson());
     }
@@ -146,64 +150,33 @@ class LayoutRemoteDataSource {
     }
   }
 
-  // Todo: Send Notification to Community's author after anyone join to his community
-  Future<void> sendNotifyToSpecificUserUsingFirebaseMessaging({required String receiverFirebaseMessagingToken,required NotificationType notifyType,required String notifyTitle,required String notifyBody}) async {
-    Uri apiUri = Uri.parse("https://fcm.googleapis.com/fcm/send");
+  // Todo: topicName => في حاله لو هبعت لناس عامله subscribe to specific Topic
+  Future<void> notifyUserOrNumberOfUsersUsingFCMAPI({required bool toSpecificUserOrNumOfUsers,String? topicName,String? receiverFirebaseMessagingToken,required NotificationType notifyType,required String notifyTitle,required String notifyBody}) async {
     await http.post(
-        apiUri,
+        Constants.firebaseFCMAPIUri,
         headers:
         {
           'Content-Type': "application/json",
-          // Todo: Authorization to know from App will send Notifications
-          'Authorization': "key=BFY0wjvc0Id0Rnq4lhYKAtvXmRzsHyGlAMi5aqwYlxyWgqE9l7pAvmh5nVxLGqNkyyHIjxwj61AbQf0C-tUw4r0"
+          'Authorization': Constants.serverKey
         },
-    body: {
-      {
-        "to": receiverFirebaseMessagingToken, // Todo: receiverFirebaseMessagingToken == firebase_messaging_token for community's author
-        "notification":
-        {
-          "title": notifyTitle,
-          "body": notifyBody,
-          "mutable_content": true,
-          "sound": "default"
-        },
-        "priority": "high",
-        "data":
-        {
-          "type": notifyType.name,
-          "click_action": "FLUTTER_NOTIFICATION_CLICK",
-        }
-      }
-    });
-  }// Todo: Send Notification to Community's author after anyone join to his community
-
-  Future<void> sendNotifyToAllUsersOnAppUsingFirebaseMessaging({required NotificationType notifyType,required String notifyTitle,required String notifyBody}) async {
-    Uri apiUri = Uri.parse("https://fcm.googleapis.com/fcm/send");
-    await http.post(
-        apiUri,
-        headers:
-        {
-          'Content-Type': "application/json",
-          // Todo: Authorization to know from App will send Notifications
-          'Authorization': "key=BFY0wjvc0Id0Rnq4lhYKAtvXmRzsHyGlAMi5aqwYlxyWgqE9l7pAvmh5nVxLGqNkyyHIjxwj61AbQf0C-tUw4r0"
-        },
-    body: {
-      {
-        "to": "/topics/all", // Todo: receiverFirebaseMessagingToken == firebase_messaging_token for community's author
-        "notification":
-        {
-          "title": notifyTitle,
-          "body": notifyBody,
-          "mutable_content": true,
-          "sound": "default"
-        },
-        "priority": "high",
-        "data":
-        {
-          "type": notifyType.name,
-          "click_action": "FLUTTER_NOTIFICATION_CLICK",
-        }
-      }
-    });
+        body: jsonEncode(
+            {
+              "to": toSpecificUserOrNumOfUsers ? receiverFirebaseMessagingToken : "/topics/$topicName",
+              "notification":
+              {
+                "title": notifyTitle,
+                "body": notifyBody,
+                "mutable_content": true,
+                "sound": "default"
+              },
+              "priority": "high",
+              "data":
+              {
+                "type": notifyType.name,
+              }
+            }
+        )
+    );
+    debugPrint("Notification sent success using Firebase FCM API .......");
   }
 }

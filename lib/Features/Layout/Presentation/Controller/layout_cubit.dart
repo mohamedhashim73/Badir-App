@@ -189,8 +189,8 @@ class LayoutCubit extends Cubit<LayoutStates> {
       }
   }
 
-  Future<void> sendNotification({required String receiverID,required String clubID,required String notifyContent,required NotificationType notifyType}) async {
-    var result = await sl<SendNotificationUseCase>().execute(clubID: clubID,receiverID: receiverID,notifyType: notifyType,notifyContent: notifyContent);
+  Future<void> sendNotification({required String notifyTitle,required bool toSpecificUserOrNumOfUsers,String? topicName,String? receiverFirebaseToken,required String receiverID,required String clubID,required String notifyContent,required NotificationType notifyType}) async {
+    var result = await sl<SendNotificationUseCase>().execute(notifyTitle: notifyTitle,toSpecificUserOrNumOfUsers: toSpecificUserOrNumOfUsers,topicName: topicName,receiverFirebaseToken : receiverFirebaseToken,clubID: clubID,receiverID: receiverID,notifyType: notifyType,notifyContent: notifyContent);
     result.fold(
             (serverFailure) => emit(FailedSendNotificationState(message: serverFailure.errorMessage)),
             (unit)

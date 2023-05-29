@@ -7,7 +7,6 @@ import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_cu
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import '../../../../Core/Components/alert_dialog_for_loading_item.dart';
 import 'display_member_data_screen.dart';
 
@@ -80,7 +79,7 @@ class ViewMembersOnMyClubScreen extends StatelessWidget {
                   color: AppColors.kRedColor,
                   onTap: ()
                   {
-                    clubsCubit.removeMemberFromCLubILead(idForClubILead: idForClubILead, memberID: userEntity.id!, layoutCubit: layoutCubit);
+                    clubsCubit.removeMemberFromCLubILead(idForClubILead: idForClubILead, memberID: userEntity.id!, layoutCubit: layoutCubit,clubName: clubsCubit.dataAboutClubYouLead!.name!,clubID: idForClubILead,memberFirebaseMessagingToken: userEntity.firebaseMessagingToken!);
                   }
               )
             ],

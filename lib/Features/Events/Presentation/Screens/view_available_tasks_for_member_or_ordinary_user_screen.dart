@@ -6,18 +6,12 @@ import 'package:bader_user_app/Features/Events/Domain/Entities/event_entity.dart
 import 'package:bader_user_app/Features/Events/Domain/Entities/task_entity.dart';
 import 'package:bader_user_app/Features/Events/Presentation/Controller/events_cubit.dart';
 import 'package:bader_user_app/Features/Events/Presentation/Controller/events_states.dart';
-import 'package:bader_user_app/Features/Events/Presentation/Screens/event_details_screen.dart';
-import 'package:bader_user_app/Features/Events/Presentation/Screens/update_event_screen.dart';
-import 'package:bader_user_app/Features/Events/Presentation/Screens/update_task_screen.dart';
-import 'package:bader_user_app/Features/Events/Presentation/Screens/view_memebrs_on_an_event_screen.dart';
 import 'package:bader_user_app/Features/Events/Presentation/Screens/view_task_details_screen.dart';
 import 'package:bader_user_app/Features/Layout/Domain/Entities/user_entity.dart';
 import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:jiffy/jiffy.dart';
-import '../../../../Core/Components/alert_dialog_for_loading_item.dart';
 
 class ViewAvailableTasksScreen extends StatelessWidget {
   const ViewAvailableTasksScreen({Key? key}) : super(key: key);
@@ -110,7 +104,7 @@ class ViewAvailableTasksScreen extends StatelessWidget {
                         }
                         else
                         {
-                          cubit.requestToAuthenticateOnATask(myData: myData,taskID: taskEntity.id.toString(), senderID: myData.id ?? Constants.userID!, senderName: myData.name!);
+                          cubit.requestToAuthenticateOnATask(senderFirebaseFCMToken: myData.firebaseMessagingToken!,myData: myData,taskID: taskEntity.id.toString(), senderID: myData.id ?? Constants.userID!, senderName: myData.name!);
                         }
                       }
                   ),

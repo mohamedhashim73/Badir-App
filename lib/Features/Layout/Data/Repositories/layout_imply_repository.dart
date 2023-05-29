@@ -82,10 +82,10 @@ class LayoutImplyRepository implements LayoutBaseRepository {
   }
 
   @override
-  Future<Either<Failure,Unit>> sendNotification({required String receiverID,required String clubID,required String notifyContent,required NotificationType notifyType}) async {
+  Future<Either<Failure,Unit>> sendNotification({required String notifyTitle,required bool toSpecificUserOrNumOfUsers,String? topicName,String? receiverFirebaseToken,required String receiverID,required String clubID,required String notifyContent,required NotificationType notifyType}) async {
     try
     {
-      await layoutRemoteDataSource.sendNotification(receiverID: receiverID, clubID: clubID, notifyContent: notifyContent, notifyType: notifyType);
+      await layoutRemoteDataSource.sendNotification(receiverFirebaseToken:receiverFirebaseToken,notifyTitle: notifyTitle,toSpecificUserOrNumOfUsers: toSpecificUserOrNumOfUsers,topicName: topicName,receiverID: receiverID, clubID: clubID, notifyContent: notifyContent, notifyType: notifyType);
       return const Right(unit);
     }
     on ServerException catch(e){

@@ -1,14 +1,15 @@
 import 'package:equatable/equatable.dart';
 
 class RequestMembershipEntity extends Equatable {
-  final String? userAskForMembershipID;
-  final String? infoAboutAsker;
-  final String? committeeName;
-  final String? requestUserName;
+  final String senderID;
+  final String infoAboutSender;
+  final String committeeName;
+  final String senderName;
+  final String senderFirebaseFCMToken;
 
-  const RequestMembershipEntity(this.userAskForMembershipID, this.infoAboutAsker,this.committeeName,this.requestUserName);
+  const RequestMembershipEntity(this.senderID, this.infoAboutSender,this.committeeName,this.senderName,this.senderFirebaseFCMToken);
 
   @override
   // TODO: implement props
-  List<Object?> get props => [userAskForMembershipID,infoAboutAsker,committeeName,requestUserName];
+  List<Object?> get props => [senderID,infoAboutSender,committeeName,senderName,senderFirebaseFCMToken];
 }

@@ -9,6 +9,8 @@ import '../../Features/Clubs/Presentation/Controller/clubs_cubit.dart';
 import '../../Features/Events/Domain/Entities/event_entity.dart';
 import '../../Features/Events/Presentation/Controller/events_cubit.dart';
 import '../../Features/Layout/Presentation/Controller/layout_cubit.dart';
+import 'dart:io';
+import 'package:device_info/device_info.dart';
 
 class Constants {
   static dynamic providers = [
@@ -79,4 +81,29 @@ class Constants {
     List? idForClubsMemberIn = userEntity.idForClubsMemberIn;
     return (!eventExpired && ( (idForEventsJoined != null && idForEventsJoined.contains(event.id) == false && idForClubsMemberIn != null && idForClubsMemberIn.contains(event.clubID)) || (idForEventsJoined == null && !eventForOnlyMembers)));
   }
+  // TODO: Use it during send notify using firebase fcm api
+  static Uri firebaseFCMAPIUri = Uri.parse("https://fcm.googleapis.com/fcm/send");
+  static const String serverKey = "key=AAAAfzXaND4:APA91bEJtFGlWFAiVTBtbhnf9RAAKaUMaj-tAf0updm5hJV2QSat7-z2A_mrlpQb0-mpgoa2PmkX_qtb6oWWu7tE0whkEsh9zHTtRWNSA7xVjCQvTt3jD19kPWSVGD4VrH-_p52s6vZ4";
+
+  // TODO: لان Virtual Device مبتقدرش تجيب منه FirebaseMessagingToken
+  static Future<bool> isPhysicalDevice() async {
+    final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    bool isPhysical;
+    if (Platform.isAndroid)
+    {
+      final androidInfo = await deviceInfo.androidInfo;
+      isPhysical = androidInfo.isPhysicalDevice;
+    }
+    else if (Platform.isIOS)
+    {
+      final iosInfo = await deviceInfo.iosInfo;
+      isPhysical = iosInfo.isPhysicalDevice;
+    }
+    else
+    {
+      isPhysical = true;
+    }
+    return isPhysical;
+  }
+
 }

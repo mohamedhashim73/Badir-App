@@ -39,10 +39,10 @@ class NotificationsScreen extends StatelessWidget {
                   notifications.clear();
                   for( var item in snapshots.data!.docs )
                     {
-                      if( item.data()['notifyType'].toString().trim() == NotificationType.adminMakesYouALeaderOnSpecificClub.name.trim() && userEntity.idForClubLead == null )
-                        {
-                          layoutCubit.getMyData(clubsCubit: clubsCubit);
-                        }
+                      // if( item.data()['notifyType'].toString().trim() == NotificationType.adminMakesYouALeaderOnSpecificClub.name.trim() && userEntity.idForClubLead == null )
+                      //   {
+                      //     layoutCubit.getMyData(clubsCubit: clubsCubit);
+                      //   }
                       notifications.add(NotifyModel.fromJson(json: item.data()));
                     }
                   return Padding(
