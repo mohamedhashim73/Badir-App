@@ -4,7 +4,6 @@ import 'package:bader_user_app/Features/Clubs/Presentation/Screens/update_club_s
 import 'package:bader_user_app/Features/Events/Presentation/Screens/create_event_screen.dart';
 import 'package:bader_user_app/Features/Events/Presentation/Screens/tasks_management.dart';
 import 'package:bader_user_app/Features/Layout/Presentation/Screens/profile_screen.dart';
-
 import '../../Features/Auth/Presentation/Screens/login_screen.dart';
 import '../../Features/Auth/Presentation/Screens/register_screen.dart';
 import '../../Features/Clubs/Presentation/Screens/create_meeting_screen.dart';

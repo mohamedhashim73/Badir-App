@@ -121,8 +121,11 @@ class RemoteEventsDataSource{
     {
       // TODO: Update CurrentEventsNum on this club
       int currentEventsNumOnThisClub = await getNumOfEventsOnSpecificClub(clubID: clubID);
+      await Future.value(
+          currentEventsNumOnThisClub = currentEventsNumOnThisClub - 1
+      );
       await FirebaseFirestore.instance.collection(Constants.kClubsCollectionName).doc(clubID).update({
-        "currentEventsNum" : --currentEventsNumOnThisClub
+        "currentEventsNum" : currentEventsNumOnThisClub
       });
       await FirebaseFirestore.instance.collection(Constants.kEventsCollectionName).doc(eventID).delete();
       return unit;

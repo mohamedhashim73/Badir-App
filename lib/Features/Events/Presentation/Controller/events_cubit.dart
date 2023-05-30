@@ -54,7 +54,7 @@ class EventsCubit extends Cubit<EventsStates> {
             },
             (eventsData) async {
               allEvents = eventsData;
-              await getPastAndNewAndMyEvents(idForClubILead: idForClubILead);   // TODO: Notice that id not required...
+              if( Constants.userID != null && idForClubILead != null ) await getPastAndNewAndMyEvents(idForClubILead: idForClubILead);   // TODO: Notice that id not required...
               emit(GetEventsDataSuccessState());
         }
     );

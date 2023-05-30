@@ -15,7 +15,7 @@ import '../../../../Core/Constants/constants.dart';
 import '../Models/club_model.dart';
 import '../Models/request_membership_model.dart';
 
-class RemoteClubsDataSource{
+class RemoteClubsDataSource {
 
   Future<String> uploadClubImageToStorage({required File imgFile}) async {
     try
@@ -24,7 +24,8 @@ class RemoteClubsDataSource{
       await imageRef.putFile(imgFile);
       return imageRef.getDownloadURL();
     }
-    catch(e){
+    catch(e)
+    {
       throw ServerException(exceptionMessage: "Something went wrong, try again later");
     }
   }
@@ -32,7 +33,8 @@ class RemoteClubsDataSource{
   // TODO: Get Clubs from Firestore
   Future<List<ClubEntity>> getAllClubs() async {
     List<ClubEntity> clubs = [];
-    try{
+    try
+    {
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection(Constants.kClubsCollectionName).get();
       for( var item in querySnapshot.docs )
       {
@@ -40,10 +42,12 @@ class RemoteClubsDataSource{
       }
       return clubs;
     }
-    on FirebaseException catch(e){
+    on FirebaseException catch(e)
+    {
       throw ServerException(exceptionMessage: e.code);
     }
   }
+
 
   Future<Set<String>> getMembersOnMyClub({required String clubID}) async {
     Set<String> membersID = {};
