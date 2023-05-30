@@ -175,14 +175,7 @@ class HomeScreen extends StatelessWidget {
                                   GestureDetector(
                                     onTap: ()
                                     {
-                                      if( Constants.userID != null )
-                                      {
-                                        Navigator.pushNamed(context, AppStrings.kPastAndNewEventsScreen);
-                                      }
-                                      else
-                                      {
-                                        showDialogToVisitorToAskHimToLogin(context: context);
-                                      }
+                                      Navigator.pushNamed(context, AppStrings.kPastAndNewEventsScreen);
                                     },
                                     child: Text("عرض الكل",style: TextStyle(color: AppColors.kYellowColor),),
                                   )

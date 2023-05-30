@@ -42,7 +42,6 @@ Future<void> main() async {
   debugPrint("User ID is : ${Constants.userID}");
   // Todo: Receive message on Background as app is closed
   FirebaseMessaging.onBackgroundMessage(firebaseBackgroundMessageHandler);
-  if( await Constants.isPhysicalDevice() ) debugPrint("Firebase Messaging token is : ${await FirebaseMessaging.instance.getToken()}");
   runApp(Phoenix(child: const MyApp()));
 }
 

@@ -33,15 +33,8 @@ class EventItemOnHomeScreen extends StatelessWidget {
     return InkWell(
       onTap: ()
       {
-        if( Constants.userID != null )
-          {
-            bool eventFinished = DateTime.now().isAfter(Jiffy("${eventEntity.endDate!.trim()} ${eventEntity.time!.trim()}", "MMMM dd, yyyy h:mm a").dateTime);
-            Navigator.push(context, MaterialPageRoute(builder: (context) => EventDetailsScreen(event: eventEntity,eventExpired: eventFinished)));
-          }
-        else
-          {
-            showDialogToVisitorToAskHimToLogin(context: context);
-          }
+        bool eventFinished = DateTime.now().isAfter(Jiffy("${eventEntity.endDate!.trim()} ${eventEntity.time!.trim()}", "MMMM dd, yyyy h:mm a").dateTime);
+        Navigator.push(context, MaterialPageRoute(builder: (context) => EventDetailsScreen(event: eventEntity,eventExpired: eventFinished)));
       },
       child: Container(
         width: 160.w,

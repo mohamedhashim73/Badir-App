@@ -9,8 +9,6 @@ import 'package:bader_user_app/Features/Layout/Domain/Entities/user_entity.dart'
 import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:jiffy/jiffy.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../../../../Core/Components/button_item.dart';
 
 class EventDetailsScreen extends StatelessWidget {
@@ -35,11 +33,12 @@ class EventDetailsScreen extends StatelessWidget {
     _linkController.text = event.link!;
     _timeController.text = event.time!;
     final LayoutCubit layoutCubit = LayoutCubit.getInstance(context);
-    final UserEntity userEntity = layoutCubit.userData!;
+    UserEntity? userEntity = Constants.userID != null ? layoutCubit.userData! : null ;     // TODO: Can be null if user is a Visitor
     final EventsCubit eventsCubit = EventsCubit.getInstance(context);
-    bool eventExpiredAndIHaveJoined = Constants.eventExpiredAndIHaveJoined(event: event,eventExpired: eventExpired,userEntity: userEntity);
-    bool eventInDateAndIHaveJoined = Constants.eventInDateAndIHaveJoined(event: event,eventExpired: eventExpired,userEntity: userEntity);
-    bool eventInDateAndIHaveNotJoinedYetAndHavePermission = Constants.eventInDateAndIHaveNotJoinedYetAndHavePermission(userEntity: userEntity, eventExpired: eventExpired, event: event);
+    // TODO: three variables eventExpiredAndIHaveJoined, eventInDateAndIHaveJoined, eventInDateAndIHaveNotJoinedYetAndHavePermission check value of userID لان مش هستعملهم الا اذا كان المستخدم عمل تسجيل دخول بالفعل
+    bool eventExpiredAndIHaveJoined = Constants.userID != null ? Constants.eventExpiredAndIHaveJoined(event: event,eventExpired: eventExpired,userEntity: userEntity!) : false;
+    bool eventInDateAndIHaveJoined = Constants.userID != null ? Constants.eventInDateAndIHaveJoined(event: event,eventExpired: eventExpired,userEntity: userEntity!) : false ;
+    bool eventInDateAndIHaveNotJoinedYetAndHavePermission = Constants.userID != null ? Constants.eventInDateAndIHaveNotJoinedYetAndHavePermission(userEntity: userEntity!, eventExpired: eventExpired, event: event) : false ;
 
     return SafeArea(
       child: Directionality(
@@ -82,9 +81,10 @@ class EventDetailsScreen extends StatelessWidget {
                     Text(event.forPublic == EventForPublicOrNot.private.name ? 'خاصة بأعضاء ${event.clubName} فقط' : 'للمستخدمين جميعا',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 14.5.sp),),
                   ],
                 ),
-                if( userEntity.idForClubLead == null && ( eventInDateAndIHaveJoined || eventInDateAndIHaveNotJoinedYetAndHavePermission || eventExpiredAndIHaveJoined ) )
+                // Constants.userID != null لان مش عاوز الزر يظهر لل Visitor
+                if( Constants.userID != null && userEntity!.idForClubLead == null && ( eventInDateAndIHaveJoined || eventInDateAndIHaveNotJoinedYetAndHavePermission || eventExpiredAndIHaveJoined ) )
                   SizedBox(height: 10.h,),
-                if( userEntity.idForClubLead == null && ( eventInDateAndIHaveJoined || eventInDateAndIHaveNotJoinedYetAndHavePermission || eventExpiredAndIHaveJoined ) )
+                if( Constants.userID != null && userEntity!.idForClubLead == null && ( eventInDateAndIHaveJoined || eventInDateAndIHaveNotJoinedYetAndHavePermission || eventExpiredAndIHaveJoined ) )
                   DefaultButton(
                     // TODO: مش هيظهر الا اذا كنت مسجل فيها او هي كانت عامة بس لو انا ليدر مش هيظهر ...
                     width: double.infinity,

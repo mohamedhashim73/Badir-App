@@ -11,7 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jiffy/jiffy.dart';
-import '../../../../Core/Constants/enumeration.dart';
 import 'event_details_screen.dart';
 
 class ViewAllEventsThrowAppScreen extends StatelessWidget {
@@ -21,7 +20,7 @@ class ViewAllEventsThrowAppScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final EventsCubit eventCubit = EventsCubit.getInstance(context);
     final LayoutCubit layoutCubit = LayoutCubit.getInstance(context);
-    final UserEntity userEntity = layoutCubit.userData!;
+    UserEntity? userEntity = Constants.userID != null ? layoutCubit.userData! : null;
     return DefaultTabController(
       length: 2,
       child: SafeArea(
@@ -63,7 +62,7 @@ class ViewAllEventsThrowAppScreen extends StatelessWidget {
     );
   }
 
-  Widget _displayEvents({required EventsCubit eventsCubit,required LayoutCubit layoutCubit,required UserEntity userEntity,required List<EventEntity> events,required bool newEventsOrNot,required BuildContext context}){
+  Widget _displayEvents({required EventsCubit eventsCubit,required LayoutCubit layoutCubit,UserEntity? userEntity,required List<EventEntity> events,required bool newEventsOrNot,required BuildContext context}){
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 12.w,vertical: 10.h),
       child: ListView.separated(
@@ -72,11 +71,11 @@ class ViewAllEventsThrowAppScreen extends StatelessWidget {
         {
           // TODO: eventFinished use it to know if i will give my opinion or not
           bool eventFinished = DateTime.now().isAfter(Jiffy("${events[index].endDate!.trim()} ${events[index].time!.trim()}", "MMMM dd, yyyy h:mm a").dateTime);
-          bool eventExpiredAndIHaveNotJoined = Constants.eventExpiredAndIHaveNotJoined(event: events[index],eventExpired: eventFinished,userEntity: userEntity);
-          bool eventExpiredAndIHaveJoined = Constants.eventExpiredAndIHaveJoined(event: events[index],eventExpired: eventFinished,userEntity: userEntity);
-          bool eventInDateAndIHaveJoined = Constants.eventInDateAndIHaveJoined(event: events[index],eventExpired: eventFinished,userEntity: userEntity);
-          bool eventInDateAndIHaveNotJoinedYetAndHavePermission = Constants.eventInDateAndIHaveNotJoinedYetAndHavePermission(userEntity: userEntity, eventExpired: eventFinished, event: events[index]);
-          bool eventInDateAndIDoNotHavePermissionToJoin = Constants.eventInDateAndIDoNotHavePermissionToJoin(userEntity: userEntity, eventExpired: eventFinished, event: events[index]);
+          bool eventExpiredAndIHaveNotJoined = Constants.userID != null ? Constants.eventExpiredAndIHaveNotJoined(event: events[index],eventExpired: eventFinished,userEntity: userEntity!) : false ;
+          bool eventExpiredAndIHaveJoined = Constants.userID != null ? Constants.eventExpiredAndIHaveJoined(event: events[index],eventExpired: eventFinished,userEntity: userEntity!) : false ;
+          bool eventInDateAndIHaveJoined = Constants.userID != null ? Constants.eventInDateAndIHaveJoined(event: events[index],eventExpired: eventFinished,userEntity: userEntity!) : false;
+          bool eventInDateAndIHaveNotJoinedYetAndHavePermission = Constants.userID != null ? Constants.eventInDateAndIHaveNotJoinedYetAndHavePermission(userEntity: userEntity!, eventExpired: eventFinished, event: events[index]) : false;
+          bool eventInDateAndIDoNotHavePermissionToJoin = Constants.userID != null ? Constants.eventInDateAndIDoNotHavePermissionToJoin(userEntity: userEntity!, eventExpired: eventFinished, event: events[index]) :false;
           return GestureDetector(
             onTap: ()
             {
@@ -104,11 +103,11 @@ class ViewAllEventsThrowAppScreen extends StatelessWidget {
                       alignment: AlignmentDirectional.topEnd,
                       child: MaterialButton(
                           elevation: 0,
-                          color: userEntity.idForClubLead != null || eventInDateAndIHaveNotJoinedYetAndHavePermission ? AppColors.kMainColor : eventExpiredAndIHaveJoined ? AppColors.kOrangeColor : eventInDateAndIDoNotHavePermissionToJoin || eventExpiredAndIHaveNotJoined ? AppColors.kRedColor : AppColors.kGreenColor,
+                          color: Constants.userID == null ? AppColors.kMainColor : userEntity!.idForClubLead != null || eventInDateAndIHaveNotJoinedYetAndHavePermission ? AppColors.kMainColor : eventExpiredAndIHaveJoined ? AppColors.kOrangeColor : eventInDateAndIDoNotHavePermissionToJoin || eventExpiredAndIHaveNotJoined ? AppColors.kRedColor : AppColors.kGreenColor,
                           textColor: AppColors.kWhiteColor,
                           onPressed: ()
                             {
-                              if ( userEntity.idForClubLead != null )
+                              if ( Constants.userID == null || ( userEntity != null && userEntity.idForClubLead != null ) )
                               {
                                 Navigator.push(context, MaterialPageRoute(builder: (context) => EventDetailsScreen(event: events[index],eventExpired: false)));
                               }
@@ -129,7 +128,7 @@ class ViewAllEventsThrowAppScreen extends StatelessWidget {
                                 showToastMessage(context: context, message: 'خاصة بأعضاء نادي ${events[index].clubName}',backgroundColor: AppColors.kRedColor);
                               }
                             },
-                        child: Text(userEntity.idForClubLead != null ? "متابعة" : eventInDateAndIHaveJoined ? "تم التسجيل" :  eventInDateAndIHaveNotJoinedYetAndHavePermission ? "سجل الآن" : eventExpiredAndIHaveNotJoined ? "انتهت الفعالية" : eventInDateAndIDoNotHavePermissionToJoin ? "خاصة" : "شاركنا برأيك",style: const TextStyle(fontWeight: FontWeight.bold),),
+                        child: Text(Constants.userID == null ? "عرض" : userEntity!.idForClubLead != null ? "متابعة" : eventInDateAndIHaveJoined ? "تم التسجيل" :  eventInDateAndIHaveNotJoinedYetAndHavePermission ? "سجل الآن" : eventExpiredAndIHaveNotJoined ? "انتهت الفعالية" : eventInDateAndIDoNotHavePermissionToJoin ? "خاصة" : "شاركنا برأيك",style: const TextStyle(fontWeight: FontWeight.bold),),
                       ),
                     )
                   ],

@@ -55,8 +55,6 @@ class EventsCubit extends Cubit<EventsStates> {
             (eventsData) async {
               allEvents = eventsData;
               await getPastAndNewAndMyEvents(idForClubILead: idForClubILead);   // TODO: Notice that id not required...
-              debugPrint("Past Events Number is : ${pastEvents.length}");
-              debugPrint("New Events Number is : ${newEvents.length}");
               emit(GetEventsDataSuccessState());
         }
     );
@@ -123,8 +121,7 @@ class EventsCubit extends Cubit<EventsStates> {
     ownEvents.clear();
     newEvents.clear();
     pastEvents.clear();
-    namesForEventsICreated.clear();
-    debugPrint("All Events number is : ${allEvents.length}");
+    namesForEventsICreated.clear();     // ده بستعمهلها في صفحه انشاء مهمه تقريبا
     if( idForClubILead != null ) emit(EventsClassifiedLoadingState());  // TODO: لأن هستعملها فقط في صفحه اداره الفعاليات عشان اعمل CircleProgressIndicator()
     for( int i = 0 ; i < allEvents.length ; i++ )
     {
