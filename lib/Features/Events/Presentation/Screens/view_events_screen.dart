@@ -18,9 +18,9 @@ class ViewAllEventsThrowAppScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final EventsCubit eventCubit = EventsCubit.getInstance(context);
     final LayoutCubit layoutCubit = LayoutCubit.getInstance(context);
     UserEntity? userEntity = Constants.userID != null ? layoutCubit.userData! : null;
+    final EventsCubit eventCubit = EventsCubit.getInstance(context)..getPastAndNewAndMyEvents(idForClubILead: userEntity != null ? userEntity.idForClubLead : null );
     return DefaultTabController(
       length: 2,
       child: SafeArea(

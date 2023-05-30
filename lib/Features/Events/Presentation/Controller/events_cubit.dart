@@ -55,6 +55,7 @@ class EventsCubit extends Cubit<EventsStates> {
             (eventsData) async {
               allEvents = eventsData;
               if( Constants.userID != null && idForClubILead != null ) await getPastAndNewAndMyEvents(idForClubILead: idForClubILead);   // TODO: Notice that id not required...
+              debugPrint("Num of All events on app is : ${eventsData.length}");
               emit(GetEventsDataSuccessState());
         }
     );

@@ -39,7 +39,7 @@ class Constants {
   static String kEventsCollectionName = "Events";
   static String kTasksCollectionName = "Tasks";
   static String kReportsCollectionName = "Reports";
-  static String getTimeNow() => Jiffy(DateTime.now()).yMMMd;
+  static String getTimeNow() => Jiffy(DateTime.now()).yMMMMd;
   static Future<TimeOfDay?> selectTime({required BuildContext context}) async => await showTimePicker(context: context,initialTime: TimeOfDay.now());
   static Future<DateTime?> selectDate({required BuildContext context}) async => await showDatePicker(
     context: context,

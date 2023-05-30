@@ -85,8 +85,8 @@ class CreateEventScreen extends StatelessWidget {
                             SizedBox(height: 12.5.h,),
                             _textField(controller: _nameController,title:  'اسم الفعالية'),
                             _textField(controller:_descriptionController,title: 'الوصف'),
-                            _textField(controller:_startDateController,title: 'تاريخ البداية',onTap: () async => _startDateController.text = Jiffy(await Constants.selectDate(context: context)).yMMMd),
-                            _textField(controller:_endDateController,title: 'تاريخ الانتهاء',onTap: () async => _endDateController.text = Jiffy(await Constants.selectDate(context: context)).yMMMd),
+                            _textField(controller:_startDateController,title: 'تاريخ البداية',onTap: () async => _startDateController.text = Jiffy(await Constants.selectDate(context: context)).yMMMMd),
+                            _textField(controller:_endDateController,title: 'تاريخ الانتهاء',onTap: () async => _endDateController.text = Jiffy(await Constants.selectDate(context: context)).yMMMMd),
                             _textField(controller:_timeController,title: 'الوقت',onTap: () async {
                               TimeOfDay? timeNow = await Constants.selectTime(context: context);
                               _timeController.text = Jiffy({
