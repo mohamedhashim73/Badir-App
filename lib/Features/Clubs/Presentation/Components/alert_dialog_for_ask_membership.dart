@@ -53,7 +53,7 @@ void askMembershipDialog({required ClubEntity club,required BuildContext context
                       {
                         if( cubit.selectedCommittee != null && controller.text.isNotEmpty && ( club.availableOnlyForThisCollege.isEmpty || ( club.availableOnlyForThisCollege.isNotEmpty && club.availableOnlyForThisCollege.contains(userEntity.college!) == true ) ) )
                         {
-                          cubit.askForMembership(senderFirebaseFCMToken: userEntity.firebaseMessagingToken!,userEntity:userEntity,committeeName: cubit.selectedCommittee!,clubID: club.id.toString(), infoAboutAsker: controller.text, userName: userEntity.name!);
+                          cubit.askForMembership(senderFirebaseFCMToken: userEntity.firebaseMessagingToken != null ? userEntity.firebaseMessagingToken! : null,userEntity:userEntity,committeeName: cubit.selectedCommittee!,clubID: club.id.toString(), infoAboutAsker: controller.text, userName: userEntity.name!);
                         }
                         else if( cubit.selectedCommittee == null || controller.text.isEmpty )
                         {

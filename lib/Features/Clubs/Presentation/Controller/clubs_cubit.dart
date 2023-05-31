@@ -185,7 +185,7 @@ class ClubsCubit extends Cubit<ClubsStates> {
   }
 
   // TODO: Ask for membership
-  void askForMembership({required UserEntity userEntity,required String senderFirebaseFCMToken,required String clubID,required String infoAboutAsker,required String userName,required String committeeName}) async {
+  void askForMembership({required UserEntity userEntity,String? senderFirebaseFCMToken,required String clubID,required String infoAboutAsker,required String userName,required String committeeName}) async {
     emit(SendRequestForMembershipLoadingState());
     bool requestSent = await sl<RequestAMembershipUseCase>().execute(
         clubID: clubID,
@@ -325,7 +325,7 @@ class ClubsCubit extends Cubit<ClubsStates> {
     );
   }
 
-  void acceptOrRejectMembershipRequest({required LayoutCubit layoutCubit,required String receiverFirebaseToken,required String committeeNameForRequestSender,required String idForClubILead,required String requestSenderID,required String clubID,required bool respondStatus,required String clubName}) async {
+  void acceptOrRejectMembershipRequest({required LayoutCubit layoutCubit,String? receiverFirebaseMessagingToken,required String committeeNameForRequestSender,required String idForClubILead,required String requestSenderID,required String clubID,required bool respondStatus,required String clubName}) async {
     emit(AcceptOrRejectMembershipRequestLoadingState());
     final result = await sl<AcceptOrRejectMembershipRequestUseCase>().execute(committeeNameForRequestSender: committeeNameForRequestSender,clubID: clubID,requestSenderID: requestSenderID,respondStatus: respondStatus);
     result.fold(
@@ -333,7 +333,7 @@ class ClubsCubit extends Cubit<ClubsStates> {
               emit(FailedToAcceptOrRejectMembershipRequestState(message: serverFailure.errorMessage));
             },
             (unit) async {
-              await layoutCubit.sendNotification(toSpecificUserOrNumOfUsers: true,notifyTitle: "طلب العضوية",receiverFirebaseToken: receiverFirebaseToken,receiverID: requestSenderID, clubID: clubID, notifyContent: respondStatus ? "لقد تم قبول طلب العضوية في $clubName" : "لقد تم رفض طلب العضوية في $clubName", notifyType: respondStatus ? NotificationType.acceptYourMembershipRequest : NotificationType.rejectYourMembershipRequest);
+              await layoutCubit.sendNotification(toSpecificUserOrNumOfUsers: true,notifyTitle: "طلب العضوية",receiverFirebaseToken: receiverFirebaseMessagingToken,receiverID: requestSenderID, clubID: clubID, notifyContent: respondStatus ? "لقد تم قبول طلب العضوية في $clubName" : "لقد تم رفض طلب العضوية في $clubName", notifyType: respondStatus ? NotificationType.acceptYourMembershipRequest : NotificationType.rejectYourMembershipRequest);
               await getMembersDataOnMyClub(layoutCubit: layoutCubit, idForClubILead: idForClubILead);
               emit(AcceptOrRejectMembershipRequestSuccessState());
             }
