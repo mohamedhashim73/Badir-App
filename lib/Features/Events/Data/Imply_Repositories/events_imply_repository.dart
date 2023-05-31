@@ -137,7 +137,7 @@ class EventsImplyRepository implements EventsContractRepository{
   }
 
   @override
-  Future<Either<Failure,Unit>> requestToAuthenticateOnATask({required String taskID,required String senderID,required String senderFirebaseFCMToken,required String senderName}) async {
+  Future<Either<Failure,Unit>> requestToAuthenticateOnATask({required String taskID,required String senderID,String? senderFirebaseFCMToken,required String senderName}) async {
     try
     {
       return Right(await remoteEventsDataSource.requestToAuthenticateOnATask(taskID: taskID, senderID: senderID, senderFirebaseFCMToken: senderFirebaseFCMToken,senderName: senderName));
@@ -192,7 +192,7 @@ class EventsImplyRepository implements EventsContractRepository{
   }
 
   @override
-  Future<Either<Failure,Unit>> acceptOrRejectAuthenticateRequestOnATask({required String requestFirebaseFCMToken,required String myID,required LayoutCubit layoutCubit,required String requestSenderName,required TaskEntity taskEntity,required String requestSenderID,required bool respondStatus}) async {
+  Future<Either<Failure,Unit>> acceptOrRejectAuthenticateRequestOnATask({String? requestFirebaseFCMToken,required String myID,required LayoutCubit layoutCubit,required String requestSenderName,required TaskEntity taskEntity,required String requestSenderID,required bool respondStatus}) async {
     try
     {
       return Right(await remoteEventsDataSource.acceptOrRejectAuthenticateRequestOnATask(requestFirebaseFCMToken: requestFirebaseFCMToken,myID: myID, layoutCubit: layoutCubit, requestSenderName: requestSenderName, taskEntity: taskEntity, requestSenderID: requestSenderID,respondStatus: respondStatus));

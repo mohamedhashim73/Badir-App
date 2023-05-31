@@ -8,7 +8,7 @@ class RequestAuthenticationOnATaskUseCase{
 
   RequestAuthenticationOnATaskUseCase({required this.eventsContractRepository});
 
-  Future<Either<Failure,Unit>> execute({required String taskID,required String senderFirebaseFCMToken,required String senderID,required String senderName}) async {
+  Future<Either<Failure,Unit>> execute({required String taskID,String? senderFirebaseFCMToken,required String senderID,required String senderName}) async {
     return await eventsContractRepository.requestToAuthenticateOnATask(senderFirebaseFCMToken: senderFirebaseFCMToken,taskID: taskID, senderID: senderID, senderName: senderName);
   }
 

@@ -7,6 +7,7 @@ import 'package:bader_user_app/Features/Clubs/Domain/Use_Cases/delete_meeting_us
 import 'package:bader_user_app/Features/Clubs/Domain/Use_Cases/get_all_clubs_use_case.dart';
 import 'package:bader_user_app/Features/Clubs/Domain/Use_Cases/get_member_data_use_case.dart';
 import 'package:bader_user_app/Features/Clubs/Domain/Use_Cases/get_members_on_my_club_use_case.dart';
+import 'package:bader_user_app/Features/Clubs/Domain/Use_Cases/update_meeting_use_case.dart';
 import 'package:bader_user_app/Features/Clubs/Domain/Use_Cases/upload_image_to_storage_use_case.dart';
 import 'package:bader_user_app/Features/Layout/Domain/Entities/user_entity.dart';
 import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_cubit.dart';
@@ -61,6 +62,22 @@ class ClubsCubit extends Cubit<ClubsStates> {
         (unit) async {
           await getMeetingsCreatedByMe(clubID: idForClubILead);
           emit(CreateMeetingSuccessState());
+        }
+    );
+  }
+
+  // TODO: Update MEETING
+  Future<void> updateMeeting({required MeetingEntity meetingEntity,required String idForClubILead,required String name,required String description,required String date,required String time,required String location,required String link}) async {
+    emit(UpdateMeetingLoadingState());
+    final result = await sl<UpdateMeetingUseCase>().execute(meetingEntity:meetingEntity,idForClubILead: idForClubILead, name: name, description: description, date: date, time: time, location: location, link: link);
+    result.fold(
+        (serverFailure)
+        {
+          emit(UpdateMeetingWithFailureState(message: serverFailure.errorMessage));
+        },
+        (unit) async {
+          await getMeetingsCreatedByMe(clubID: idForClubILead);
+          emit(UpdateMeetingSuccessState());
         }
     );
   }

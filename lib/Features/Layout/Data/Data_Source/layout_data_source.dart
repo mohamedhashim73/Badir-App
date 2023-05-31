@@ -60,7 +60,7 @@ class LayoutRemoteDataSource {
     try
     {
       NotifyModel notifyModel = NotifyModel(Constants.getTimeNow(), notifyType.name, false, notifyContent,clubID);
-      await notifyUserOrNumberOfUsersUsingFCMAPI(notifyTitle:notifyTitle,topicName: topicName,toSpecificUserOrNumOfUsers: toSpecificUserOrNumOfUsers,receiverFirebaseMessagingToken: receiverFirebaseToken, notifyType: notifyType, notifyBody: notifyContent);
+      if( receiverFirebaseToken != null || topicName != null ) await notifyUserOrNumberOfUsersUsingFCMAPI(notifyTitle:notifyTitle,topicName: topicName,toSpecificUserOrNumOfUsers: toSpecificUserOrNumOfUsers,receiverFirebaseMessagingToken: receiverFirebaseToken, notifyType: notifyType, notifyBody: notifyContent);
       await FirebaseFirestore.instance.collection(Constants.kUsersCollectionName).doc(receiverID).
       collection(Constants.kNotificationsCollectionName).add(notifyModel.toJson());
     }

@@ -12,6 +12,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import '../../../../Core/Constants/constants.dart';
+import '../../Domain/Entities/meeting_entity.dart';
 import '../Models/club_model.dart';
 import '../Models/request_membership_model.dart';
 
@@ -279,6 +280,19 @@ class RemoteClubsDataSource {
       ++newMeetingID;
       MeetingModel meetingModel = MeetingModel(name, newMeetingID.toString(),description, date,time,location, link);
       await FirebaseFirestore.instance.collection(Constants.kClubsCollectionName).doc(idForClubILead).collection(Constants.kMeetingsCollectionName).doc(newMeetingID.toString()).set(meetingModel.toJson());
+      return unit;
+    }
+    on FirebaseException catch(e){
+      throw ServerException(exceptionMessage: e.code);
+    }
+  }
+
+  Future<Unit> updateMeeting({required MeetingEntity meetingEntity,required String idForClubILead,required String name,required String description,required String date,required String time,required String location,required String link}) async {
+    try
+    {
+      // TODO: Get Last ID For Last Event to increase it by one
+      MeetingModel meetingModel = MeetingModel(name, meetingEntity.id,description, date,time,location, link);
+      await FirebaseFirestore.instance.collection(Constants.kClubsCollectionName).doc(idForClubILead).collection(Constants.kMeetingsCollectionName).doc(meetingEntity.id).set(meetingModel.toJson());
       return unit;
     }
     on FirebaseException catch(e){

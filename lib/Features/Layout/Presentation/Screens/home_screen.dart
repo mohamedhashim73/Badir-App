@@ -214,6 +214,7 @@ class HomeScreen extends StatelessWidget {
                                           {
                                             // TODO: eventDate => لان محتاج اعرف اذا كانت الفعاليه عدت ولا لا
                                             DateTime eventDate = Jiffy("${eventsCubit.allEvents[index].endDate!.trim()} ${eventsCubit.allEvents[index].time!.trim()}", "MMMM dd, yyyy h:mm a").dateTime;
+                                            debugPrint("Event Date is : $eventDate, with id : ${eventsCubit.allEvents[index].id}");
                                             return EventItemOnHomeScreen(eventsCubit: eventsCubit,myData: Constants.userID != null ? layoutCubit.userData! : null ,context:context,eventEntity: eventsCubit.allEvents[index],eventExpired: DateTime.now().isAfter(eventDate) ? true : false, layoutCubit: layoutCubit);
                                           },
                                         );

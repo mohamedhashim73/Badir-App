@@ -11,6 +11,7 @@ import 'package:bader_user_app/Features/Clubs/Domain/Use_Cases/get_meetings_crea
 import 'package:bader_user_app/Features/Clubs/Domain/Use_Cases/get_member_data_use_case.dart';
 import 'package:bader_user_app/Features/Clubs/Domain/Use_Cases/remove_member_from_club_use_case.dart';
 import 'package:bader_user_app/Features/Clubs/Domain/Use_Cases/update_club_use_case.dart';
+import 'package:bader_user_app/Features/Clubs/Domain/Use_Cases/update_meeting_use_case.dart';
 import 'package:bader_user_app/Features/Events/Domain/Use_Cases/delete_event_use_case.dart';
 import 'package:bader_user_app/Features/Events/Domain/Use_Cases/get_all_events_use_case.dart';
 import 'package:bader_user_app/Features/Events/Domain/Use_Cases/get_id_for_tasks_that_i_asked_for_authentication.dart';
@@ -105,6 +106,7 @@ class ServiceLocators{
     sl.registerLazySingleton<CreateMeetingUseCase>(() => CreateMeetingUseCase(clubsContractRepository: sl<ClubsImplyRepository>()));
     sl.registerLazySingleton<RemoveMemberFromClubILeadUseCase>(() => RemoveMemberFromClubILeadUseCase(clubsContractRepository: sl<ClubsImplyRepository>()));
     sl.registerLazySingleton<DeleteMeetingUseCase>(() => DeleteMeetingUseCase(clubsContractRepository: sl<ClubsImplyRepository>()));
+    sl.registerLazySingleton<UpdateMeetingUseCase>(() => UpdateMeetingUseCase(clubsContractRepository: sl<ClubsImplyRepository>()));
     sl.registerLazySingleton<GetMeetingRelatedToClubIMemberInUseCase>(() => GetMeetingRelatedToClubIMemberInUseCase(clubsContractRepository: sl<ClubsImplyRepository>()));
     sl.registerLazySingleton<GetMeetingsCreatedByMeUseCase>(() => GetMeetingsCreatedByMeUseCase(clubsContractRepository: sl<ClubsImplyRepository>()));
     sl.registerLazySingleton<AcceptOrRejectMembershipRequestUseCase>(() => AcceptOrRejectMembershipRequestUseCase(clubsContractRepository: sl<ClubsImplyRepository>()));

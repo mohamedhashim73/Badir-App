@@ -7,6 +7,8 @@ import '../../Data/Models/meeting_model.dart';
 import '../Entities/club_entity.dart';
 import 'dart:io';
 
+import '../Entities/meeting_entity.dart';
+
 abstract class ClubsContractRepository{
 
   Future<Either<Failure,List<ClubEntity>>> getClubs();
@@ -34,4 +36,6 @@ abstract class ClubsContractRepository{
   Future<Either<Failure,Unit>> deleteMeeting({required String meetingID,required String clubID});
   Future<Either<Failure,UserEntity>> getMemberData({required String memberID});
   Future<Either<Failure,List<MeetingModel>>> getMeetingRelatedToClubIMemberIn({required List idForClubsMemberIn});
+  Future<Either<Failure,Unit>> updateMeeting({required MeetingEntity meetingEntity,required String idForClubILead,required String name,required String description,required String date,required String time,required String location,required String link});
+
 }

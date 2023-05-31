@@ -22,11 +22,11 @@ abstract class EventsContractRepository{
   Future<Either<Failure,Unit>> createTask({required String taskName,required String ownerID,required String clubID,required String description,String? eventID,String? eventName,required bool forPublicOrSpecificToAnEvent,required int hours,required int numOfPosition });
   Future<Either<Failure,Unit>> deleteTask({required String taskID});
   Future<Either<Failure,Unit>> updateTask({required String taskID,required TaskModel taskModel});
-  Future<Either<Failure,Unit>> requestToAuthenticateOnATask({required String taskID,required String senderFirebaseFCMToken,required String senderID,required String senderName});
+  Future<Either<Failure,Unit>> requestToAuthenticateOnATask({required String taskID,String? senderFirebaseFCMToken,required String senderID,required String senderName});
   // TODO: هترجع id بتاع التاسكات اللي انا بعت طلب تسجيل فيها بالفعل
   Future<Either<Failure,Set>> getIDForTasksIAskedToAuthenticate({List? idForClubIMemberIn,required String userID});
   Future<Either<Failure,List<RequestAuthenticationOnATaskModel>>> gedRequestForAuthenticateOnATask({required String taskID});
-  Future<Either<Failure,Unit>> acceptOrRejectAuthenticateRequestOnATask({required String requestFirebaseFCMToken,required String myID,required LayoutCubit layoutCubit,required String requestSenderName,required TaskEntity taskEntity,required String requestSenderID,required bool respondStatus});
+  Future<Either<Failure,Unit>> acceptOrRejectAuthenticateRequestOnATask({String? requestFirebaseFCMToken,required String myID,required LayoutCubit layoutCubit,required String requestSenderName,required TaskEntity taskEntity,required String requestSenderID,required bool respondStatus});
   Future<Either<Failure,Unit>> sendOpinionAboutEvent({required String eventID,required OpinionAboutEventModel opinionModel,required String senderID});
   Future<Either<Failure,List<OpinionAboutEventModel>>> getOpinionsAboutEvent({required String eventID});
 }

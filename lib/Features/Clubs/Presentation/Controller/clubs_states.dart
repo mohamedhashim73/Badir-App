@@ -75,6 +75,13 @@ class CreateMeetingWithFailureState extends ClubsStates{
   CreateMeetingWithFailureState({required this.message});
 }
 
+class UpdateMeetingLoadingState extends ClubsStates{}
+class UpdateMeetingSuccessState extends ClubsStates{}
+class UpdateMeetingWithFailureState extends ClubsStates{
+  final String message;
+  UpdateMeetingWithFailureState({required this.message});
+}
+
 class GetMemberDataLoadingState extends ClubsStates{}
 class GetMemberDataSuccessState extends ClubsStates{
   final UserEntity userEntity;

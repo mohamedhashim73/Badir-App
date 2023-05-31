@@ -18,7 +18,7 @@ class ViewClubDetailsScreen extends StatelessWidget {
       child: Directionality(
         textDirection: TextDirection.rtl,
         child: Scaffold(
-          appBar: AppBar(title: Text(club.name!,overflow: TextOverflow.ellipsis,)),
+          appBar: AppBar(title: Text("بيانات النادي",overflow: TextOverflow.ellipsis,)),
           body: Padding(
             padding: EdgeInsets.symmetric(horizontal: 12.w,vertical:15.h),
             child: Column(
@@ -31,8 +31,7 @@ class ViewClubDetailsScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children:
                     [
-                      Text("هيكلة النادي",style: TextStyle(color: AppColors.kMainColor,fontWeight: FontWeight.bold,fontSize: 20.sp,overflow: TextOverflow.ellipsis),),
-                      const Spacer(),
+                      Expanded(child: Text(club.name!,style: TextStyle(color: AppColors.kMainColor,fontWeight: FontWeight.bold,fontSize: 20.sp,overflow: TextOverflow.ellipsis),)),
                       if( club.image != null )
                         Container(
                           height: 90.h,
@@ -55,15 +54,7 @@ class ViewClubDetailsScreen extends StatelessWidget {
                         title: "الفعاليات",
                         onTap: ()
                         {
-                          if( Constants.userID != null )
-                          {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => ViewEventsOnSpecificClubScreen(clubID: club.id.toString(),clubName: club.name!,)));
-                          }
-                          else
-                          {
-                            // TODO: لأن الفعاليات مش هتظهر الا اذا كان عمل تسجيل دخول
-                            showDialogToVisitorToAskHimToLogin(context: context);
-                          }
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => ViewEventsOnSpecificClubScreen(clubID: club.id.toString(),clubName: club.name!,)));
                         }
                     ),
                     _otherDetailsComponent(

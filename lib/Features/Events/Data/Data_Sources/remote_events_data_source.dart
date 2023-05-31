@@ -194,7 +194,7 @@ class RemoteEventsDataSource{
   }
 
   // TODO: ASK FOR Authentication on A Task
-  Future<Unit> requestToAuthenticateOnATask({required String taskID,required String senderID,required String senderFirebaseFCMToken,required String senderName}) async {
+  Future<Unit> requestToAuthenticateOnATask({required String taskID,required String senderID,String? senderFirebaseFCMToken,required String senderName}) async {
     try
     {
       RequestAuthenticationOnATaskModel requestModel = RequestAuthenticationOnATaskModel(senderID,senderFirebaseFCMToken,senderName);
@@ -295,7 +295,7 @@ class RemoteEventsDataSource{
     return hours;
   }
 
-  Future<Unit> acceptOrRejectAuthenticateRequestOnATask({required String myID,required LayoutCubit layoutCubit,required String requestSenderName,required TaskEntity taskEntity,required String requestSenderID,required String requestFirebaseFCMToken,required bool respondStatus}) async {
+  Future<Unit> acceptOrRejectAuthenticateRequestOnATask({required String myID,required LayoutCubit layoutCubit,required String requestSenderName,required TaskEntity taskEntity,required String requestSenderID,String? requestFirebaseFCMToken,required bool respondStatus}) async {
     try
     {
       // TODO: ف كلا الحالتين هحذف م الطلبات

@@ -82,7 +82,7 @@ class ViewRequestsForAuthenticateOnTaskScreen extends StatelessWidget {
                     color: AppColors.kGreenColor,
                     onTap: ()
                     {
-                      eventsCubit.acceptOrRejectAuthenticateRequestOnATask(myID: layoutCubit.userData!.id ?? Constants.userID!, layoutCubit: layoutCubit, requestSenderName: requestData.senderName,requestFirebaseFCMToken: requestData.senderFirebaseFCMToken, taskEntity: task, requestSenderID: requestData.senderID!, respondStatus: true);
+                      eventsCubit.acceptOrRejectAuthenticateRequestOnATask(myID: layoutCubit.userData!.id ?? Constants.userID!, layoutCubit: layoutCubit, requestSenderName: requestData.senderName,requestFirebaseFCMToken: requestData.senderFirebaseFCMToken, taskEntity: task, requestSenderID: requestData.senderID, respondStatus: true);
                     }
                 ),
                 SizedBox(width: 10.w,),

@@ -4,6 +4,7 @@ import 'package:bader_user_app/Core/Constants/app_strings.dart';
 import 'package:bader_user_app/Features/Clubs/Domain/Entities/meeting_entity.dart';
 import 'package:bader_user_app/Features/Clubs/Presentation/Controller/clubs_cubit.dart';
 import 'package:bader_user_app/Features/Clubs/Presentation/Controller/clubs_states.dart';
+import 'package:bader_user_app/Features/Clubs/Presentation/Screens/update_meeting_screen.dart';
 import 'package:bader_user_app/Features/Events/Presentation/Controller/events_cubit.dart';
 import 'package:bader_user_app/Features/Layout/Presentation/Controller/layout_cubit.dart';
 import 'package:flutter/material.dart';
@@ -78,17 +79,33 @@ class MeetingsManagementScreen extends StatelessWidget {
         elevation: 0.1,
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 18.h,horizontal: 12.w),
-          child: Row(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children:
             [
-              Expanded(child: Text(meetingEntity.name!,style: TextStyle(fontSize:15.sp,fontWeight:FontWeight.bold,overflow: TextOverflow.ellipsis),)),
-              _buttonItem(
-                  title: 'حذف',
-                  onTap: ()
-                  {
-                    cubit.deleteMeeting(meetingID: meetingEntity.id!,clubID: idForClubILead);
-                  }
-              ),
+              Text(meetingEntity.name!,overflow:TextOverflow.ellipsis,style: TextStyle(fontSize:15.sp,fontWeight:FontWeight.bold,overflow: TextOverflow.ellipsis),),
+              SizedBox(height: 7.h,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children:
+                [
+                  _buttonItem(
+                      title: 'تحديث',
+                      onTap: ()
+                      {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => UpdateMeetingScreen(meetingEntity: meetingEntity)));
+                      }
+                  ),
+                  SizedBox(width: 10.w,),
+                  _buttonItem(
+                      title: 'حذف',
+                      onTap: ()
+                      {
+                        cubit.deleteMeeting(meetingID: meetingEntity.id!,clubID: idForClubILead);
+                      }
+                  ),
+                ],
+              )
             ],
           ),
         ),

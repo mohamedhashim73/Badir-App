@@ -7,6 +7,7 @@ import 'package:bader_user_app/Features/Clubs/Domain/Contract_Repositories/club_
 import 'package:bader_user_app/Features/Clubs/Domain/Entities/club_entity.dart';
 import 'package:dartz/dartz.dart';
 import '../../../Layout/Domain/Entities/user_entity.dart';
+import '../../Domain/Entities/meeting_entity.dart';
 import '../../Domain/Entities/request_membership_entity.dart';
 import '../Models/club_model.dart';
 import '../Models/meeting_model.dart';
@@ -53,7 +54,16 @@ class ClubsImplyRepository implements ClubsContractRepository{
     }
   }
 
-  @override
+  Future<Either<Failure,Unit>> updateMeeting({required MeetingEntity meetingEntity,required String idForClubILead,required String name,required String description,required String date,required String time,required String location,required String link}) async {
+    try
+    {
+      return Right(await remoteClubsDataSource.updateMeeting(meetingEntity: meetingEntity, idForClubILead: idForClubILead, name: name, description: description, date: date, time: time, location: location, link: link));
+    }
+    on ServerException catch(e){
+      return Left(ServerFailure(errorMessage: e.exceptionMessage));
+    }
+  }
+    @override
   Future<bool> requestAMembershipOnSpecificClub({String? senderFirebaseFCMToken,required String clubID, required String requestUserName, required String userAskForMembershipID, required String infoAboutAsker, required String committeeName}) async {
     return remoteClubsDataSource.requestAMembershipOnSpecificClub(senderFirebaseFCMToken:senderFirebaseFCMToken,clubID: clubID, requestUserName: requestUserName, userAskForMembershipID: userAskForMembershipID, infoAboutAsker: infoAboutAsker, committeeName: committeeName);
   }

@@ -104,7 +104,7 @@ class ViewAvailableTasksScreen extends StatelessWidget {
                         }
                         else
                         {
-                          cubit.requestToAuthenticateOnATask(senderFirebaseFCMToken: myData.firebaseMessagingToken!,myData: myData,taskID: taskEntity.id.toString(), senderID: myData.id ?? Constants.userID!, senderName: myData.name!);
+                          cubit.requestToAuthenticateOnATask(senderFirebaseFCMToken: myData.firebaseMessagingToken,myData: myData,taskID: taskEntity.id.toString(), senderID: myData.id ?? Constants.userID!, senderName: myData.name!);
                         }
                       }
                   ),
