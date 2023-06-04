@@ -140,7 +140,7 @@ class LayoutRemoteDataSource {
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection(Constants.kReportsCollectionName).get();
       int newReportID = querySnapshot.docs.isNotEmpty ? int.parse(querySnapshot.docs.last.id) : 0;
       ++newReportID;
-      ReportModel report = ReportModel(clubName:clubName,senderID:senderID,reportID: newReportID.toString(), reportType: reportType, clubID: clubID, pdfLink: pdfLink);
+      ReportModel report = ReportModel(clubName:clubName,senderID:senderID,reportID: newReportID.toString(), reportType: reportType, clubID: clubID, pdfLink: pdfLink,isAccepted: null);
       await FirebaseFirestore.instance.collection(Constants.kReportsCollectionName).doc(newReportID.toString()).set(report.toJson());
       return unit;
     }
@@ -179,4 +179,5 @@ class LayoutRemoteDataSource {
     );
     debugPrint("Notification sent success using Firebase FCM API .......");
   }
+
 }

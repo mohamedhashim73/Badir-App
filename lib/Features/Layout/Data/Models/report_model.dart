@@ -10,6 +10,7 @@ class ReportModel extends ReportEntity{
     required super.clubName,
     required super.senderID,
     required super.pdfLink,
+    required super.isAccepted,
   });
 
   // Todo: From JSON to Refactor Data That come from Firestore
@@ -22,6 +23,7 @@ class ReportModel extends ReportEntity{
         clubName:json['clubName'],
         senderID:json['senderID'],
         pdfLink:json['pdfLink'],
+        isAccepted:json['isAccepted'],
     );
   }
 
@@ -34,6 +36,7 @@ class ReportModel extends ReportEntity{
       'clubName' : clubName,
       'senderID' : senderID,
       'pdfLink' : pdfLink,
+      'isAccepted' : super.isAccepted,
     };
   }
 }
