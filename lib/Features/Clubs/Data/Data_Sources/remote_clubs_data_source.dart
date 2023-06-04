@@ -69,7 +69,8 @@ class RemoteClubsDataSource {
 
   // TODO: ASK FOR MEMBERSHIP
   Future<bool> requestAMembershipOnSpecificClub({required String clubID,String? senderFirebaseFCMToken,required String requestUserName,required String userAskForMembershipID,required String infoAboutAsker,required String committeeName}) async {
-    try{
+    try
+    {
       final model = RequestMembershipModel(userAskForMembershipID, infoAboutAsker,committeeName,requestUserName,senderFirebaseFCMToken);
       await FirebaseFirestore.instance.collection(Constants.kClubsCollectionName).doc(clubID).collection(Constants.kMembershipRequestsCollectionName).doc(userAskForMembershipID).set(model.toJson());
       return true;
@@ -136,7 +137,7 @@ class RemoteClubsDataSource {
   Future<int> getMembersNumOnApp() async {
     int membersNum = 0;
     await FirebaseFirestore.instance.collection(Constants.kMembersNumberCollectionName).doc('Number').get().then((value){
-      membersNum = value.data() != null  ? value.data()!['total'] : 0;
+      membersNum = value.data() != null ? value.data()!['total'] : 0 ;
     });
     return membersNum;
   }
@@ -276,7 +277,7 @@ class RemoteClubsDataSource {
     {
       // TODO: Get Last ID For Last Event to increase it by one
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection(Constants.kClubsCollectionName).doc(idForClubILead).collection(Constants.kMeetingsCollectionName).get();
-      int newMeetingID = querySnapshot.docs.isNotEmpty ? int.parse(querySnapshot.docs.last.id) : 0;
+      int newMeetingID = querySnapshot.docs.isNotEmpty ? int.parse(querySnapshot.docs.last.id) : 0 ;
       ++newMeetingID;
       MeetingModel meetingModel = MeetingModel(name, newMeetingID.toString(),description, date,time,location, link);
       await FirebaseFirestore.instance.collection(Constants.kClubsCollectionName).doc(idForClubILead).collection(Constants.kMeetingsCollectionName).doc(newMeetingID.toString()).set(meetingModel.toJson());

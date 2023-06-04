@@ -40,10 +40,11 @@ class ClubsCubit extends Cubit<ClubsStates> {
     emit(GetClubsLoadingState());
     final result = await sl<GetAllClubsUseCase>().execute();
     result.fold(
-            (serverFailure) {
+            (serverFailure){
               emit(FailedToGetClubsDataState(message: serverFailure.errorMessage));
             },
-            (clubsData) async {
+            (clubsData) async
+            {
               clubs = clubsData;
               if( userEntity != null && userEntity.idForClubLead == null ) await getIDForClubsIAskedForMembership(userID: userEntity.id ?? Constants.userID!, idForClubsMemberID: userEntity.idForClubsMemberIn);
               emit(GetClubsDataSuccessState());

@@ -108,7 +108,6 @@ class RemoteEventsDataSource{
         debugPrint("Start getting data , documents length is ${value.docs.length}......");
         members = List<MemberModel>.of(value.docs.map((e) => MemberModel.fromJson(json: e.data())));
       });
-      debugPrint("Members num : ${members.length}");
       return members;
     }
     on FirebaseException catch(e){
@@ -339,7 +338,6 @@ class RemoteEventsDataSource{
         volunteerHoursForClub += taskEntity.hours;
         await FirebaseFirestore.instance.collection(Constants.kClubsCollectionName).doc(taskEntity.clubID).update({
           'volunteerHours' : volunteerHoursForClub,
-
         });
       }
       return unit;
