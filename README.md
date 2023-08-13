@@ -4,11 +4,11 @@ university community, clubs leaders, members.
 - Besides that, it is an organized source of information for interested non-members.
 
 Developed Used :
-- Dart.
-- Flutter.
-- Firebase.
-- Clean Architecture. 
-- Dependancy Injection.
+- Dart
+- Flutter
+- Firebase
+- Clean Architecture
+- Dependancy Injection
 - Cubit.
 
 Photos from the App
