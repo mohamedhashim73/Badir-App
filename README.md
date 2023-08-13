@@ -10,10 +10,10 @@
 - Dependancy Injection
 - Cubit.
 
-# Video link
+# Video
 
 https://www.linkedin.com/posts/mohamed-hashim-3b2ab2235_badir-user-app-dashboard-this-app-activity-7085767477174972416-_Kx8?utm_source=share&utm_medium=member_desktop
 
-# Dashboard source code
+# Dashboard
 
 https://github.com/mohamedhashim73/Badir-Dashboard
