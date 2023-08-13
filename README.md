@@ -1,16 +1,14 @@
-# bader_user_app
+Badir ( User App - Dashboard ) 
+This App aims to organize the operations of University student clubs, builds a good connection between the
+university community, clubs leaders, members.
+Besides that, it is an organized source of information for interested non-members.
+Developed using :
+• Dart
+• Flutter
+• Clean Architecture
+• Firebase
+• Shared_preferences
+• Cubit
+• Dependancy Injection.
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Dashboard source code : https://github.com/mohamedhashim73/Badir-Dashboard.git
