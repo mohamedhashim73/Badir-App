@@ -1,4 +1,4 @@
-# Badir App
+# About
 - This App aims to organize the operations of University Students Clubs, builds a good connection between the Communities, Clubs leaders, Members.
 - Besides that, it is an organized source of information for interested non-Members.
 
