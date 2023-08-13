@@ -1,6 +1,7 @@
-# Shareme Application
-Full Social Media App using Dart - Flutter - Firebase - Bloc - SharedPreferences.
-
+# Badir App
+- This App aims to organize the operations of University student clubs, builds a good connection between the
+university community, clubs leaders, members
+- Besides that, it is an organized source of information for interested non-members.
 link for video that show How app work https://mostaql.com/portfolio/1118304
 
 Application features :
